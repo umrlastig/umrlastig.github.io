@@ -1115,8 +1115,9 @@ img {
 .thumbnail a > img,
 .carousel-inner > .item > img,
 .carousel-inner > .item > a > img {
-  display: block;
-  
+  /* display: block */
+  display: flex;
+  justify-content: center; 
   max-width: 100%;
   height: auto;
 }
