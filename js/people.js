@@ -35,14 +35,20 @@
 			var data = Papa.parse(text, {
 				download: false,
 				header: true,
-				step: function(row) {
-					if(row.data[0].firstname.localeCompare("") != 0){
+				step: function(row) 
+				{
+					if(row.data[0].firstname.localeCompare("") != 0)
+					{
 						var parent = document.getElementById("people-container");
-						divForAllPeople(parent, row.data);}
-					},
-				complete: function() {
+						divForAllPeople(parent, row.data);
+						var parent2 = document.getElementById("people-container-2");
+						divForAllPeople2(parent2, row.data);
+					}
+				},
+				complete: function()
+				{
 					var classes = [".lang-fr", ".lang-en"];
-        			var lang = document.getElementById('select-lang').selectedIndex;
+        				var lang = document.getElementById('select-lang').selectedIndex;
 					$( classes[lang] ).hide();
 					console.log("All done for people!");
 				},
@@ -54,43 +60,101 @@
   };
 
   function divForAllPeople(parentElement, data) {
-	  	if (data[0].perm == 'false') return;  // on ne garde que les permanents (LLGRD-07/09/21)
-		if (data[0].member == 'false') return;
-		if (data[0].end_date != ''){
+	  
+	  	if (data[0].member == 'false')
+		{
+			return;
+		}
+		if (data[0].end_date != '')
+		{
 			var d1 = new Date();
 			var d2 = new Date(data[0].end_date);
 			if (d2.getTime() < d1.getTime()) return;
 		}
-	const childElement = document.createElement('div');
-	const appendChildElement = parentElement.appendChild(childElement);
-	appendChildElement.setAttribute("class","people col-lg-2 col-md-6 mb-lg-0 mb-5");
-	avatarDivElement = document.createElement('div');
-	const appendAvatarDivElement = appendChildElement.appendChild(avatarDivElement);
-	appendAvatarDivElement.setAttribute("class","avatar mx-auto img-member");
-	imgElement = document.createElement('img');
-	imgElement.setAttribute("class","rounded-circle z-depth-1");
-	imgElement.setAttribute("src",data[0].photo);
-	imgElement.setAttribute("alt","");
-	appendImgElement = appendAvatarDivElement.appendChild(imgElement);
+	  
+	// ------------------------------------------- permanents (LLGRD-07/09/21)
+	if (data[0].perm == 'true')
+	{
+		const childElement = document.createElement('div');
+		const appendChildElement = parentElement.appendChild(childElement);
+		appendChildElement.setAttribute("class","people col-lg-2 col-md-6 mb-lg-0 mb-5");
+		avatarDivElement = document.createElement('div');
+		const appendAvatarDivElement = appendChildElement.appendChild(avatarDivElement);
+		appendAvatarDivElement.setAttribute("class","avatar mx-auto img-member");
+		imgElement = document.createElement('img');
+		imgElement.setAttribute("class","rounded-circle z-depth-1");
+		imgElement.setAttribute("src",data[0].photo);
+		imgElement.setAttribute("alt","");
+		appendImgElement = appendAvatarDivElement.appendChild(imgElement);
 
-	aElement = document.createElement('a');
-	aElement.setAttribute("href", data[0].webpage);
-	nameElement = document.createElement('h5');
-	nameElement.innerHTML = data[0].firstname +" "+ data[0].lastname;
-	nameElement.setAttribute("class","font-weight-bold mt-4 mb-3");
-	aElement.append(nameElement);
-	appendChildElement.appendChild(aElement);
-	statusElement = document.createElement('p');
-	statusElement.innerHTML = data[0].status;
-	statusElement.setAttribute("class","text blue-text text-status lang-en");
-	appendChildElement.appendChild(statusElement);
-	statutElement = document.createElement('p');
-	statutElement.innerHTML = data[0].statut;
-	statutElement.setAttribute("class","text blue-text text-status lang-fr");
-	appendChildElement.appendChild(statutElement);
-	//appendChildElement.innerHTML = data[0].status;
+		aElement = document.createElement('a');
+		aElement.setAttribute("href", data[0].webpage);
+		nameElement = document.createElement('h5');
+		nameElement.innerHTML = data[0].firstname +" "+ data[0].lastname;
+		nameElement.setAttribute("class","font-weight-bold mt-4 mb-3");
+		aElement.append(nameElement);
+		appendChildElement.appendChild(aElement);
+		statusElement = document.createElement('p');
+		statusElement.innerHTML = data[0].status;
+		statusElement.setAttribute("class","text blue-text text-status lang-en");
+		appendChildElement.appendChild(statusElement);
+		statutElement = document.createElement('p');
+		statutElement.innerHTML = data[0].statut;
+		statutElement.setAttribute("class","text blue-text text-status lang-fr");
+		appendChildElement.appendChild(statutElement);
+		//appendChildElement.innerHTML = data[0].status;
+	}
   };
 
-	var displayPeople = function(){
+//---------------------------------------------------- DOUBLON TRES SALE (LLGRD-07/09/21)
+  function divForAllPeople2(parentElement, data) {
+	  
+	  	if (data[0].member == 'false')
+		{
+			return;
+		}
+		if (data[0].end_date != '')
+		{
+			var d1 = new Date();
+			var d2 = new Date(data[0].end_date);
+			if (d2.getTime() < d1.getTime()) return;
+		}
+	  
+	// ------------------------------------------- CDD (LLGRD-07/09/21)
+	if (data[0].perm == 'false')
+	{
+		const childElement = document.createElement('div');
+		const appendChildElement = parentElement.appendChild(childElement);
+		appendChildElement.setAttribute("class","people col-lg-2 col-md-6 mb-lg-0 mb-5");
+		avatarDivElement = document.createElement('div');
+		const appendAvatarDivElement = appendChildElement.appendChild(avatarDivElement);
+		appendAvatarDivElement.setAttribute("class","avatar mx-auto img-member");
+		imgElement = document.createElement('img');
+		imgElement.setAttribute("class","rounded-circle z-depth-1");
+		imgElement.setAttribute("src",data[0].photo);
+		imgElement.setAttribute("alt","");
+		appendImgElement = appendAvatarDivElement.appendChild(imgElement);
+
+		aElement = document.createElement('a');
+		aElement.setAttribute("href", data[0].webpage);
+		nameElement = document.createElement('h5');
+		nameElement.innerHTML = data[0].firstname +" "+ data[0].lastname;
+		nameElement.setAttribute("class","font-weight-bold mt-4 mb-3");
+		aElement.append(nameElement);
+		appendChildElement.appendChild(aElement);
+		statusElement = document.createElement('p');
+		statusElement.innerHTML = data[0].status;
+		statusElement.setAttribute("class","text blue-text text-status lang-en");
+		appendChildElement.appendChild(statusElement);
+		statutElement = document.createElement('p');
+		statutElement.innerHTML = data[0].statut;
+		statutElement.setAttribute("class","text blue-text text-status lang-fr");
+		appendChildElement.appendChild(statutElement);
+		//appendChildElement.innerHTML = data[0].status;
+	}
+  };
+
+var displayPeople = function()
+{
     var data = parsePeopleCSVfile();
 };
