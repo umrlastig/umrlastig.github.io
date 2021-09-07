@@ -54,6 +54,7 @@
   };
 
   function divForAllPeople(parentElement, data) {
+	  	if (data[0].perm == 'false') return;  // on ne garde que les permanents (LLGRD-07/09/21)
 		if (data[0].member == 'false') return;
 		if (data[0].end_date != ''){
 			var d1 = new Date();
