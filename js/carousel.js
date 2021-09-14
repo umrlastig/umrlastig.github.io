@@ -56,8 +56,6 @@
 
   function divForAllItems(indicatorParent, innerParent, data) {
       childElement = document.createElement('div');
-      console.log("carousel:" + data[0].url);
-      console.log("carousel inner:" + innerParent.children.length);
       if (innerParent.children.length == 0) {
 	  childElement.setAttribute("class","carousel-item active");
       } else {
@@ -78,7 +76,6 @@
 	textfrElement.setAttribute("class","text blue-text text-status lang-fr");
         appendChildElement.appendChild(textfrElement);
       indicatorChildElement = document.createElement('li');
-      console.log("carousel inner:" + indicatorParent.children.length);
       if(indicatorParent.children.length == 0){
 	  indicatorChildElement.setAttribute("class","active");
       }
