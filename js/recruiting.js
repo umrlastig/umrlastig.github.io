@@ -42,6 +42,10 @@ function parseCSVfile() {
 						var parent = document.getElementById("ec-offers");
 						divForJob(parent, row.data);
 					}
+					else if(row.data[0].type == "Researcher") {
+						var parent = document.getElementById("researcher-offers");
+						divForJob(parent, row.data);
+					}
 					else if(row.data[0].type == "PhD"){
 						var parent = document.getElementById("phd-offers");
 						divForJob(parent, row.data);
