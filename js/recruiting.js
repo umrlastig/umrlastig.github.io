@@ -83,7 +83,7 @@ function parseCSVfile() {
         		var classes = [".lang-fr", ".lang-en"];
         		var lang = document.getElementById('select-lang').selectedIndex;
 				$( classes[lang] ).hide();
-				console.log("display offers done!");
+				// console.log("display offers done!");
 			}
 		});
 		return data;

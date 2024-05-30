@@ -45,7 +45,7 @@
 					var classes = [".lang-fr", ".lang-en"];
         			var lang = document.getElementById('select-lang').selectedIndex;
 					$( classes[lang] ).hide();
-					console.log("All done for carousel!");
+					// console.log("All done for carousel!");
 				},
 					worker: true
 				});

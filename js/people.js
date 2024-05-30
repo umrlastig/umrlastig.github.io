@@ -50,7 +50,7 @@
 					var classes = [".lang-fr", ".lang-en"];
         				var lang = document.getElementById('select-lang').selectedIndex;
 					$( classes[lang] ).hide();
-					console.log("All done for people!");
+					// console.log("All done for people!");
 				},
 					worker: true
 				});
