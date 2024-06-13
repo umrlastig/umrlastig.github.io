@@ -1,0 +1,33 @@
+.doc {
+    width: 100%;
+    /* height: 100px; */
+    margin: auto;
+    font-size: 1rem;
+    line-height: 1.5rem;
+}
+
+.list {
+    padding-left: 50px;
+}
+
+.author {
+    color: #bfbfbf;
+    text-decoration: none;
+}
+
+.author:not(:last-child)::after {
+    content: ", ";
+}
+
+.author:last-child::after {
+    content: ". ";
+}
+
+.title {
+    color: #29AF7F;
+    text-decoration: none;
+}
+
+.title::after {
+    content: ". ";
+}
