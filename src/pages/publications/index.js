@@ -148,7 +148,7 @@ const PublicationsPage = ({ data }) => {
 }
 
 export const query = graphql`
-    query {
+    query($language: String!) {
         allHal {
             nodes {
                 halId
@@ -170,6 +170,15 @@ export const query = graphql`
                 peerReviewing
                 researchData
                 audience
+            }
+        }
+        locales: allLocale(filter: {language: {eq: $language}}) {
+            edges {
+                node {
+                ns
+                data
+                language
+                }
             }
         }
     }

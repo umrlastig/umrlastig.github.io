@@ -35,6 +35,7 @@ body {
 
 .nav-link-item {
   padding: 2rem 1.5rem;
+  width: 150px;
 }
 
 .nav-link-text {
@@ -47,10 +48,10 @@ body {
 }
 
 .site-title {
-  font-size: 3rem;
+  /* font-size: 3rem;
   color: gray;
   font-weight: 700;
-  margin: 3rem 0;
+  margin: 3rem 0; */
 }
 
 .home-top-container {
@@ -74,6 +75,7 @@ body {
 .team-container {
   width: 100%;
   display: flex;
+  text-align: center;
 }
 
 .team-column-container {
@@ -113,4 +115,58 @@ body {
   height: 80%;
   margin-left: 10%;
   margin-right: 10%;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+nav ul li {
+  /* display: inline-block; */
+  position: relative;
+}
+
+nav ul ul {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+
+nav ul li:hover > ul {
+  display: block;
+  z-index: 10000;
+  background-color: #337AB7;
+}
+
+/* .nav-languages {
+
+} */
+
+.footer-container {
+  min-height: 140px;
+  background-color: #337AB7;
+  border-top: #000000 solid 6px;
+  margin-top: 1em;
+  padding: 2rem 2rem;
+}
+
+.footer-row {
+    justify-content: space-between !important;
+}
+
+.footer-container div {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+}
+
+.footer-column {
+  flex-direction: column !important;
+  width: 150px;
+}
+
+.footer-column-content {
+  display: block !important;
 }

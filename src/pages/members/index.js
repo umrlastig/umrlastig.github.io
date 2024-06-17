@@ -1,5 +1,7 @@
 import * as React from 'react'
-import { Link, graphql } from 'gatsby'
+import { graphql } from 'gatsby'
+import {Link, Trans, useTranslation} from 'gatsby-plugin-react-i18next';
+
 import Layout from '../../components/layout'
 import Seo from '../../components/seo'
 import {members,imgMember,roundedCircle} from '../../components/members.module.css'
@@ -32,7 +34,7 @@ const MembersPage = ({ data }) => {
 }
 
 export const query = graphql`
-    query {
+    query ($language: String!) {
         allPeopleCsv {
             nodes {
             HAL
@@ -48,6 +50,15 @@ export const query = graphql`
             statut
             team
             webpage
+            }
+        }
+        locales: allLocale(filter: {language: {eq: $language}}) {
+            edges {
+                node {
+                ns
+                data
+                language
+                }
             }
         }
     }
