@@ -74,7 +74,9 @@ const Layout = ({ children }) => {
                   <img src={'https://languageicon.org/language-icon.svg'} alt="Select Language" style={{ width: "auto", height: 60 }}></img>
                 </Link>
                 <ul> {/* className={navLanguages} */}
-                  {languages.map((lng) => (<li className={navLinkItem} key={lng}><Link className={navLinkText} to={originalPath} language={lng}>{lng}</Link></li>))}
+                  {languages.map((lng) => (
+                    <li className={navLinkItem} key={lng}><Link className={navLinkText} to={originalPath} language={lng}>{lng}</Link></li>
+                  ))}
                 </ul>
               </li>
             </ul>

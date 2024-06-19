@@ -109,18 +109,16 @@ exports.onCreateNode = async ({
     var url = node.url;
     if (url.includes("zenodo")) {
       url = url.replace("/records/", "/api/records/")
-      console.log("Z = "+url)
+      // console.log("Z = "+url)
       const fetchZenodo = () => axios.get(url,proxy = ign_proxy);
       // await for results
       const res = await fetchZenodo();
       const downloads = res.data["stats"]["downloads"];
-      // console.log(downloads);
-      // console.log(res.stats.downloads);
-      console.log(`Z => ${downloads}`)
+      // console.log(`Z => ${downloads}`)
       createNodeField({ node, name: 'downloads', value: +downloads })
     } else {
       if (url.includes("dataverse") || url.includes("entrepot.recherche.data.gouv.fr")) {
-        console.log("D = " + url);
+        // console.log("D = " + url);
         await axios.get(url,proxy = ign_proxy).then(({ data }) => {
           const $ = cheerio.load(data);
           const downloads = $('.metrics-count-block')
@@ -129,65 +127,28 @@ exports.onCreateNode = async ({
               return $block.text().substring(0, $block.text().indexOf(" Downloads")).replace(",", "")
             })
             .toArray()[0];
-          // console.log(downloads)
-          console.log(`D => ${downloads}`)
+          // console.log(`D => ${downloads}`)
           createNodeField({ node, name: 'downloads', value: +downloads })
         });
       } else {
         if (url.includes("figshare")) {
           const dataId = url.substring(url.lastIndexOf("/") + 1)
-          console.log(`F = ${url} (${dataId})`);
+          // console.log(`F = ${url} (${dataId})`);
           const fetchFigshare = () => axios.get(`https://stats.figshare.com/total/article/${dataId}`,proxy = ign_proxy);
           const res = await fetchFigshare();
-          console.log(res.data)
+          // console.log(res.data)
           const downloads = res.data["downloads"];
-          console.log(`F => ${downloads} from ${`https://stats.figshare.com/total/article/${dataId}`}`)
+          // console.log(`F => ${downloads} from ${`https://stats.figshare.com/total/article/${dataId}`}`)
           createNodeField({ node, name: 'downloads', value: +downloads })
-          // const cheerio = require('cheerio');
-          // await axios.get(url).then(({ data }) => {
-          //   // console.log("Figshare data: " + data)
-          //   const $ = cheerio.load(data);
-          //   const downloads = $('.wZ+x4')
-          //     .map((_, block) => {
-          //       const $block = $(block);
-          //       console.log("Figshare block: " + $block.text())
-          //       return $block.text()
-          //     })
-          //     .toArray()[0];
-          //   console.log("Figshare: " + downloads)
-          //   if (downloads) {
-          //     createNodeField({ node, name: 'downloads', value: +downloads })
-          //   } else {
-          //     createNodeField({ node, name: 'downloads', value: Number(0) })
-          //   }
-          // });
         } else {
           if (url.includes("mendeley")) {
-            console.log("M = "+ url);
-            // const cheerio = require('cheerio');
-            // await axios.get(url).then(({ data }) => {
-            //   // console.log("Mendeley data: " + data)
-            //   const $ = cheerio.load(data);
-            //   const downloads = $('.pps-count')
-            //     .map((_, block) => {
-            //       const $block = $(block);
-            //       console.log("Mendeley block: " + $block.text())
-            //       return $block.text()
-            //     })
-            //     .toArray()[0];
-            //   console.log("Mendeley: " + downloads)
-            //   if (downloads) {
-            //     createNodeField({ node, name: 'downloads', value: +downloads })
-            //   } else {
-            //     createNodeField({ node, name: 'downloads', value: Number(0) })
-            //   }
-            // });
+            // console.log("M = "+ url);
             const dataId = url.substring(url.lastIndexOf("/") + 1)
             const fetchMendeley = () => axios.get(`https://api.plu.mx/widget/elsevier/artifact?type=mendeley_data_id&id=${dataId}&hidePrint=true&site=plum&href=https://plu.mx/plum/a?mendeley_data_id=${dataId}`,proxy = ign_proxy);
             const res = await fetchMendeley();
             // console.log(res)
             const downloads = res.data["statistics"]["Usage"][0]["count"];
-            console.log("M => " + downloads)
+            // console.log("M => " + downloads)
             createNodeField({ node, name: 'downloads', value: +downloads })
           } else {
             console.log("OTHER = " + url)
