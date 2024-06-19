@@ -21,6 +21,7 @@ export default function MemberPage({ data }) {
         <div className={imgMember}><img className={roundedCircle} src={modifyPhotoUrl(node.photo)} alt={`${node.firstname} ${node.lastname}`} /></div>
         <h2>{node.status}{node.team ? ` in the ${node.team} team`: null }</h2>
         <a href={modifyUrl(node.webpage)}>Personal webpage</a>
+        <p>HAL-id: {node.HAL}</p>
       </div>
     </Layout>
   )

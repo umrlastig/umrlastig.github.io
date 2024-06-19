@@ -61,6 +61,7 @@ const Layout = ({ children }) => {
                   <li className={navLinkItem}><Link to="/members/" className={navLinkText}><Trans>Members</Trans></Link></li>
                   <li className={navLinkItem}><Link to="/projects/" className={navLinkText}><Trans>Projects</Trans></Link></li>
                   <li className={navLinkItem}><Link to="/publications/" className={navLinkText}><Trans>Publications</Trans></Link></li>
+                  <li className={navLinkItem}><Link to="/datasets/" className={navLinkText}><Trans>Datasets</Trans></Link></li>
                 </ul>
               </li>
               {/* <li className={navLinkItem}>

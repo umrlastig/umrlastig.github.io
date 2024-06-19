@@ -1,5 +1,5 @@
 exports.createPages = async function ({ actions, graphql }) {
-    var { data } = await graphql(`
+  var { data } = await graphql(`
         query {
             allPeopleCsv {
                 nodes {
@@ -20,63 +20,39 @@ exports.createPages = async function ({ actions, graphql }) {
             }
         }
     `)
-    data.allPeopleCsv.nodes.forEach(node => {
-        const firstName = node.firstname
-        const lastName = node.lastname
-        // console.log(`${node.firstname}-${node.lastname}`)
-        actions.createPage({
-            path: `/members/${node.firstname}-${node.lastname}`,
-            component: require.resolve(`./src/templates/member-page.js`),
-            context: { firstName: firstName, lastName: lastName },
-        })
+  data.allPeopleCsv.nodes.forEach(node => {
+    const firstName = node.firstname
+    const lastName = node.lastname
+    // console.log(`${node.firstname}-${node.lastname}`)
+    actions.createPage({
+      path: `/members/${node.firstname}-${node.lastname}`,
+      component: require.resolve(`./src/templates/member-page.js`),
+      context: { firstName: firstName, lastName: lastName },
     })
-    // var { data } = await graphql(`
-    //     query {
-    //         allMdx {
-    //             nodes {
-    //                 frontmatter {
-    //                     title
-    //                     slug
-    //                 }
-    //                 id
-    //                 excerpt
-    //                 internal {
-    //                     contentFilePath
-    //                 }
-    //             }
-    //         }
-    //     }
-    // `)
-    // data.allMdx.nodes.forEach(node => {
-    //     const title = node.frontmatter.title
-    //     const slug = node.frontmatter.slug
-    //     const id = node.id
-    //     const path = require("path")
-    //     const template = path.resolve(`./src/templates/page.js`)
-    //     console.log(title + " with " + slug + " has id = " + id)
-    //     actions.createPage({
-    //         path: `/${node.frontmatter.slug}`,
-    //         component: `${template}?__contentFilePath=${node.internal.contentFilePath}`,
-    //         context: { id: id },
-    //     })
-    // })
-
+  })
 }
 const axios = require('axios');
 const crypto = require('crypto');
+// const ign_proxy = {
+//   protocol: 'http',
+//   host: 'proxy.ign.fr',
+//   port: 3128,
+// }
+const ign_proxy = {
+}
 
 exports.sourceNodes = async ({ actions }) => {
   const { createNode } = actions;
   // fetch raw data from the HAL api
-  const fetchHAL = () => axios.get(`https://api.archives-ouvertes.fr/search/?q=*&wt=json&sort=producedDateY_i desc&rows=10000&fl=fileAnnexes_s,fileAnnexesFigure_s,invitedCommunication_s,proceedings_s,popularLevel_s,halId_s,authIdHalFullName_fs,producedDateY_i,docType_s,files_s,fileMain_s,fileMainAnnex_s,linkExtUrl_s,title_s,en_title_s,fr_title_s,label_bibtex,citationRef_s,labStructId_i,journalTitle_s,researchData_s,peerReviewing_s,audience_s&fq=(labStructId_i:1003089 OR labStructId_i:536752)&fq=producedDateY_i:[2019 TO *]`);
+  const fetchHAL = () => axios.get(`https://api.archives-ouvertes.fr/search/?q=*&wt=json&sort=producedDateY_i desc&rows=10000&fl=fileAnnexes_s,fileAnnexesFigure_s,invitedCommunication_s,proceedings_s,popularLevel_s,halId_s,authIdHalFullName_fs,producedDateY_i,docType_s,files_s,fileMain_s,fileMainAnnex_s,linkExtUrl_s,title_s,en_title_s,fr_title_s,label_bibtex,citationRef_s,labStructId_i,journalTitle_s,researchData_s,peerReviewing_s,audience_s&fq=(labStructId_i:1003089 OR labStructId_i:536752)&fq=producedDateY_i:[2019 TO *]`,proxy = ign_proxy);
   // await for results
   const res = await fetchHAL();
   // map into these results and create nodes
   res.data.response.docs.map((doc, i) => {
     // Create your node object
     const authors = doc.authIdHalFullName_fs.map((authIdHalFullName) => {
-        const [_idHal, _fullName] = authIdHalFullName.split('_FacetSep_');
-        return {fullName: _fullName, idHal: _idHal}
+      const [_idHal, _fullName] = authIdHalFullName.split('_FacetSep_');
+      return { fullName: _fullName, idHal: _idHal }
     });
     // console.log(authors);
     const docNode = {
@@ -117,3 +93,118 @@ exports.sourceNodes = async ({ actions }) => {
   });
   return;
 }
+
+//name	short_name	doi	url	date	project	theme
+const { createRemoteFileNode } = require(`gatsby-source-filesystem`)
+const cheerio = require('cheerio');
+
+
+exports.onCreateNode = async ({
+  node, // the node that was just created
+  actions: { createNode, createNodeField },
+  createNodeId,
+  getCache,
+}) => {
+  if (node.internal.type === `DatasetCsv`) {
+    var url = node.url;
+    if (url.includes("zenodo")) {
+      url = url.replace("/records/", "/api/records/")
+      console.log("Z = "+url)
+      const fetchZenodo = () => axios.get(url,proxy = ign_proxy);
+      // await for results
+      const res = await fetchZenodo();
+      const downloads = res.data["stats"]["downloads"];
+      // console.log(downloads);
+      // console.log(res.stats.downloads);
+      console.log(`Z => ${downloads}`)
+      createNodeField({ node, name: 'downloads', value: +downloads })
+    } else {
+      if (url.includes("dataverse") || url.includes("entrepot.recherche.data.gouv.fr")) {
+        console.log("D = " + url);
+        await axios.get(url,proxy = ign_proxy).then(({ data }) => {
+          const $ = cheerio.load(data);
+          const downloads = $('.metrics-count-block')
+            .map((_, block) => {
+              const $block = $(block);
+              return $block.text().substring(0, $block.text().indexOf(" Downloads")).replace(",", "")
+            })
+            .toArray()[0];
+          // console.log(downloads)
+          console.log(`D => ${downloads}`)
+          createNodeField({ node, name: 'downloads', value: +downloads })
+        });
+      } else {
+        if (url.includes("figshare")) {
+          const dataId = url.substring(url.lastIndexOf("/") + 1)
+          console.log(`F = ${url} (${dataId})`);
+          const fetchFigshare = () => axios.get(`https://stats.figshare.com/total/article/${dataId}`,proxy = ign_proxy);
+          const res = await fetchFigshare();
+          console.log(res.data)
+          const downloads = res.data["downloads"];
+          console.log(`F => ${downloads} from ${`https://stats.figshare.com/total/article/${dataId}`}`)
+          createNodeField({ node, name: 'downloads', value: +downloads })
+          // const cheerio = require('cheerio');
+          // await axios.get(url).then(({ data }) => {
+          //   // console.log("Figshare data: " + data)
+          //   const $ = cheerio.load(data);
+          //   const downloads = $('.wZ+x4')
+          //     .map((_, block) => {
+          //       const $block = $(block);
+          //       console.log("Figshare block: " + $block.text())
+          //       return $block.text()
+          //     })
+          //     .toArray()[0];
+          //   console.log("Figshare: " + downloads)
+          //   if (downloads) {
+          //     createNodeField({ node, name: 'downloads', value: +downloads })
+          //   } else {
+          //     createNodeField({ node, name: 'downloads', value: Number(0) })
+          //   }
+          // });
+        } else {
+          if (url.includes("mendeley")) {
+            console.log("M = "+ url);
+            // const cheerio = require('cheerio');
+            // await axios.get(url).then(({ data }) => {
+            //   // console.log("Mendeley data: " + data)
+            //   const $ = cheerio.load(data);
+            //   const downloads = $('.pps-count')
+            //     .map((_, block) => {
+            //       const $block = $(block);
+            //       console.log("Mendeley block: " + $block.text())
+            //       return $block.text()
+            //     })
+            //     .toArray()[0];
+            //   console.log("Mendeley: " + downloads)
+            //   if (downloads) {
+            //     createNodeField({ node, name: 'downloads', value: +downloads })
+            //   } else {
+            //     createNodeField({ node, name: 'downloads', value: Number(0) })
+            //   }
+            // });
+            const dataId = url.substring(url.lastIndexOf("/") + 1)
+            const fetchMendeley = () => axios.get(`https://api.plu.mx/widget/elsevier/artifact?type=mendeley_data_id&id=${dataId}&hidePrint=true&site=plum&href=https://plu.mx/plum/a?mendeley_data_id=${dataId}`,proxy = ign_proxy);
+            const res = await fetchMendeley();
+            // console.log(res)
+            const downloads = res.data["statistics"]["Usage"][0]["count"];
+            console.log("M => " + downloads)
+            createNodeField({ node, name: 'downloads', value: +downloads })
+          } else {
+            console.log("OTHER = " + url)
+            createNodeField({ node, name: 'downloads', value: Number(0) })
+          }
+        }
+      }
+    }
+  }
+}
+
+// exports.createSchemaCustomization = ({ actions }) => {
+//   const { createTypes } = actions
+
+//   createTypes(`
+//     type DatasetCsv implements Node {
+//       downloads: String!
+//     }
+//   `)
+// }
