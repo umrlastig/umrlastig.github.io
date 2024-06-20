@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@ericcote/gatsby-theme-i18n": "^4.1.13",
+    "@ericcote/gatsby-theme-i18n-react-intl": "^4.1.13",
     "@mdx-js/react": "^2.3.0",
     "chart.js": "^4.4.3",
     "cross-env": "^7.0.3",
@@ -38,6 +39,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
+    "react-intl": "^6.6.8",
     "react-leaflet": "^4.2.1",
     "react-slick": "^0.30.2",
     "slick-carousel": "^1.8.1"

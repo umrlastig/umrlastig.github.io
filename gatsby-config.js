@@ -61,6 +61,12 @@ module.exports = {
       },
     },
     {
+      resolve: `@ericcote/gatsby-theme-i18n-react-intl`,
+      options: {
+        defaultLocale: `./i18n/locales/en.json`,
+      },
+    },
+    {
       resolve: 'gatsby-plugin-react-leaflet',
       options: {
         linkStyles: true // (default: true) Enable/disable loading stylesheets via CDN

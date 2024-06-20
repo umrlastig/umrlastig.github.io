@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
 // import {Link, Trans, useTranslation} from 'gatsby-plugin-react-i18next';
-import { MdxLink as Link } from "@ericcote/gatsby-theme-i18n"
+import { LocalizedLink as Link } from "@ericcote/gatsby-theme-i18n"
 
 import Layout from '../../components/layout'
 import Seo from '../../components/seo'

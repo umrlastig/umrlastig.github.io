@@ -2,7 +2,7 @@ import * as React from 'react'
 // import { Link, Trans, useI18next } from 'gatsby-plugin-react-i18next';
 import { useLocalization } from "@ericcote/gatsby-theme-i18n"
 import { LocalizedLink as Link } from "@ericcote/gatsby-theme-i18n"
-
+import { useIntl } from "react-intl"
 import {
   container,
   // heading,
@@ -22,6 +22,8 @@ import {
 const Layout = ({ children }) => {
   // const { languages, originalPath } = useI18next();
   const { localizedPath, config } = useLocalization();
+  const intl = useIntl()
+  function trans(text) { return intl.formatMessage({ id: text }) }
   return (
     <div className={container}>
       <header className={siteTitle}>
@@ -35,21 +37,21 @@ const Layout = ({ children }) => {
                 </Link>
               </li>
               <li className={navLinkItem}>
-                <Link to="/" className={navLinkText}>Lab</Link>
+                <Link to="/" className={navLinkText}>{intl.formatMessage({ id: "Lab" })}</Link>
                 <ul>
-                  <li className={navLinkItem}><Link to="/presentation/" className={navLinkText}>Presentation</Link></li>
-                  <li className={navLinkItem}><Link to="/history/" className={navLinkText}>History</Link></li>
-                  <li className={navLinkItem}><Link to="/access/" className={navLinkText}>Access</Link></li>
+                  <li className={navLinkItem}><Link to="/presentation/" className={navLinkText}>{trans("Presentation")}</Link></li>
+                  <li className={navLinkItem}><Link to="/history/" className={navLinkText}>{trans("History")}</Link></li>
+                  <li className={navLinkItem}><Link to="/access/" className={navLinkText}>{trans("Access")}</Link></li>
                 </ul>
               </li>
               <li className={navLinkItem}>
-                <Link to="/" className={navLinkText}>Research</Link>
+                <Link to="/" className={navLinkText}>{intl.formatMessage({ id: "Research" })}</Link>
                 <ul>
-                  <li className={navLinkItem}><Link to="/teams/" className={navLinkText}>Teams</Link></li>
-                  <li className={navLinkItem}><Link to="/members/" className={navLinkText}>Members</Link></li>
-                  <li className={navLinkItem}><Link to="/projects/" className={navLinkText}>Projects</Link></li>
-                  <li className={navLinkItem}><Link to="/publications/" className={navLinkText}>Publications</Link></li>
-                  <li className={navLinkItem}><Link to="/datasets/" className={navLinkText}>Datasets</Link></li>
+                  <li className={navLinkItem}><Link to="/teams/" className={navLinkText}>{trans("Teams")}</Link></li>
+                  <li className={navLinkItem}><Link to="/members/" className={navLinkText}>{trans("Members")}</Link></li>
+                  <li className={navLinkItem}><Link to="/projects/" className={navLinkText}>{trans("Projects")}</Link></li>
+                  <li className={navLinkItem}><Link to="/publications/" className={navLinkText}>{trans("Publications")}</Link></li>
+                  <li className={navLinkItem}><Link to="/datasets/" className={navLinkText}>{trans("Datasets")}</Link></li>
                 </ul>
               </li>
               {/* <li className={navLinkItem}>
