@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
-import {Link, Trans, useTranslation} from 'gatsby-plugin-react-i18next';
+// import {Link, Trans, useTranslation} from 'gatsby-plugin-react-i18next';
 
 import Layout from '../../components/layout'
 import Seo from '../../components/seo'
@@ -73,7 +73,7 @@ const DatasetsPage = ({ data }) => {
 }
 
 export const query = graphql`
-    query ($language: String!) {
+    query {
         allDatasetCsv(sort: { fields: { downloads: DESC } }) {
             nodes {
             fields {
@@ -87,15 +87,6 @@ export const query = graphql`
             short_name
             theme
             url
-            }
-        }
-        locales: allLocale(filter: {language: {eq: $language}}) {
-            edges {
-                node {
-                ns
-                data
-                language
-                }
             }
         }
     }

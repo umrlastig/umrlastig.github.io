@@ -94,10 +94,7 @@ exports.sourceNodes = async ({ actions }) => {
   return;
 }
 
-//name	short_name	doi	url	date	project	theme
-const { createRemoteFileNode } = require(`gatsby-source-filesystem`)
 const cheerio = require('cheerio');
-
 
 exports.onCreateNode = async ({
   node, // the node that was just created
@@ -151,7 +148,7 @@ exports.onCreateNode = async ({
             // console.log("M => " + downloads)
             createNodeField({ node, name: 'downloads', value: +downloads })
           } else {
-            console.log("OTHER = " + url)
+            // console.log("OTHER = " + url)
             createNodeField({ node, name: 'downloads', value: Number(0) })
           }
         }

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
-import {Link, Trans, useTranslation} from 'gatsby-plugin-react-i18next';
+// import {Link, Trans, useTranslation} from 'gatsby-plugin-react-i18next';
+import { MdxLink as Link } from "@ericcote/gatsby-theme-i18n"
 
 import Layout from '../../components/layout'
 import Seo from '../../components/seo'
@@ -34,7 +35,7 @@ const MembersPage = ({ data }) => {
 }
 
 export const query = graphql`
-    query ($language: String!) {
+    query {
         allPeopleCsv {
             nodes {
             HAL
@@ -50,15 +51,6 @@ export const query = graphql`
             statut
             team
             webpage
-            }
-        }
-        locales: allLocale(filter: {language: {eq: $language}}) {
-            edges {
-                node {
-                ns
-                data
-                language
-                }
             }
         }
     }

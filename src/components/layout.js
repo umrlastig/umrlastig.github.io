@@ -1,6 +1,8 @@
 import * as React from 'react'
-// import { useStaticQuery, graphql } from 'gatsby'
-import { Link, Trans, useI18next } from 'gatsby-plugin-react-i18next';
+// import { Link, Trans, useI18next } from 'gatsby-plugin-react-i18next';
+import { useLocalization } from "@ericcote/gatsby-theme-i18n"
+import { LocalizedLink as Link } from "@ericcote/gatsby-theme-i18n"
+
 import {
   container,
   // heading,
@@ -16,24 +18,10 @@ import {
   footerColumnContent,
   siteTitle,
 } from './layout.module.css'
-// import { StaticImage } from 'gatsby-plugin-image'
 
 const Layout = ({ children }) => {
-  // const { t } = useTranslation();
-  const { languages, originalPath } = useI18next();
-  // const data = useStaticQuery(graphql`
-  //   query ($language: String!) {
-  //     locales: allLocale(filter: {language: {eq: $language}}) {
-  //       edges {
-  //         node {
-  //           ns
-  //           data
-  //           language
-  //         }
-  //       }
-  //     }
-  //   }
-  // `)
+  // const { languages, originalPath } = useI18next();
+  const { localizedPath, config } = useLocalization();
   return (
     <div className={container}>
       <header className={siteTitle}>
@@ -47,21 +35,21 @@ const Layout = ({ children }) => {
                 </Link>
               </li>
               <li className={navLinkItem}>
-                <Link to="/" className={navLinkText}><Trans>Lab</Trans></Link>
+                <Link to="/" className={navLinkText}>Lab</Link>
                 <ul>
-                  <li className={navLinkItem}><Link to="/presentation/" className={navLinkText}><Trans>Presentation</Trans></Link></li>
-                  <li className={navLinkItem}><Link to="/history/" className={navLinkText}><Trans>History</Trans></Link></li>
-                  <li className={navLinkItem}><Link to="/access/" className={navLinkText}><Trans>Access</Trans></Link></li>
+                  <li className={navLinkItem}><Link to="/presentation/" className={navLinkText}>Presentation</Link></li>
+                  <li className={navLinkItem}><Link to="/history/" className={navLinkText}>History</Link></li>
+                  <li className={navLinkItem}><Link to="/access/" className={navLinkText}>Access</Link></li>
                 </ul>
               </li>
               <li className={navLinkItem}>
-                <Link to="/" className={navLinkText}><Trans>Research</Trans></Link>
+                <Link to="/" className={navLinkText}>Research</Link>
                 <ul>
-                  <li className={navLinkItem}><Link to="/teams/" className={navLinkText}><Trans>Teams</Trans></Link></li>
-                  <li className={navLinkItem}><Link to="/members/" className={navLinkText}><Trans>Members</Trans></Link></li>
-                  <li className={navLinkItem}><Link to="/projects/" className={navLinkText}><Trans>Projects</Trans></Link></li>
-                  <li className={navLinkItem}><Link to="/publications/" className={navLinkText}><Trans>Publications</Trans></Link></li>
-                  <li className={navLinkItem}><Link to="/datasets/" className={navLinkText}><Trans>Datasets</Trans></Link></li>
+                  <li className={navLinkItem}><Link to="/teams/" className={navLinkText}>Teams</Link></li>
+                  <li className={navLinkItem}><Link to="/members/" className={navLinkText}>Members</Link></li>
+                  <li className={navLinkItem}><Link to="/projects/" className={navLinkText}>Projects</Link></li>
+                  <li className={navLinkItem}><Link to="/publications/" className={navLinkText}>Publications</Link></li>
+                  <li className={navLinkItem}><Link to="/datasets/" className={navLinkText}>Datasets</Link></li>
                 </ul>
               </li>
               {/* <li className={navLinkItem}>
@@ -74,8 +62,10 @@ const Layout = ({ children }) => {
                   <img src={'https://languageicon.org/language-icon.svg'} alt="Select Language" style={{ width: "auto", height: 60 }}></img>
                 </Link>
                 <ul> {/* className={navLanguages} */}
-                  {languages.map((lng) => (
-                    <li className={navLinkItem} key={lng}><Link className={navLinkText} to={originalPath} language={lng}>{lng}</Link></li>
+                  {config.map((locale) => (
+                    <li className={navLinkItem} key={locale.code}>
+                      <Link className={navLinkText} to="/" language={locale.code}>{locale.localName}</Link>
+                    </li>
                   ))}
                 </ul>
               </li>
@@ -91,20 +81,20 @@ const Layout = ({ children }) => {
         <div className={footerRow}>
           <section className={footerColumn}>
             <div className={footerColumnContent}>
-              <div><Link to="/access/" className={navLinkText}><Trans>Access</Trans></Link></div>
+              <div><Link to="/access/" className={navLinkText}>Access</Link></div>
             </div>
           </section>
           <section className={footerColumn}>
             <div className={footerColumnContent}>
-              <div><Link to="/legal/" className={navLinkText}><Trans>Legal</Trans></Link></div>
-              <div><a href="https://github.com/umrlastig/lastig-gatsby" className={navLinkText}><Trans>Source</Trans></a></div>
+              <div><Link to="/legal/" className={navLinkText}>Legal</Link></div>
+              <div><a href="https://github.com/umrlastig/lastig-gatsby" className={navLinkText}>Source</a></div>
             </div>
           </section>
           <section className={footerColumn}>
             <div className={footerColumnContent}>
-              <div><a href="https://x.com/LASTIG_lab" className={navLinkText}><Trans>Twitter</Trans></a></div>
-              <div><a href="https://www.youtube.com/channel/UCpVokwKUh9S4pqZ4cd-GTCQ" className={navLinkText}><Trans>Youtube</Trans></a></div>
-              <div><a href="https://github.com/umrlastig" className={navLinkText}><Trans>GitHub</Trans></a></div>
+              <div><a href="https://x.com/LASTIG_lab" className={navLinkText}>Twitter</a></div>
+              <div><a href="https://www.youtube.com/channel/UCpVokwKUh9S4pqZ4cd-GTCQ" className={navLinkText}>Youtube</a></div>
+              <div><a href="https://github.com/umrlastig" className={navLinkText}>GitHub</a></div>
             </div>
           </section>
         </div>
@@ -125,17 +115,5 @@ const Layout = ({ children }) => {
     </div>
   )
 }
-// export const query = graphql`
-//   query ($language: String!) {
-//     locales: allLocale(filter: {language: {eq: $language}}) {
-//       edges {
-//         node {
-//           ns
-//           data
-//           language
-//         }
-//       }
-//     }
-//   }
-// `;
+
 export default Layout

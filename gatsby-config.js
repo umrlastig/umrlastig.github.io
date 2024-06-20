@@ -5,6 +5,7 @@ module.exports = {
   pathPrefix: "/lastig-gatsby",
   siteMetadata: {
     title: "LASTIG Gatsby",
+    siteUrl: "https://www.umr-lastig.fr/"
   },
   plugins: [
     "gatsby-plugin-image",
@@ -53,37 +54,11 @@ module.exports = {
       }
     },
     {
-      resolve: `gatsby-source-filesystem`,
+      resolve: `@ericcote/gatsby-theme-i18n`,
       options: {
-        path: `${__dirname}/locales`,
-        name: `locale`
-      }
-    },
-    {
-      resolve: `gatsby-plugin-react-i18next`,
-      options: {
-        localeJsonSourceName: `locale`, // name given to `gatsby-source-filesystem` plugin.
-        languages: [`en`, `fr`],
-        defaultLanguage: `en`,
-        siteUrl: `https://www.umr-lastig.fr/`,
-        // if you are using trailingSlash gatsby config include it here, as well (the default is 'always')
-        trailingSlash: 'always',
-        // you can pass any i18next options
-        i18nextOptions: {
-          interpolation: {
-            escapeValue: false // not needed for react as it escapes by default
-          },
-          keySeparator: false,
-          nsSeparator: false
-        },
-        pages: [
-          {
-            matchPath: '/:lang?/:uid',
-            getLanguageFromPath: true,
-            excludeLanguages: ['en']
-          },
-        ]
-      }
+        defaultLang: `en`,
+        configPath: require.resolve(`./i18n/config.json`),
+      },
     },
     {
       resolve: 'gatsby-plugin-react-leaflet',
