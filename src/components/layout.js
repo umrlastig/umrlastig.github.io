@@ -50,15 +50,18 @@ const Layout = ({ children }) => {
                   <li className={navLinkItem}><Link to="/teams/" className={navLinkText}>{trans("Teams")}</Link></li>
                   <li className={navLinkItem}><Link to="/members/" className={navLinkText}>{trans("Members")}</Link></li>
                   <li className={navLinkItem}><Link to="/projects/" className={navLinkText}>{trans("Projects")}</Link></li>
+                </ul>
+              </li>
+              <li className={navLinkItem}>
+                <Link to="/" className={navLinkText}>{intl.formatMessage({ id: "Production" })}</Link>
+                <ul>
                   <li className={navLinkItem}><Link to="/publications/" className={navLinkText}>{trans("Publications")}</Link></li>
                   <li className={navLinkItem}><Link to="/datasets/" className={navLinkText}>{trans("Datasets")}</Link></li>
                 </ul>
               </li>
-              {/* <li className={navLinkItem}>
-            <Link to="/positions" className={navLinkText}>
-              Positions
-            </Link>
-          </li> */}
+              <li className={navLinkItem}>
+                <Link to="/join/" className={navLinkText}>{trans("Join")}</Link>
+              </li>
               <li className={navLinkLogo} >
                 <Link to="/" className={navLinkText}>
                   <img src={'https://languageicon.org/language-icon.svg'} alt="Select Language" style={{ width: "auto", height: 60 }}></img>

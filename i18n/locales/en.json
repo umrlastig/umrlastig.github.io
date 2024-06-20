@@ -18,5 +18,21 @@
     "Datasets": "Datasets",
     "inteam": " in the {team} team",
     "Researcher": "Researcher",
-    "Personal webpage": "Personal webpage"
+    "Personal webpage": "Personal webpage",
+    "Production": "Production",
+    "ACL": "International Journals",
+    "ACLN": "National Journals",
+    "ASCL": "Other articles",
+    "PV": "Popularization",
+    "INV": "Invited Talks",
+    "COM": "Communications",
+    "ACTI": "International conferences",
+    "ACTN": "National Conferences",
+    "OS": "Book Chapters",
+    "DO": "Books",
+    "AP": "Reports or preprints",
+    "TH": "Dissertations (PhD theses and habilitations)",
+    "AFF": "Posters",
+    "OTHER": "Other publication",
+    "Join": "Join us"
 }

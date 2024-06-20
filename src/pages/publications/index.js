@@ -3,6 +3,7 @@ import { graphql } from 'gatsby'
 import Layout from '../../components/layout'
 import Seo from '../../components/seo'
 import { doc, list, author, title } from '../../components/publications.module.css'
+import { FormattedMessage, useIntl } from 'react-intl'
 
 const baseImageUrl = "https://www.umr-lastig.fr/strudel/assets/images";
 const icons = {
@@ -23,11 +24,11 @@ function parseCitation(citation) {
     }
     return { "citation": citation, "links": links };
 }
-function pubType(node) {
+export function getPubType(node) {
     if (node.popularLevel === "1") return "PV";
     if (node.popularLevel === "0" && node.docType === "ART" && node.peerReviewing === "0") return "ASCL";
     if (node.popularLevel === "0" && node.docType === "ART" && node.peerReviewing === "1" && node.audience === "2") return "ACL";
-    if (node.popularLevel === "0" && node.docType === "ART" && node.peerReviewing === "1" ) return "ACLN";
+    if (node.popularLevel === "0" && node.docType === "ART" && node.peerReviewing === "1") return "ACLN";
     if (node.popularLevel === "0" && node.docType === "COMM" && node.invitedCommunication === "1") return "INV";
     if (node.popularLevel === "0" && node.docType === "COMM" && node.invitedCommunication === "0" && node.proceedings === "0") return "COM";
     if (node.popularLevel === "0" && node.docType === "COMM" && node.invitedCommunication === "0" && node.proceedings === "1" && node.audience === "2") return "ACTI";
@@ -39,7 +40,7 @@ function pubType(node) {
     if (node.docType === "POSTER") return "AFF";
     return "OTHER";
 }
-function createNodes(nodes, type) {
+export function createNodes(nodes, type) {
     return nodes.filter((node) => node.pubType === type).map((node) => (
         <li key={node.halId} className={doc}>
             <span key={node.halId}>
@@ -52,96 +53,38 @@ function createNodes(nodes, type) {
     ))
 }
 const PublicationsPage = ({ data }) => {
+    const intl = useIntl()
+    function trans(text) { return intl.formatMessage({ id: text }) }
     const nodes = data.allHal.nodes;
-    const classifiedNodes = nodes.map((node) => ({ pubType: pubType(node), ...node }));
+    const classifiedNodes = nodes.map((node) => ({ pubType: getPubType(node), ...node }));
+    function Pub({ pubType }) {
+        const nodes = createNodes(classifiedNodes, pubType)
+        if (nodes.length > 0) {
+            return <div id={`pub${pubType}`}>
+                <h2> {trans(pubType)} </h2>
+                <ol className={list}>{nodes}</ol>
+            </div>;
+        }
+        return null;
+    }
     return (
         <Layout pageTitle="LASTIG Publications">
             <h1>LASTIG Publications</h1>
             <div>
-                <div id="pubACL">
-                    <h2> ACL </h2>
-                    <ol className={list}>
-                        {createNodes(classifiedNodes,"ACL")}
-                    </ol>
-                </div>
-                <div id="pubACLN">
-                    <h2> ACLN </h2>
-                    <ol className={list}>
-                        {createNodes(classifiedNodes,"ACLN")}
-                    </ol>
-                </div>
-                <div id="pubASCL">
-                    <h2> ASCL </h2>
-                    <ol className={list}>
-                        {createNodes(classifiedNodes,"ASCL")}
-                    </ol>
-                </div>
-                <div id="pubPV">
-                    <h2> PV </h2>
-                    <ol className={list}>
-                        {createNodes(classifiedNodes,"PV")}
-                    </ol>
-                </div>
-                <div id="pubINV">
-                    <h2> INV </h2>
-                    <ol className={list}>
-                        {createNodes(classifiedNodes,"INV")}
-                    </ol>
-                </div>
-                <div id="pubCOM">
-                    <h2> COM </h2>
-                    <ol className={list}>
-                        {createNodes(classifiedNodes,"COM")}
-                    </ol>
-                </div>
-                <div id="pubACTI">
-                    <h2> ACTI </h2>
-                    <ol className={list}>
-                        {createNodes(classifiedNodes,"ACTI")}
-                    </ol>
-                </div>
-                <div id="pubACTN">
-                    <h2> ACTN </h2>
-                    <ol className={list}>
-                        {createNodes(classifiedNodes,"ACTN")}
-                    </ol>
-                </div>
-                <div id="pubOS">
-                    <h2> OS </h2>
-                    <ol className={list}>
-                        {createNodes(classifiedNodes,"OS")}
-                    </ol>
-                </div>
-                <div id="pubDO">
-                    <h2> DO </h2>
-                    <ol className={list}>
-                        {createNodes(classifiedNodes,"DO")}
-                    </ol>
-                </div>
-                <div id="pubAP">
-                    <h2> AP </h2>
-                    <ol className={list}>
-                        {createNodes(classifiedNodes,"AP")}
-                    </ol>
-                </div>
-                <div id="pubTH">
-                    <h2> TH </h2>
-                    <ol className={list}>
-                        {createNodes(classifiedNodes,"TH")}
-                    </ol>
-                </div>
-                <div id="pubAFF">
-                    <h2> AFF </h2>
-                    <ol className={list}>
-                        {createNodes(classifiedNodes,"AFF")}
-                    </ol>
-                </div>
-                <div id="pubOTHER">
-                    <h2> OTHER </h2>
-                    <ol className={list}>
-                        {createNodes(classifiedNodes,"OTHER")}
-                    </ol>
-                </div>
+                <Pub pubType="ACL"></Pub>
+                <Pub pubType="ACLN"></Pub>
+                <Pub pubType="ASCL"></Pub>
+                <Pub pubType="PV"></Pub>
+                <Pub pubType="INV"></Pub>
+                <Pub pubType="COM"></Pub>
+                <Pub pubType="ACTI"></Pub>
+                <Pub pubType="ACTN"></Pub>
+                <Pub pubType="OS"></Pub>
+                <Pub pubType="DO"></Pub>
+                <Pub pubType="AP"></Pub>
+                <Pub pubType="TH"></Pub>
+                <Pub pubType="AFF"></Pub>
+                <Pub pubType="OTHER"></Pub>
             </div>
         </Layout>
     )

@@ -31,5 +31,21 @@
     "Lecturer": "Enseignant-e / Chercheur-se",
     "Assistant Professor": "Maître-sse de Conférences",
     "Professor emeritus": "Professeur-e des Universités émérite",
-    "Associated researcher": "Chercheur-e associé-e"
+    "Associated researcher": "Chercheur-e associé-e",
+    "Production": "Production",
+    "ACL": "Journaux internationaux",
+    "ACLN": "Journaux nationaux",
+    "ASCL": "Autres articles",
+    "PV": "Vulgarisation",
+    "INV": "Conférences invitées",
+    "COM": "Communications",
+    "ACTI": "Conférences internationales",
+    "ACTN": "Conférences nationales",
+    "OS": "Chapitres d'ouvrages",
+    "DO": "Directions d'ouvrages",
+    "AP": "Rapports ou pré-publications",
+    "TH": "Dissertations (thèses et HDR)",
+    "AFF": "Posters",
+    "OTHER": "Other publication",
+    "Join": "Nous rejoindre"
 }
