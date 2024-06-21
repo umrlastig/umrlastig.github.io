@@ -5,7 +5,7 @@ import { imgMember, roundedCircle } from '../components/members.module.css'
 import { list } from '../components/publications.module.css'
 
 import { FormattedMessage, useIntl } from 'react-intl'
-import { createNodes, pubType } from '../pages/publications/index'
+import { createNodes, getPubType } from '../pages/publications/index'
 
 const modifyUrl = (url) => {
   if (url.startsWith("/")) return "https://www.umr-lastig.fr" + url;
@@ -23,8 +23,8 @@ export default function MemberPage({ data }) {
     return authIdHalFullName.fullName === `${node.firstname} ${node.lastname}` || authIdHalFullName.idHal === node.HAL;
   }
   const filteredNodes = allNodes.filter((node) => node.authIdHalFullName.some(checkAuthor));
-  const classifiedNodes = filteredNodes.map((node) => ({ pubType: pubType(node), ...node }));
-  console.log(classifiedNodes)
+  const classifiedNodes = filteredNodes.map((node) => ({ pubType: getPubType(node), ...node }));
+  // console.log(classifiedNodes)
   function Pub({ pubType }) {
     const nodes = createNodes(classifiedNodes, pubType)
     if (nodes.length > 0) {

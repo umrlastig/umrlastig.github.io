@@ -16,7 +16,7 @@ const DatasetsPage = ({ data }) => {
         "Tourism": "#de2cfa",
         "Planning": "#dae3fb",
         "Urban": "#ea0604",
-        "LUCC": "#fbc422",
+        "LULC": "#fbc422",
         "Security" :"#0ceee3",
         "Climate": "#f6f812"
     }
