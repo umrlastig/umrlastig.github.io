@@ -1,8 +1,6 @@
 import React from "react"
 import { graphql } from "gatsby"
-import Layout from "../components/layout"
-import { imgMember, roundedCircle } from '../components/members.module.css'
-import { list } from '../components/publications.module.css'
+import Layout from "../components/Layout"
 
 import { FormattedMessage, useIntl } from 'react-intl'
 import { createNodes, getPubType } from '../pages/publications/index'
@@ -30,7 +28,7 @@ export default function MemberPage({ data }) {
     if (nodes.length > 0) {
       return <div id={`pub${pubType}`}>
         <h2> {pubType} </h2>
-        <ol className={list}>{nodes}</ol>
+        <ol >{nodes}</ol>
       </div>;
     }
     return null;
@@ -41,7 +39,7 @@ export default function MemberPage({ data }) {
     <Layout>
       <div>
         <h1>{node.firstname} {node.lastname}</h1>
-        <div className={imgMember}><img className={roundedCircle} src={modifyPhotoUrl(node.photo)} alt={`${node.firstname} ${node.lastname}`} /></div>
+        <div><img src={modifyPhotoUrl(node.photo)} alt={`${node.firstname} ${node.lastname}`} /></div>
         <h2>{trans(node.status)}{
           node.team ? <FormattedMessage
             id="inteam"

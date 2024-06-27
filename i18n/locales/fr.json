@@ -5,7 +5,7 @@
     "Teams": "Équipes",
     "Members": "Membres",
     "Publications": "Publications",
-    "Languages": "Langues",
+    "Language": "Langue",
     "Access": "Accès & Contact",
     "Research": "Recherche",
     "Legal": "Mentions légales",
@@ -33,6 +33,7 @@
     "Professor emeritus": "Professeur-e des Universités émérite",
     "Associated researcher": "Chercheur-e associé-e",
     "Production": "Production",
+    "LASTIG Publications": "Publications du LASTIG",
     "ACL": "Journaux internationaux",
     "ACLN": "Journaux nationaux",
     "ASCL": "Autres articles",
@@ -47,5 +48,6 @@
     "TH": "Dissertations (thèses et HDR)",
     "AFF": "Posters",
     "OTHER": "Other publication",
-    "Join": "Nous rejoindre"
+    "Join": "Nous rejoindre",
+    "Downloads:": "Téléchargements :"
 }

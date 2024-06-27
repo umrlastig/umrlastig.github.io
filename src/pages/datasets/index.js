@@ -1,73 +1,69 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
-// import {Link, Trans, useTranslation} from 'gatsby-plugin-react-i18next';
-
-import Layout from '../../components/layout'
+import Layout from '../../components/Layout'
 import Seo from '../../components/seo'
 import Chart from "chart.js/auto";
 import BarChart from "../../components/BarChart";
 import { useState } from "react";
 import { CategoryScale } from "chart.js";
+import { theme } from '../../components/Layout'
+import { DatasetLegend, DatasetLegendItem, DatasetList, Dataset, DatasetHead, DatasetInfo, Downloads } from '../../components/styles/Datasets.styled'
+import { useIntl } from 'react-intl'
+import { StaticImage } from "gatsby-plugin-image"
 Chart.register(CategoryScale);
+
 const DatasetsPage = ({ data }) => {
-    const colors = {
-        "Agriculture": "#9fd6b6",
-        "DigitalHumanities": "#0c8ae3",
-        "Tourism": "#de2cfa",
-        "Planning": "#dae3fb",
-        "Urban": "#ea0604",
-        "LULC": "#fbc422",
-        "Security" :"#0ceee3",
-        "Climate": "#f6f812"
-    }
-    const [chartData, setChartData] = useState({
-        labels: data.allDatasetCsv.nodes.map((node) => `${node.short_name}`), 
+    const intl = useIntl()
+    function trans(text) { return intl.formatMessage({ id: text }) }
+  
+    const [chartData] = useState({
+        labels: data.allDatasetCsv.nodes.map((node) => `${node.short_name}`),
         datasets: [
-          {
-            label: "Datasets downloads",
-            data: data.allDatasetCsv.nodes.map((node) => node.fields.downloads),
-            backgroundColor: data.allDatasetCsv.nodes.map((node) => colors[node.theme]),
-            // borderColor: "black",
-            // borderWidth: 2
-          }
+            {
+                label: "Datasets downloads",
+                data: data.allDatasetCsv.nodes.map((node) => node.fields.downloads),
+                backgroundColor: data.allDatasetCsv.nodes.map((node) => theme.colors[node.theme]),
+            }
         ]
-      });
+    });
     function Project({ project }) {
-    if (!project) {
-        return null;
-    }
-    return <p>Project: {project}</p>;
+        if (!project) { return <div></div>; }
+        return <div>Project: <b>{project}</b></div>;
     }
     function Doi({ doi }) {
-        if (!doi) {
-            return null;
-        }
-        return <p>DOI: <a href={`https://www.doi.org/${doi}`}>{doi}</a></p>;
-        }
-        
+        if (!doi) { return <div></div>; }
+        return <div><StaticImage style={{width: '2em', height: '2em' }} src={`../../images/DOI_logo.svg`} alt='DOI'/><a href={`https://www.doi.org/${doi}`}>{doi}</a></div>;
+    }
+
     return (
         <Layout pageTitle="LASTIG Datasets">
+            <h1>LASTIG Datasets</h1>
             <div>
+                <DatasetLegend>
+                    {['Agriculture','DigitalHumanities','Tourism','Planning','Urban','LULC','Security','Climate'].map((dataTheme)=>
+                        <DatasetLegendItem $dataTheme = {dataTheme}><b>{dataTheme}</b></DatasetLegendItem>
+                    )}
+                </DatasetLegend>
                 <BarChart chartData={chartData} />
             </div>
-            <div>
+            <DatasetList>
                 {
                     data.allDatasetCsv.nodes.map((node) => (
-                        <article key={node.id}>
-                            <h2>
-                                <a href={node.url}>
-                                    {node.name}
-                                </a>
-                            </h2>
-                            <Project project = {node.project}/>
-                            <p>Theme: {node.theme}</p>
-                            <Doi doi = {node.doi}/>
-                            <p>Url: <a href={node.url}>{node.url}</a></p>
-                            <p>Downloads: {node.fields.downloads}</p>
-                        </article>
+                        <Dataset key={node.id}>
+                            <DatasetHead $dataTheme={node.theme}>
+                                <div><a href={node.url}>{node.name}</a></div>
+                                <div>{node.theme}</div>
+                            </DatasetHead>
+                            <DatasetInfo>
+                            {/* DOI_logo.svg */}
+                                <Doi doi={node.doi} />
+                                <Project project={node.project} />
+                                <Downloads>{trans('Downloads:')} <b>{node.fields.downloads}</b></Downloads>
+                            </DatasetInfo>
+                        </Dataset>
                     ))
                 }
-            </div>
+            </DatasetList>
         </Layout>
     )
 }

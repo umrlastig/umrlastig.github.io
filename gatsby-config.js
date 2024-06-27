@@ -8,6 +8,12 @@ module.exports = {
     siteUrl: "https://www.umr-lastig.fr/"
   },
   plugins: [
+    {
+      resolve: 'gatsby-plugin-manifest',
+      options: {
+        icon: 'src/images/icon.png',
+      },
+    },
     "gatsby-plugin-image",
     "gatsby-plugin-sharp",
     {
@@ -71,6 +77,7 @@ module.exports = {
       options: {
         linkStyles: true // (default: true) Enable/disable loading stylesheets via CDN
       }
-    }
+    },
+    `gatsby-plugin-styled-components`
   ],
 };

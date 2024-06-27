@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
-import Layout from '../../components/layout'
+import Layout from '../../components/Layout'
 import Seo from '../../components/seo'
-import { doc, list, author, title } from '../../components/publications.module.css'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { useIntl } from 'react-intl'
+import { Publication } from '../../components/styles/Publications.styled'
 
 const baseImageUrl = "https://www.umr-lastig.fr/strudel/assets/images";
 const icons = {
@@ -41,15 +41,16 @@ export function getPubType(node) {
     return "OTHER";
 }
 export function createNodes(nodes, type) {
+    function pubKey(node) {console.log(`${node.id}-${type}`);return `${node.id}-${type}`};
     return nodes.filter((node) => node.pubType === type).map((node) => (
-        <li key={node.halId} className={doc}>
-            <span key={node.halId}>
-                {node.authIdHalFullName.map((auth) => <a href={auth["idHal"] ? `https://cv.archives-ouvertes.fr/${auth["idHal"]}` : null} className={author}>{auth["fullName"]}</a>)}
+        <Publication key={pubKey(node)}>
+            <span key={`${node.id}-authors`}>
+                {node.authIdHalFullName.map((auth) => <a href={auth["idHal"] ? `https://cv.archives-ouvertes.fr/${auth["idHal"]}` : null}>{auth["fullName"]}</a>)}
             </span>
-            <a href={node.fileMain} key={node.halId} className={title}>{node.title}</a>
-            <span key={node.halId} dangerouslySetInnerHTML={{ __html: parseCitation(node.citationRef)["citation"] }} >
+            <a href={node.fileMain} key={`${node.id}-title`}>{node.title}</a>
+            <span key={`${node.id}-citation`} dangerouslySetInnerHTML={{ __html: parseCitation(node.citationRef)["citation"] }} >
             </span>
-        </li>
+        </Publication>
     ))
 }
 const PublicationsPage = ({ data }) => {
@@ -60,31 +61,33 @@ const PublicationsPage = ({ data }) => {
     function Pub({ pubType }) {
         const nodes = createNodes(classifiedNodes, pubType)
         if (nodes.length > 0) {
-            return <div id={`pub${pubType}`}>
-                <h2> {trans(pubType)} </h2>
-                <ol className={list}>{nodes}</ol>
-            </div>;
+            return (
+                <div key={`pub${pubType}`}>
+                    <h2> {trans(pubType)} </h2>
+                    <ol>{nodes}</ol>
+                </div>
+            );
         }
         return null;
     }
     return (
         <Layout pageTitle="LASTIG Publications">
-            <h1>LASTIG Publications</h1>
+            <h1>{trans('LASTIG Publications')}</h1>
             <div>
-                <Pub pubType="ACL"></Pub>
-                <Pub pubType="ACLN"></Pub>
-                <Pub pubType="ASCL"></Pub>
-                <Pub pubType="PV"></Pub>
-                <Pub pubType="INV"></Pub>
-                <Pub pubType="COM"></Pub>
-                <Pub pubType="ACTI"></Pub>
-                <Pub pubType="ACTN"></Pub>
-                <Pub pubType="OS"></Pub>
-                <Pub pubType="DO"></Pub>
-                <Pub pubType="AP"></Pub>
-                <Pub pubType="TH"></Pub>
-                <Pub pubType="AFF"></Pub>
-                <Pub pubType="OTHER"></Pub>
+                <Pub pubType="ACL" key="ACL"></Pub>
+                <Pub pubType="ACLN" key="ACLN"></Pub>
+                <Pub pubType="ASCL" key="ASCL"></Pub>
+                <Pub pubType="PV" key="PV"></Pub>
+                <Pub pubType="INV" key="INV"></Pub>
+                <Pub pubType="COM" key="COM"></Pub>
+                <Pub pubType="ACTI" key="ACTI"></Pub>
+                <Pub pubType="ACTN" key="ACTN"></Pub>
+                <Pub pubType="OS" key="OS"></Pub>
+                <Pub pubType="DO" key="DO"></Pub>
+                <Pub pubType="AP" key="AP"></Pub>
+                <Pub pubType="TH" key="TH"></Pub>
+                <Pub pubType="AFF" key="AFF"></Pub>
+                <Pub pubType="OTHER" key="OTHER"></Pub>
             </div>
         </Layout>
     )

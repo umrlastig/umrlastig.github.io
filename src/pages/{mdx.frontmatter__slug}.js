@@ -1,35 +1,22 @@
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import { MDXProvider } from "@mdx-js/react"
-import Layout from '../components/layout'
+import Layout from '../components/Layout'
 import Seo from '../components/seo'
-import { useLocalization } from "@ericcote/gatsby-theme-i18n"
 import { MdxLink as Link } from "@ericcote/gatsby-theme-i18n"
-
-import Slider from "react-slick"
-import "slick-carousel/slick/slick.css"
-import "slick-carousel/slick/slick-theme.css"
-import '../components/layout.module.css'
-import Org from "../images/orga_lastig_12mois.svg";
+// import Org from "../images/orga_lastig_12mois.svg";
 import Projects from "../images/projects.svg";
-import LastigMapContainer from "../components/lastigMapComponent.js"
-import {image} from '../../src/components/layout.module.css'
+import LastigMapContainer from "../components/lastigMapComponent"
+import { ContainerWithSlider } from '../components/ContainerWithSlider'
+import { Columns,Column2,Column4 } from '../components/styles/ContainerWithSlider.styled'
+import { News } from '../components/News'
+import { StaticImage } from 'gatsby-plugin-image'
 
+const Org = () => <div><StaticImage src={`../images/orga_lastig_12mois.svg`} alt='LASTIG organisation' /></div>
 const Page = ({ data, children }) => {
-  const { locale } = useLocalization()
-  // console.log(locale)
-  // console.log(data)
-  // console.log(data.mdx.frontmatter.slug + " = > " + data.mdx.frontmatter.title + " with "+ locale)
-  const shortcodes = { Link, Slider, Projects, LastigMapContainer,
-    OrgWithProps: () => <Org className={image}/>,
-    News: () =>
-    <div>
-      {
-          data.allNewsCsv.nodes.map((node) => (
-              <article key={node.id} dangerouslySetInnerHTML={{__html: `<b>${node.date} [${node.team}]:</b> ${(locale === 'en')?node.texten:node.textfr}`}}></article>
-          ))
-      }
-    </div>
+  const shortcodes = {
+    Link, ContainerWithSlider, Columns,Column2,Column4, Projects, LastigMapContainer, Org,
+    News: () => <News data = {data}/>
    } // Provide common components here  
   return (
     <Layout pageTitle={data.mdx.frontmatter.title}>

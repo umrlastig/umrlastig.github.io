@@ -5,7 +5,7 @@
     "Teams": "Teams",
     "Members": "Members",
     "Publications": "Publications",
-    "Languages": "Languages",
+    "Language": "Language",
     "Access": "Access & Contact",
     "Research": "Research",
     "Legal": "Legal",
@@ -20,6 +20,7 @@
     "Researcher": "Researcher",
     "Personal webpage": "Personal webpage",
     "Production": "Production",
+    "LASTIG Publications": "LASTIG Publications",
     "ACL": "International Journals",
     "ACLN": "National Journals",
     "ASCL": "Other articles",
@@ -34,5 +35,7 @@
     "TH": "Dissertations (PhD theses and habilitations)",
     "AFF": "Posters",
     "OTHER": "Other publication",
-    "Join": "Join us"
+    "Join": "Join us",
+    "PhD student": "PhD student",
+    "Downloads:": "Downloads:"
 }
