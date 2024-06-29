@@ -4,7 +4,7 @@ import Layout from '../../components/Layout'
 import Seo from '../../components/seo'
 import { useIntl } from 'react-intl'
 import { PublicationListOfLists } from '../../components/styles/Publications.styled'
-import { getPubType } from './util'
+import { getPubType } from '../../util'
 import { CreateNodes } from '../../components/CreateNodes'
 
 const PublicationsPage = ({ data }) => {

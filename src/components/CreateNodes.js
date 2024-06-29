@@ -44,7 +44,7 @@ function Repo(repo) {
 }
 
 export const CreateNodes = ({nodes, type}) => {
-    function pubKey(node) { console.log(`${node.id}-${type}`); return `${node.id}-${type}` };
+    function pubKey(node) { return `${node.id}-${type}` };
     return (
         <PublicationList>
             {nodes.map((node) => (

@@ -4,7 +4,7 @@ import Layout from "../components/Layout"
 
 import { FormattedMessage, useIntl } from 'react-intl'
 
-import { getPubType } from '../pages/publications/util'
+import { getPubType } from '../util'
 import { CreateNodes } from '../components/CreateNodes'
 import { Icon } from '@iconify-icon/react';
 
