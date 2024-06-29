@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { ThemeProvider } from 'styled-components'
-import { useLocalization } from "@ericcote/gatsby-theme-i18n"
 import { LocalizedLink as Link } from "@ericcote/gatsby-theme-i18n"
 import { useIntl } from "react-intl"
 import {Nav} from './Nav'
@@ -13,35 +12,11 @@ import {VerticalContainer, HorizontalContainer, MainContainer, HorizontalCentere
 import {Footer} from './styles/Footer.styled'
 import {LastigLogo} from './styles/LastigLogo.styled'
 import {Button} from './styles/Dropdown.styled'
-
-export const theme = {
-  colors: {
-    header: '#337ab7',
-    highlight: '#2269a6',
-    headerText: '#ffffff',
-    ACTE: '#e41a1ccc',
-    GEOVIS: '#377eb8cc',
-    MEIG: '#4daf4acc',
-    STRUDEL: '#984ea3cc',
-    LASTIG: '#337ab7cc',
-    Agriculture: "#9fd6b6",
-    DigitalHumanities: "#0c8ae3",
-    Tourism: "#de2cfa",
-    Planning: "#dae3fb",
-    Urban: "#ea0604",
-    LULC: "#fbc422",
-    Security :"#0ceee3",
-    Climate: "#f6f812"
-  }
-}
+import {theme} from '../theme'
 
 const Layout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false)
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen)
-  }
-  const { /*localizedPath,*/ config } = useLocalization();
+  const toggleMenu = () => { setIsOpen(!isOpen) }
   const intl = useIntl()
   function trans(text) { return intl.formatMessage({ id: text }) }
   return (

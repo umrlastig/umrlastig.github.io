@@ -1,7 +1,17 @@
 import styled from "styled-components";
 
-export const Publication = styled.li`
+export const PublicationListOfLists = styled.div`
+    margin: 2rem;
+    margin: 2rem;
+`
+
+export const PublicationList = styled.table`
+  width: 100%;
+`
+
+export const Publication = styled.tr`
     margin: 1rem;
+    width: 100%;
     span {
         a {
             color: #bfbfbf;
@@ -19,6 +29,28 @@ export const Publication = styled.li`
         text-decoration: none;
         &:after {
             content: ". ";
+        }
+    }
+`
+export const ImageLink = styled.div`
+    width: 32px;
+    height: 32px;
+    display: block;
+    float:right;
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+    button {
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        border: none;
+    }
+    iconify-icon {
+        svg {
+            width: 2em;
+            height: 2em;
         }
     }
 `

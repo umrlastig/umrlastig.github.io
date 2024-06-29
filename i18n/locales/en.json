@@ -16,7 +16,7 @@
     "LegalNotice": "Legal Notice",
     "Projects": "Projects",
     "Datasets": "Datasets",
-    "inteam": " in the {team} team",
+    "inteam": "{team} team",
     "Researcher": "Researcher",
     "Personal webpage": "Personal webpage",
     "Production": "Production",
@@ -37,5 +37,8 @@
     "OTHER": "Other publication",
     "Join": "Join us",
     "PhD student": "PhD student",
-    "Downloads:": "Downloads:"
+    "Downloads:": "Downloads:",
+    "PhD": "PhD",
+    "postdoc": "Post-Doc",
+    "Internship": "Internship"
 }

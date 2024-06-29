@@ -21,7 +21,7 @@
     "Projects" : "Projets",
     "Find the LASTIG lab": "Comment nous trouver",
     "History of LASTIG lab": "Historique du LASTIG",
-    "inteam": " dans l'équipe {team}",
+    "inteam": "Équipe {team}",
     "Researcher": "Chercheur-se",
     "Personal webpage": "Page personnelle",
     "PhD student": "Doctorant-e",
@@ -49,5 +49,8 @@
     "AFF": "Posters",
     "OTHER": "Other publication",
     "Join": "Nous rejoindre",
-    "Downloads:": "Téléchargements :"
+    "Downloads:": "Téléchargements :",
+    "PhD": "Doctorat",
+    "postdoc": "Post-Doc",
+    "Internship": "Stage"
 }

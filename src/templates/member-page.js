@@ -3,7 +3,12 @@ import { graphql } from "gatsby"
 import Layout from "../components/Layout"
 
 import { FormattedMessage, useIntl } from 'react-intl'
-import { createNodes, getPubType } from '../pages/publications/index'
+
+import { getPubType } from '../pages/publications/util'
+import { CreateNodes } from '../components/CreateNodes'
+import { Icon } from '@iconify-icon/react';
+
+import {StyledMemberPage} from '../components/styles/MemberPage.styled'
 
 const modifyUrl = (url) => {
   if (url.startsWith("/")) return "https://www.umr-lastig.fr" + url;
@@ -22,13 +27,12 @@ export default function MemberPage({ data }) {
   }
   const filteredNodes = allNodes.filter((node) => node.authIdHalFullName.some(checkAuthor));
   const classifiedNodes = filteredNodes.map((node) => ({ pubType: getPubType(node), ...node }));
-  // console.log(classifiedNodes)
   function Pub({ pubType }) {
-    const nodes = createNodes(classifiedNodes, pubType)
-    if (nodes.length > 0) {
+    const filteredNodes = classifiedNodes.filter((node) => node.pubType === pubType);
+    if (filteredNodes.length > 0) {
       return <div id={`pub${pubType}`}>
         <h2> {pubType} </h2>
-        <ol >{nodes}</ol>
+        <CreateNodes nodes={filteredNodes} type={pubType}/>
       </div>;
     }
     return null;
@@ -37,18 +41,13 @@ export default function MemberPage({ data }) {
   function trans(text) { return intl.formatMessage({ id: text }) }
   return (
     <Layout>
-      <div>
+      <StyledMemberPage>
         <h1>{node.firstname} {node.lastname}</h1>
         <div><img src={modifyPhotoUrl(node.photo)} alt={`${node.firstname} ${node.lastname}`} /></div>
-        <h2>{trans(node.status)}{
-          node.team ? <FormattedMessage
-            id="inteam"
-            defaultMessage=" in the {team} team"
-            values={{ team: node.team }}
-          /> : null
-        }</h2>
+        <h2>{trans(node.status)}</h2>
+        {node.team && <h3><FormattedMessage id="inteam" defaultMessage=" in the {team} team" values={{ team: node.team }}/></h3>}
         <a href={modifyUrl(node.webpage)}>{trans("Personal webpage")}</a>
-        <p>HAL-id: {node.HAL}</p>
+        {node.HAL && <p><Icon icon="simple-icons:hal" width="2em" height="2em" /> <a href={`https://cv.hal.science/${node.HAL}`}>{node.HAL}</a></p>}
         <h1>Publications</h1>
         <div>
           <Pub pubType="ACL"></Pub>
@@ -66,7 +65,7 @@ export default function MemberPage({ data }) {
           <Pub pubType="AFF"></Pub>
           <Pub pubType="OTHER"></Pub>
         </div>
-      </div>
+      </StyledMemberPage>
     </Layout>
   )
 }
@@ -107,6 +106,12 @@ export const query = graphql`
             peerReviewing
             researchData
             audience
+            doiId
+            softCodeRepository
+            arxivId
+            anrProjectTitle
+            europeanProjectTitle
+            publicationDate
         }
     }
   }

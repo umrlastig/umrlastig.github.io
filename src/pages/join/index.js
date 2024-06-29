@@ -8,14 +8,10 @@ import {Position} from '../../components/styles/Positions.styles'
 
 function createPosition(id, type, team, pdf, text) {
     return (
-        <Position>
-            <span key={`${id}-position`}>
-                {type}
-            </span>
+        <Position $team = {team}>
+            <span key={`${id}-position`}><b>{type}</b></span>
             <a href={pdf} key={`${id}-title`}>{text}</a>
-            <span key={`${id}-team`}>
-                {team}
-            </span>
+            <span key={`${id}-team`}><b>{team}</b></span>
         </Position>
     )
 }
@@ -31,7 +27,7 @@ const JoinPage = ({ data }) => {
             <ul>
                 {
                     nodes.map((node) => ( 
-                        createPosition(node.id, node.type, node.team, (locale === 'en') ? node.pdf_en : node.pdf_fr, (locale === 'en') ? node.title : node.titre)
+                        createPosition(node.id, trans(node.type), node.team, (locale === 'en') ? node.pdf_en : node.pdf_fr, (locale === 'en') ? node.title : node.titre)
                         // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
                     ))
                 }

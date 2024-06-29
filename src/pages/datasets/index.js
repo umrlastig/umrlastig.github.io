@@ -6,10 +6,11 @@ import Chart from "chart.js/auto";
 import BarChart from "../../components/BarChart";
 import { useState } from "react";
 import { CategoryScale } from "chart.js";
-import { theme } from '../../components/Layout'
+import { theme } from '../../theme'
 import { DatasetLegend, DatasetLegendItem, DatasetList, Dataset, DatasetHead, DatasetInfo, Downloads } from '../../components/styles/Datasets.styled'
 import { useIntl } from 'react-intl'
-import { StaticImage } from "gatsby-plugin-image"
+import { Icon } from '@iconify-icon/react';
+
 Chart.register(CategoryScale);
 
 const DatasetsPage = ({ data }) => {
@@ -32,7 +33,7 @@ const DatasetsPage = ({ data }) => {
     }
     function Doi({ doi }) {
         if (!doi) { return <div></div>; }
-        return <div><StaticImage style={{width: '2em', height: '2em' }} src={`../../images/DOI_logo.svg`} alt='DOI'/><a href={`https://www.doi.org/${doi}`}>{doi}</a></div>;
+        return <div><a href={`https://www.doi.org/${doi}`}><Icon icon="academicons:doi" width="2em" height="2em" />{doi}</a></div>;
     }
 
     return (
