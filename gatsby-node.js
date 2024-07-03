@@ -30,10 +30,34 @@ exports.createPages = async function ({ actions, graphql }) {
       context: { firstName: firstName, lastName: lastName },
     })
   })
+  const teams = ['STRUDEL','ACTE','MEIG','GEOVIS']
+  teams.forEach((team) => {
+    console.log(`Team ${team}`)
+    actions.createPage({
+      path: `/teams/${team.toLowerCase()}/publications`,
+      component: require.resolve(`./src/templates/publications.js`),
+      context: { team: [team] },
+    })
+    actions.createPage({
+      path: `/teams/${team.toLowerCase()}/datasets`,
+      component: require.resolve(`./src/templates/datasets.js`),
+      context: { team: [team] },
+    })
+  })
+  actions.createPage({
+    path: `/publications`,
+    component: require.resolve(`./src/templates/publications.js`),
+    context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
+  })
+  actions.createPage({
+    path: `/datasets`,
+    component: require.resolve(`./src/templates/datasets.js`),
+    context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
+  })
 }
-const axios = require('axios');
-const crypto = require('crypto');
-var qs = require('qs');
+const axios = require('axios')
+const crypto = require('crypto')
+var qs = require('qs')
 // const ign_proxy = {
 //   protocol: 'http',
 //   host: 'proxy.ign.fr',
@@ -63,6 +87,7 @@ exports.sourceNodes = async ({ actions }) => {
   await axios.get(`https://api.archives-ouvertes.fr/search/?${params}`,
     proxy = ign_proxy).then(res => {
       console.log(`Found ${res.data.response.docs.length} publications`);
+
       // map into these results and create nodes
       res.data.response.docs.map((doc, i) => {
         // Create your node object
@@ -70,7 +95,6 @@ exports.sourceNodes = async ({ actions }) => {
           const [_idHal, _fullName] = authIdHalFullName.split('_FacetSep_');
           return { fullName: _fullName, idHal: _idHal }
         });
-        // console.log(authors);
         const docNode = {
           // Required fields
           id: `${i}`,
@@ -117,10 +141,11 @@ exports.sourceNodes = async ({ actions }) => {
 }
 
 const cheerio = require('cheerio');
-
+var first = true
 exports.onCreateNode = async ({
   node, // the node that was just created
-  actions: { createNodeField }
+  actions: { createNodeField },
+  getNodesByType
 }) => {
   if (node.internal.type === `DatasetCsv`) {
     var url = node.url;
@@ -171,15 +196,96 @@ exports.onCreateNode = async ({
         }
       }
     }
+  } else {
+    if (node.internal.type === `HAL`) {
+      const peopleData = getNodesByType("PeopleCsv")
+      // Identify the teams
+      if (first) {
+        const ignoreNoise = str => str.replaceAll("-", " ").replaceAll(".", "")
+        const removeAccents = str => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        const clean = str => ignoreNoise(removeAccents(str))
+        peopleData.forEach((n) => console.log(clean(`${n.firstname} ${n.lastname}`)))
+        first = false
+      }
+      function match(n, a) {
+        function getInitials(name) {
+          let words = name.split(' ');
+          let initials = words.map(word => word.charAt(0));
+          return initials.join('-').toUpperCase();
+        }
+        const ignoreNoise = str => str.replaceAll("-", " ").replaceAll(".", "")
+        const removeAccents = str => str.normalize('NFD').replaceAll(/[\u0300-\u036f]/g, '')
+        const clean = str => ignoreNoise(removeAccents(str))
+        const fullName = clean(a.fullName)
+        return (
+          (n.HAL && (a.idHal === n.HAL)) ||
+          fullName.includes(clean(`${n.firstname} ${n.lastname}`)) ||
+          fullName.includes(clean(`${n.alt_firstname} ${n.lastname}`)) ||
+          fullName.includes(clean(`${getInitials(n.firstname)} ${n.lastname}`)) ||
+          fullName.includes(clean(`${n.lastname} ${n.firstname}`))
+        )
+      }
+      const teams = Array.from(new Set(node.authIdHalFullName.flatMap((author) => {
+        const people = peopleData.filter((peopleNode) => match(peopleNode, author));
+        return people.map((p) => p.team);
+      })))
+      if (teams.length == 0) console.log(node.halId + " => " + teams + " => " + node.authIdHalFullName.map((a) => a.fullName).join(', '));
+      createNodeField({ node, name: 'teams', value: teams })
+    }
   }
 }
 
-// exports.createSchemaCustomization = ({ actions }) => {
-//   const { createTypes } = actions
-
-//   createTypes(`
-//     type DatasetCsv implements Node {
-//       downloads: String!
-//     }
-//   `)
-// }
+exports.createSchemaCustomization = ({ actions, schema }) => {
+  const { createFieldExtension, createTypes } = actions
+  createFieldExtension({
+    name: `defaultArray`,
+    extend() {
+      return {
+        resolve(source, args, context, info) {
+          if (source[info.fieldName] == null) {
+            return []
+          }
+          return source[info.fieldName]
+        },
+      }
+    },
+  })
+  const typeDefs = [`
+    type Site implements Node {
+      siteMetadata: SiteMetadata
+    }
+    type SiteMetadata {
+      menuLinks: [MenuLinks]!
+      menuSTRUDEL: [MenuLinks]!
+    }
+    type MenuLinks {
+      name: String!
+      link: String!
+      subMenu: [SubMenu] @defaultArray
+    }
+    type SubMenu {
+      name: String
+      link: String
+    }
+  `,
+    schema.buildObjectType({
+      name: 'DatasetCsv',
+      interfaces: ['Node'],
+      extensions: {
+        infer: true,
+      },
+      fields: {
+        teams: {
+          type: '[String]',
+          resolve: (src, args, context, info) => {
+            const { fieldName } = info
+            const content = src[fieldName]
+            const teams = content.split(',').map(str => str.trim())
+            return teams
+          }
+        }
+      }
+    })
+  ]
+  createTypes(typeDefs)
+}

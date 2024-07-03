@@ -5,7 +5,123 @@ module.exports = {
   pathPrefix: "/lastig-gatsby",
   siteMetadata: {
     title: "LASTIG Gatsby",
-    siteUrl: "https://www.umr-lastig.fr/"
+    siteUrl: "https://www.umr-lastig.fr/",
+    menuLinks: [
+      {
+        name: `Lab`,
+        link: `/`,
+        subMenu: [
+          {
+            name: `Presentation`,
+            link: `/presentation`,
+          },
+          {
+            name: `History`,
+            link: `/history`,
+          },
+          {
+            name: `Access`,
+            link: `/access`,
+          }
+        ]
+      },
+      {
+        name: `Research`,
+        link: `/`,
+        subMenu: [
+          {
+            name: `Teams`,
+            link: `/teams`,
+            subMenu: [
+              {
+                name: `ACTE`,
+                link: `/teams/acte`,
+              },
+              {
+                name: `GEOVIS`,
+                link: `/teams/geovis`,
+              },
+              {
+                name: `MEIG`,
+                link: `/teams/meig`,
+              },
+              {
+                name: `STRUDEL`,
+                link: `/teams/strudel`,
+              }
+            ]
+          },
+          {
+            name: `Members`,
+            link: `/members`,
+          },
+          {
+            name: `Projects`,
+            link: `/projects`,
+          }
+        ]
+      },
+      {
+        name: `Production`,
+        link: `/`,
+        subMenu: [
+          {
+            name: `Publications`,
+            link: `/publications`,
+          },
+          {
+            name: `Datasets`,
+            link: `/datasets`,
+          },
+          {
+            name: `Projects`,
+            link: `/projects`,
+          }
+        ]
+      },
+      {
+        name: `Join`,
+        link: `/join`,
+      }
+    ],
+    menuSTRUDEL: [
+      {
+        name: `Presentation`,
+        link: `/teams/strudel`,
+      },
+      {
+        name: `Research`,
+        link: `/`,
+        subMenu: [
+          {
+            name: `Members`,
+            link: `/members`,
+          },
+          {
+            name: `Projects`,
+            link: `/projects`,
+          }
+        ]
+      },
+      {
+        name: `Production`,
+        link: `/`,
+        subMenu: [
+          {
+            name: `Publications`,
+            link: `/teams/strudel/publications`,
+          },
+          {
+            name: `Datasets`,
+            link: `/teams/strudel/datasets`,
+          },
+          {
+            name: `Projects`,
+            link: `/teams/strudel/projects`,
+          }
+        ]
+      },
+    ],
   },
   plugins: [
     {

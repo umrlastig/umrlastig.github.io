@@ -11,12 +11,17 @@ import { ContainerWithSlider } from '../components/ContainerWithSlider'
 import { Columns,Column2,Column4 } from '../components/styles/ContainerWithSlider.styled'
 import { News } from '../components/News'
 import { StaticImage } from 'gatsby-plugin-image'
+import { NavBar } from '../components/NavBar'
 
 const Org = () => <div><StaticImage src={`../images/orga_lastig_12mois.svg`} alt='LASTIG organisation' /></div>
+function LocalMenu(title, slug, menus) {
+  return ( <NavBar title={title} menus = {menus} team="STRUDEL"/> );
+}
 const Page = ({ data, children }) => {
   const shortcodes = {
     Link, ContainerWithSlider, Columns,Column2,Column4, Projects, LastigMapContainer, Org,
-    News: () => <News data = {data}/>
+    News: () => <News data = {data}/>,
+    LocalMenu: () => LocalMenu(data.mdx.frontmatter.title,data.mdx.frontmatter.slug,data.site.siteMetadata.menuSTRUDEL)
    } // Provide common components here  
   return (
     <Layout pageTitle={data.mdx.frontmatter.title}>
@@ -46,6 +51,30 @@ export const query = graphql`
         perso
         textfr
         texten
+      }
+    }
+    site {
+      siteMetadata {
+        menuLinks {
+          link
+          name
+          subMenu {
+            link
+            name
+            subMenu {
+              link
+              name
+            }
+          }
+        }
+        menuSTRUDEL {
+          link
+          name
+          subMenu {
+            link
+            name
+          }
+        }
       }
     }
   }

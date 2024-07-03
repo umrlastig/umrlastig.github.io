@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useStaticQuery, graphql } from "gatsby"
 import { ThemeProvider } from 'styled-components'
 import { LocalizedLink as Link } from "@ericcote/gatsby-theme-i18n"
 import { useIntl } from "react-intl"
@@ -13,17 +14,38 @@ import {Footer} from './styles/Footer.styled'
 import {LastigLogo} from './styles/LastigLogo.styled'
 import {Button} from './styles/Dropdown.styled'
 import {theme} from '../theme'
+import { NavBar } from './NavBar'
 
 const Layout = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const toggleMenu = () => { setIsOpen(!isOpen) }
+  // const [isOpen, setIsOpen] = useState(false)
+  // const toggleMenu = () => { setIsOpen(!isOpen) }
   const intl = useIntl()
   function trans(text) { return intl.formatMessage({ id: text }) }
+  const data = useStaticQuery(graphql`
+    query MenuQuery {
+      site {
+        siteMetadata {
+          menuLinks {
+            link
+            name
+            subMenu {
+              link
+              name
+              subMenu {
+                link
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  `)
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />
       <VerticalContainer>
-        <Header>
+        {/* <Header>
           <HorizontalContainer>
             <LastigLogo to="/">
               <img src={'https://www.umr-lastig.fr/img/lastig1.svg'} alt="LASTIG LOGO" style={{ width: "auto", height: 60 }}></img>
@@ -36,7 +58,8 @@ const Layout = ({ children }) => {
             </VerticalContainer>
             <Locale />
           </HorizontalContainer>
-        </Header>
+        </Header> */}
+        <NavBar title="LASTIG" menus = {data.site.siteMetadata.menuLinks} lastigLogo="true" useLocale="true"/>
         <main>
           <MainContainer>
             {children}

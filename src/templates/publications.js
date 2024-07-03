@@ -1,34 +1,38 @@
 import React from 'react'
 import { graphql } from 'gatsby'
-import Layout from '../../components/Layout'
-import Seo from '../../components/seo'
+import Layout from '../components/Layout'
+import Seo from '../components/seo'
 import { useIntl } from 'react-intl'
-import { PublicationListOfLists } from '../../components/styles/Publications.styled'
-import { getPubType } from '../../util'
-import { CreateNodes } from '../../components/CreateNodes'
+import { PublicationListOfLists } from '../components/styles/Publications.styled'
+import { getPubType } from '../util'
+import { CreateNodes } from '../components/CreateNodes'
+import { NavBar } from '../components/NavBar'
+import {theme} from '../theme'
 
-const PublicationsPage = ({ data }) => {
+export default function PublicationsPage({ data, pageContext }) {
+    const team = pageContext.team
+    const isLastigPage = (team.length > 1)
+    console.log(`Publication PAGE : ${team} => ${isLastigPage}`)
     const intl = useIntl()
     function trans(text) { return intl.formatMessage({ id: text }) }
     const nodes = data.allHal.nodes;
     const classifiedNodes = nodes.map((node) => ({ pubType: getPubType(node), ...node }));
     function Pub({ pubType }) {
         const filteredNodes = classifiedNodes.filter((node) => node.pubType === pubType);
-        // const nodes = createNodes(classifiedNodes, pubType)
         if (filteredNodes.length > 0) {
             return (
                 <div key={`pub${pubType}`}>
                     <h2> {trans(pubType)} </h2>
-                    {/* <PublicationList>{nodes}</PublicationList> */}
-                    <CreateNodes nodes = {filteredNodes} type={pubType}/>
+                    <CreateNodes nodes = {filteredNodes} type={pubType} theme={theme}/>
                 </div>
             );
         }
         return null;
     }
     return (
-        <Layout pageTitle="LASTIG Publications">
-            <h1>{trans('LASTIG Publications')}</h1>
+        <Layout pageTitle={`${isLastigPage ? 'LASTIG' : pageContext.team} Publications`}>
+            <h1>{trans(`${isLastigPage ? 'LASTIG' : pageContext.team} Publications`)}</h1>
+            {(!isLastigPage) && <NavBar title={team} menus = {data.site.siteMetadata.menuSTRUDEL} team={team}/>}
             <PublicationListOfLists>
                 <Pub pubType="ACL" key="ACL"></Pub>
                 <Pub pubType="ACLN" key="ACLN"></Pub>
@@ -50,8 +54,8 @@ const PublicationsPage = ({ data }) => {
 }
 
 export const query = graphql`
-    query {
-        allHal {
+    query ($team: [String]) {
+        allHal(filter: { fields: { teams: { in: $team } } }) {
             nodes {
                 halId
                 id
@@ -78,11 +82,36 @@ export const query = graphql`
                 anrProjectTitle
                 europeanProjectTitle
                 publicationDate
+                fields {
+                    teams
+                }
+            }
+        }
+        site {
+            siteMetadata {
+                menuLinks {
+                    link
+                    name
+                    subMenu {
+                        link
+                        name
+                        subMenu {
+                            link
+                            name
+                        }
+                    }
+                }
+                menuSTRUDEL {
+                    link
+                    name
+                    subMenu {
+                        link
+                        name
+                    }
+                }
             }
         }
     }
 `
 
-export const Head = () => <Seo title="LASTIG Publications" />
-
-export default PublicationsPage
+export const Head = ({pageContext}) => <Seo title={`${pageContext.team.length > 1 ? 'LASTIG' : pageContext.team} Publications`} />

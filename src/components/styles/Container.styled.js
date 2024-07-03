@@ -13,11 +13,11 @@ export const MainContainer = styled.div`
     // flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    svg {
-        margin: 0 auto 0 auto;
-        width: 50%;
-        height: 50%;
-    }
+    // svg {
+    //     margin: 0 auto 0 auto;
+    //     width: 50%;
+    //     height: 50%;
+    // }
 `;
 
 export const HorizontalContainer = styled.div`
