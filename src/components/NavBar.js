@@ -25,8 +25,9 @@ export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
         if (menu.subMenu && menu.subMenu.length > 0) {
             const subMenuItems = menu.subMenu.map((submenu) => createMenuItem(submenu))
             if (topMenu) {
+                console.log(`TOP MENU = ${team}-${menu.link}-${menu.name}`)
                 return (
-                    <NavMenu team={team} align="center" onClick={(e) => {
+                    <NavMenu key={`${team}-${menu.link}-${menu.name}`} team={team} align="center" onClick={(e) => {
                         e.stopPropagation();
                         e.keepOpen = true;
                     }}
@@ -38,8 +39,9 @@ export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
                     </NavMenu>
                 )
             }
+            console.log(`SUB MENU = ${team}-${menu.link}-${menu.name}`)
             return (
-                <NavSubMenu align="center" team={team} onClick={(e) => {
+                <NavSubMenu key={`${team}-${menu.link}-${menu.name}`} align="center" team={team} onClick={(e) => {
                     // console.log(`[SubMenu] $router{e.value} clicked`);
                     // Stop the `onItemClick` of root menu component from firing
                     e.stopPropagation();
@@ -49,8 +51,9 @@ export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
                 </NavSubMenu>
             )
         }
+        console.log(`ITEM = ${team}-${menu.link}-${menu.name}`)
         return (
-            <NavMenuItem onClick={(e) => {
+            <NavMenuItem key={`${team}-${menu.link}-${menu.name}`} onClick={(e) => {
                 // console.log(`[MenuItem] ${e.value} clicked`);
                 // Stop the `onItemClick` of root menu component from firing
                 e.stopPropagation = true;

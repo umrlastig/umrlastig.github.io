@@ -14,14 +14,19 @@ import { StaticImage } from 'gatsby-plugin-image'
 import { NavBar } from '../components/NavBar'
 
 const Org = () => <div><StaticImage src={`../images/orga_lastig_12mois.svg`} alt='LASTIG organisation' /></div>
-function LocalMenu(title, slug, menus) {
-  return ( <NavBar title={title} menus = {menus} team="STRUDEL"/> );
+function LocalMenu(title, team, menus) {
+  return ( <NavBar title={title} menus = {menus} team={team}/> );
 }
 const Page = ({ data, children }) => {
+  const pageTitle = data.mdx.frontmatter.title
+  const pageSlug = data.mdx.frontmatter.slug
+  const team = (pageSlug.includes("teams/")) ? pageSlug.replace("teams/","").split("/")[0].toUpperCase() : null
+  const pageMenu = team ? data.site.siteMetadata.menus[team] : null
+  console.log(`Page ${pageSlug} - team ${team} menu ${pageMenu}`)
   const shortcodes = {
     Link, ContainerWithSlider, Columns,Column2,Column4, Projects, LastigMapContainer, Org,
     News: () => <News data = {data}/>,
-    LocalMenu: () => LocalMenu(data.mdx.frontmatter.title,data.mdx.frontmatter.slug,data.site.siteMetadata.menuSTRUDEL)
+    LocalMenu: () => pageMenu && LocalMenu(pageTitle,team,pageMenu)
    } // Provide common components here  
   return (
     <Layout pageTitle={data.mdx.frontmatter.title}>
@@ -67,12 +72,38 @@ export const query = graphql`
             }
           }
         }
-        menuSTRUDEL {
-          link
-          name
-          subMenu {
+        menus {
+          ACTE {
             link
             name
+            subMenu {
+              link
+              name
+            }
+          }
+          GEOVIS {
+            link
+            name
+            subMenu {
+              link
+              name
+            }
+          }
+          MEIG {
+            link
+            name
+            subMenu {
+              link
+              name
+            }
+          }
+          STRUDEL {
+            link
+            name
+            subMenu {
+              link
+              name
+            }
           }
         }
       }

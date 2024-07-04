@@ -45,9 +45,9 @@ export default function DatasetsPage({ data, pageContext }) {
     }
 
     return (
-        <Layout pageTitle={`${isLastigPage ? 'LASTIG' : pageContext.team} Datasets`}>
-            <h1>{trans(`${isLastigPage ? 'LASTIG' : pageContext.team} Datasets`)}</h1>
-            {(!isLastigPage) && <NavBar title={team} menus = {data.site.siteMetadata.menuSTRUDEL} team={team}/>}
+        <Layout pageTitle={`${isLastigPage ? 'LASTIG' : team} Datasets`}>
+            <h1>{trans(`${isLastigPage ? 'LASTIG' : team} Datasets`)}</h1>
+            {(!isLastigPage) && <NavBar title={team} menus = {data.site.siteMetadata.menus[team]} team={team}/>}
             <div>
                 <DatasetLegend>
                     {['Agriculture','DigitalHumanities','Tourism','Planning','Urban','LULC','Security','Climate'].map((dataTheme)=>
@@ -111,12 +111,38 @@ export const query = graphql`
                         }
                     }
                 }
-                menuSTRUDEL {
-                    link
-                    name
-                    subMenu {
+                menus {
+                    ACTE {
                         link
                         name
+                        subMenu {
+                        link
+                        name
+                        }
+                    }
+                    GEOVIS {
+                        link
+                        name
+                        subMenu {
+                        link
+                        name
+                        }
+                    }
+                    MEIG {
+                        link
+                        name
+                        subMenu {
+                        link
+                        name
+                        }
+                    }
+                    STRUDEL {
+                        link
+                        name
+                        subMenu {
+                        link
+                        name
+                        }
                     }
                 }
             }

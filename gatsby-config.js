@@ -72,10 +72,6 @@ module.exports = {
           {
             name: `Datasets`,
             link: `/datasets`,
-          },
-          {
-            name: `Projects`,
-            link: `/projects`,
           }
         ]
       },
@@ -84,44 +80,144 @@ module.exports = {
         link: `/join`,
       }
     ],
-    menuSTRUDEL: [
-      {
-        name: `Presentation`,
-        link: `/teams/strudel`,
-      },
-      {
-        name: `Research`,
-        link: `/`,
-        subMenu: [
-          {
-            name: `Members`,
-            link: `/members`,
-          },
-          {
-            name: `Projects`,
-            link: `/projects`,
-          }
-        ]
-      },
-      {
-        name: `Production`,
-        link: `/`,
-        subMenu: [
-          {
-            name: `Publications`,
-            link: `/teams/strudel/publications`,
-          },
-          {
-            name: `Datasets`,
-            link: `/teams/strudel/datasets`,
-          },
-          {
-            name: `Projects`,
-            link: `/teams/strudel/projects`,
-          }
-        ]
-      },
-    ],
+    menus: {
+      STRUDEL: [
+        {
+          name: `Presentation`,
+          link: `/teams/strudel`,
+        },
+        {
+          name: `Research`,
+          link: `/`,
+          subMenu: [
+            {
+              name: `Members`,
+              link: `/teams/strudel/members`,
+            },
+            {
+              name: `Projects`,
+              link: `/projects`,
+            }
+          ]
+        },
+        {
+          name: `Production`,
+          link: `/`,
+          subMenu: [
+            {
+              name: `Publications`,
+              link: `/teams/strudel/publications`,
+            },
+            {
+              name: `Datasets`,
+              link: `/teams/strudel/datasets`,
+            },
+          ]
+        },
+      ],
+      ACTE: [
+        {
+          name: `Presentation`,
+          link: `/teams/acte`,
+        },
+        {
+          name: `Research`,
+          link: `/`,
+          subMenu: [
+            {
+              name: `Members`,
+              link: `/teams/acte/members`,
+            },
+            {
+              name: `Projects`,
+              link: `/projects`,
+            }
+          ]
+        },
+        {
+          name: `Production`,
+          link: `/`,
+          subMenu: [
+            {
+              name: `Publications`,
+              link: `/teams/acte/publications`,
+            },
+            {
+              name: `Datasets`,
+              link: `/teams/acte/datasets`,
+            },
+          ]
+        },
+      ],
+      MEIG: [
+        {
+          name: `Presentation`,
+          link: `/teams/meig`,
+        },
+        {
+          name: `Research`,
+          link: `/`,
+          subMenu: [
+            {
+              name: `Members`,
+              link: `/teams/meig/members`,
+            },
+            {
+              name: `Projects`,
+              link: `/projects`,
+            }
+          ]
+        },
+        {
+          name: `Production`,
+          link: `/`,
+          subMenu: [
+            {
+              name: `Publications`,
+              link: `/teams/meig/publications`,
+            },
+            {
+              name: `Datasets`,
+              link: `/teams/meig/datasets`,
+            },
+          ]
+        },
+      ],
+      GEOVIS: [
+        {
+          name: `Presentation`,
+          link: `/teams/geovis`,
+        },
+        {
+          name: `Research`,
+          link: `/`,
+          subMenu: [
+            {
+              name: `Members`,
+              link: `/teams/geovis/members`,
+            },
+            {
+              name: `Projects`,
+              link: `/projects`,
+            }
+          ]
+        },
+        {
+          name: `Production`,
+          link: `/`,
+          subMenu: [
+            {
+              name: `Publications`,
+              link: `/teams/geovis/publications`,
+            },
+            {
+              name: `Datasets`,
+              link: `/teams/geovis/datasets`,
+            },
+          ]
+        },
+      ]
+    },
   },
   plugins: [
     {

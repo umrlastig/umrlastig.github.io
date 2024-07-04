@@ -43,6 +43,11 @@ exports.createPages = async function ({ actions, graphql }) {
       component: require.resolve(`./src/templates/datasets.js`),
       context: { team: [team] },
     })
+    actions.createPage({
+      path: `/teams/${team.toLowerCase()}/members`,
+      component: require.resolve(`./src/templates/members-page.js`),
+      context: { team: [team] },
+    })
   })
   actions.createPage({
     path: `/publications`,
@@ -52,6 +57,11 @@ exports.createPages = async function ({ actions, graphql }) {
   actions.createPage({
     path: `/datasets`,
     component: require.resolve(`./src/templates/datasets.js`),
+    context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
+  })
+  actions.createPage({
+    path: `/members`,
+    component: require.resolve(`./src/templates/members-page.js`),
     context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
   })
 }
@@ -256,7 +266,13 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
     }
     type SiteMetadata {
       menuLinks: [MenuLinks]!
-      menuSTRUDEL: [MenuLinks]!
+      menus: teamMenus!
+    }
+    type teamMenus {
+      ACTE: [MenuLinks]!
+      GEOVIS: [MenuLinks]!
+      MEIG: [MenuLinks]!
+      STRUDEL: [MenuLinks]!
     }
     type MenuLinks {
       name: String!

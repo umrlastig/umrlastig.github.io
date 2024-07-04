@@ -47,16 +47,16 @@ export const CreateNodes = ({nodes, type, theme}) => {
     function pubKey(node) { return `${node.id}-${type}` };
     return (
         <PublicationList>
+            {/* <tbody> */}
             {nodes.map((node) => (
                 <Publication key={pubKey(node)}>
                     <td>
-                        <div style={{
+                        <div aria-label="Team" style={{
                         width:32, 
                         height: 32, 
                         background:`conic-gradient(${node.fields.teams.map((team,index)=>`${theme.colors[team]} ${index*360.0/node.fields.teams.length}deg ${(index+1)*360.0/node.fields.teams.length}deg`).join(", ")})`,
                         borderRadius: 5
-                        }}>
-                        </div>
+                        }} />
                     </td>
                     <td>
                         <span key={`${node.id}-authors`}>
@@ -72,6 +72,7 @@ export const CreateNodes = ({nodes, type, theme}) => {
                     <td>{ClipboardCopy({ copyText: node.label_bibtex })}</td>
                 </Publication>
             ))}
+            {/* </tbody> */}
         </PublicationList>
     );
 }

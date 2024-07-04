@@ -30,9 +30,9 @@ export default function PublicationsPage({ data, pageContext }) {
         return null;
     }
     return (
-        <Layout pageTitle={`${isLastigPage ? 'LASTIG' : pageContext.team} Publications`}>
-            <h1>{trans(`${isLastigPage ? 'LASTIG' : pageContext.team} Publications`)}</h1>
-            {(!isLastigPage) && <NavBar title={team} menus = {data.site.siteMetadata.menuSTRUDEL} team={team}/>}
+        <Layout pageTitle={`${isLastigPage ? 'LASTIG' : team} Publications`}>
+            <h1>{trans(`${isLastigPage ? 'LASTIG' : team} Publications`)}</h1>
+            {(!isLastigPage) && <NavBar title={team} menus = {data.site.siteMetadata.menus[team]} team={team}/>}
             <PublicationListOfLists>
                 <Pub pubType="ACL" key="ACL"></Pub>
                 <Pub pubType="ACLN" key="ACLN"></Pub>
@@ -101,12 +101,38 @@ export const query = graphql`
                         }
                     }
                 }
-                menuSTRUDEL {
-                    link
-                    name
-                    subMenu {
+                menus {
+                    ACTE {
                         link
                         name
+                        subMenu {
+                        link
+                        name
+                        }
+                    }
+                    GEOVIS {
+                        link
+                        name
+                        subMenu {
+                        link
+                        name
+                        }
+                    }
+                    MEIG {
+                        link
+                        name
+                        subMenu {
+                        link
+                        name
+                        }
+                    }
+                    STRUDEL {
+                        link
+                        name
+                        subMenu {
+                        link
+                        name
+                        }
                     }
                 }
             }
