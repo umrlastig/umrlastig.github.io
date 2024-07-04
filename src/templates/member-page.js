@@ -9,6 +9,7 @@ import { CreateNodes } from '../components/CreateNodes'
 import { Icon } from '@iconify-icon/react';
 
 import {StyledMemberPage} from '../components/styles/MemberPage.styled'
+import {theme} from '../theme'
 
 const modifyUrl = (url) => {
   if (url.startsWith("/")) return "https://www.umr-lastig.fr" + url;
@@ -32,7 +33,7 @@ export default function MemberPage({ data }) {
     if (filteredNodes.length > 0) {
       return <div id={`pub${pubType}`}>
         <h2> {pubType} </h2>
-        <CreateNodes nodes={filteredNodes} type={pubType}/>
+        <CreateNodes nodes={filteredNodes} type={pubType} theme={theme} />
       </div>;
     }
     return null;
@@ -112,6 +113,9 @@ export const query = graphql`
             anrProjectTitle
             europeanProjectTitle
             publicationDate
+            fields {
+                teams
+            }
         }
     }
   }
