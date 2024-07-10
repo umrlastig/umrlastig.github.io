@@ -4,29 +4,33 @@ import { MDXProvider } from "@mdx-js/react"
 import Layout from '../components/Layout'
 import Seo from '../components/seo'
 import { MdxLink as Link } from "@ericcote/gatsby-theme-i18n"
-// import Org from "../images/orga_lastig_12mois.svg";
 import Projects from "../images/projects.svg";
 import LastigMapContainer from "../components/lastigMapComponent"
 import { ContainerWithSlider } from '../components/ContainerWithSlider'
 import { Columns,Column2,Column4 } from '../components/styles/ContainerWithSlider.styled'
 import { News } from '../components/News'
-import { StaticImage } from 'gatsby-plugin-image'
 import { NavBar } from '../components/NavBar'
+import {WordCloud} from '../components/WordCloud'
 
-const Org = () => <div><StaticImage src={`../images/orga_lastig_12mois.svg`} alt='LASTIG organisation' /></div>
 function LocalMenu(title, team, menus) {
   return ( <NavBar title={title} menus = {menus} team={team}/> );
 }
+
 const Page = ({ data, children }) => {
   const pageTitle = data.mdx.frontmatter.title
   const pageSlug = data.mdx.frontmatter.slug
   const team = (pageSlug.includes("teams/")) ? pageSlug.replace("teams/","").split("/")[0].toUpperCase() : null
   const pageMenu = team ? data.site.siteMetadata.menus[team] : null
-  console.log(`Page ${pageSlug} - team ${team} menu ${pageMenu}`)
+  const nodes = data.allHal.nodes;
+  console.log("Team = " + team)
+  console.log("Node Team = " + nodes[0].fields.teams)
+  const filteredNodes = team ? nodes.filter((node)=>node.fields.teams.includes(team)) : nodes
+  // console.log(`Page ${pageSlug} - team ${team} menu ${pageMenu}`)
   const shortcodes = {
-    Link, ContainerWithSlider, Columns,Column2,Column4, Projects, LastigMapContainer, Org,
+    Link, ContainerWithSlider, Columns,Column2,Column4, Projects, LastigMapContainer, 
     News: () => <News data = {data}/>,
-    LocalMenu: () => pageMenu && LocalMenu(pageTitle,team,pageMenu)
+    LocalMenu: () => pageMenu && LocalMenu(pageTitle,team,pageMenu),
+    WordCloud: () => <WordCloud nodes = {filteredNodes} />
    } // Provide common components here  
   return (
     <Layout pageTitle={data.mdx.frontmatter.title}>
@@ -107,6 +111,39 @@ export const query = graphql`
           }
         }
       }
+    }
+    allHal {
+        nodes {
+            halId
+            id
+            citationRef
+            docType
+            fileMain
+            files
+            invitedCommunication
+            label_bibtex
+            popularLevel
+            proceedings
+            producedDate
+            title
+            authIdHalFullName {
+                fullName
+                idHal
+            }
+            peerReviewing
+            researchData
+            audience
+            doiId
+            softCodeRepository
+            arxivId
+            anrProjectTitle
+            europeanProjectTitle
+            publicationDate
+            fields {
+                teams
+            }
+            keywords
+        }
     }
   }
 `

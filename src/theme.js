@@ -1,6 +1,6 @@
 export const theme = {
   colors: {
-    header: '#337ab7',
+    header: '#ff7f00',
     highlight: '#2269a6',
     headerText: '#ffffff',
     ACTE: '#e41a1c',

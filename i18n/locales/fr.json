@@ -57,8 +57,13 @@
     "GEOVIS": "GEOVIS",
     "MEIG": "MEIG",
     "STRUDEL": "STRUDEL",
-    "ACTE Members":"ACTE Members",
-    "GEOVIS Members":"GEOVIS Members",
-    "MEIG Members":"MEIG Members",
-    "STRUDEL Members":"STRUDEL Members"
+    "members": "Membres de l'équipe {team}",
+    "ACTE Publications":"Publications ACTE",
+    "GEOVIS Publications":"Publications GEOVIS",
+    "MEIG Publications":"Publications MEIG",
+    "STRUDEL Publications":"Publications STRUDEL",
+    "Permanent staff": "Personnel permanent",
+    "PhD candidates": "Doctorant-e-s",
+    "Post-docs": "Post-docs",
+    "Alumni": "Alumni"
 }

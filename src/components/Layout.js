@@ -1,24 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useStaticQuery, graphql } from "gatsby"
 import { ThemeProvider } from 'styled-components'
 import { LocalizedLink as Link } from "@ericcote/gatsby-theme-i18n"
 import { useIntl } from "react-intl"
-import {Nav} from './Nav'
-import {NavButton} from './styles/Nav.styled'
-import Locale from './Locale'
 import { GlobalStyles } from './styles/Global'
-import { FaAlignJustify, FaScaleBalanced, FaTwitter, FaYoutube, FaGithub, FaLocationPin} from "react-icons/fa6"
-import {Header} from './styles/Header.styled'
+import { FaScaleBalanced, FaTwitter, FaYoutube, FaGithub, FaLocationPin} from "react-icons/fa6"
 import {VerticalContainer, HorizontalContainer, MainContainer, HorizontalCenteredContainer} from './styles/Container.styled'
 import {Footer} from './styles/Footer.styled'
-import {LastigLogo} from './styles/LastigLogo.styled'
 import {Button} from './styles/Dropdown.styled'
 import {theme} from '../theme'
 import { NavBar } from './NavBar'
 
 const Layout = ({ children }) => {
-  // const [isOpen, setIsOpen] = useState(false)
-  // const toggleMenu = () => { setIsOpen(!isOpen) }
   const intl = useIntl()
   function trans(text) { return intl.formatMessage({ id: text }) }
   const data = useStaticQuery(graphql`
@@ -45,20 +38,6 @@ const Layout = ({ children }) => {
     <ThemeProvider theme={theme}>
       <GlobalStyles />
       <VerticalContainer>
-        {/* <Header>
-          <HorizontalContainer>
-            <LastigLogo to="/">
-              <img src={'https://www.umr-lastig.fr/img/lastig1.svg'} alt="LASTIG LOGO" style={{ width: "auto", height: 60 }}></img>
-            </LastigLogo>
-            <VerticalContainer>
-              <NavButton onClick={toggleMenu}>
-                <FaAlignJustify />
-              </NavButton>
-              <Nav isOpen={isOpen} />
-            </VerticalContainer>
-            <Locale />
-          </HorizontalContainer>
-        </Header> */}
         <NavBar title="LASTIG" menus = {data.site.siteMetadata.menuLinks} lastigLogo="true" useLocale="true"/>
         <main>
           <MainContainer>

@@ -23,23 +23,26 @@ function ClipboardCopy({ copyText }) {
     );
 }
 
-function withLink(ref, content) {
+function withLink(ref, content, key) {
+    // console.log("withLink " + key)
     const url = (ref.startsWith("http")) ? ref : `https://www.doi.org/${ref}`;
-    return <ImageLink><a href={url}>{content}</a></ImageLink>
+    return <ImageLink key={key}><a href={url}>{content}</a></ImageLink>
 }
 
-function ResearchDataIcon(researchData) {
-    if (researchData.includes("figshare") || researchData.startsWith("10.6084/")) return withLink(researchData, <Icon icon="simple-icons:figshare" width="2em" height="2em" />)
-    if (researchData.includes("zenodo") || researchData.startsWith("10.5281/")) return withLink(researchData, <Icon icon="simple-icons:zenodo" width="2em" height="2em" />)
-    if (researchData.startsWith("10.17632/")) return withLink(researchData, <Icon icon="simple-icons:mendeley" width="2em" height="2em" />)
-    if (researchData.startsWith("10.57967/")) return withLink(researchData, <Icon icon="simple-icons:huggingface" width="2em" height="2em" />)
-    if (researchData.startsWith("10.2760/")) return withLink(researchData, <Icon icon="twemoji:flag-european-union" width="2em" height="2em" />)
-    if (researchData.includes("arXiv") || researchData.startsWith("10.48550/")) return withLink(researchData, <Icon icon="simple-icons:arxiv" width="2em" height="2em" />)
-    if (researchData.startsWith("10.1145/")) return withLink(researchData, <Icon icon="academicons:acmdl" width="2em" height="2em" />)
+function ResearchDataIcon(researchData, key) {
+    // console.log("ResearchDataIcon " + key)
+    if (researchData.includes("figshare") || researchData.startsWith("10.6084/")) return withLink(researchData, <Icon icon="simple-icons:figshare" width="2em" height="2em" />, key)
+    if (researchData.includes("zenodo") || researchData.startsWith("10.5281/")) return withLink(researchData, <Icon icon="simple-icons:zenodo" width="2em" height="2em" />, key)
+    if (researchData.startsWith("10.17632/")) return withLink(researchData, <Icon icon="simple-icons:mendeley" width="2em" height="2em" />, key)
+    if (researchData.startsWith("10.57967/")) return withLink(researchData, <Icon icon="simple-icons:huggingface" width="2em" height="2em" />, key)
+    if (researchData.startsWith("10.2760/")) return withLink(researchData, <Icon icon="twemoji:flag-european-union" width="2em" height="2em" />, key)
+    if (researchData.includes("arXiv") || researchData.startsWith("10.48550/")) return withLink(researchData, <Icon icon="simple-icons:arxiv" width="2em" height="2em" />, key)
+    if (researchData.startsWith("10.1145/")) return withLink(researchData, <Icon icon="academicons:acmdl" width="2em" height="2em" />, key)
     return null;
 }
-function Repo(repo) {
-    if (repo.includes("github.com")) return withLink(repo, <Icon icon="fe:github-alt" width="2em" height="2em" />)
+function Repo(repo, key) {
+    // console.log("Repo " + key)
+    if (repo.includes("github.com")) return withLink(repo, <Icon icon="fe:github-alt" width="2em" height="2em" />, key)
     return null;
 }
 
@@ -47,10 +50,13 @@ export const CreateNodes = ({nodes, type, theme}) => {
     function pubKey(node) { return `${node.id}-${type}` };
     return (
         <PublicationList>
-            {/* <tbody> */}
-            {nodes.map((node) => (
-                <Publication key={pubKey(node)}>
-                    <td>
+            <thead />
+            <tbody>
+            {nodes.map((node, index) => {
+                // console.log(index+"="+pubKey(node));
+                return (
+                <Publication key={index+"="+pubKey(node)}>
+                    <td key={pubKey(node)+"-teams"}>
                         <div aria-label="Team" style={{
                         width:32, 
                         height: 32, 
@@ -58,21 +64,25 @@ export const CreateNodes = ({nodes, type, theme}) => {
                         borderRadius: 5
                         }} />
                     </td>
-                    <td>
+                    <td key={pubKey(node)+"-authors"}>
                         <span key={`${node.id}-authors`}>
-                            {node.authIdHalFullName.map((auth) => <a href={auth["idHal"] ? `https://cv.archives-ouvertes.fr/${auth["idHal"]}` : null}>{auth["fullName"]}</a>)}
+                            {node.authIdHalFullName.map((auth,aIndex) => <a key={node.id+"a"+aIndex} href={auth["idHal"] ? `https://cv.archives-ouvertes.fr/${auth["idHal"]}` : null}>{auth["fullName"]}</a>)}
                         </span>
                         <a href={`https://hal.science/${node.halId}`} key={`${node.id}-title`}>{node.title}</a>
                         <span key={`${node.id}-citation`} dangerouslySetInnerHTML={{ __html: node.citationRef }} ></span>
                     </td>
-                    <td>{node.researchData && node.researchData.map((rData) => ResearchDataIcon(rData))}</td>
-                    <td>{node.softCodeRepository && node.softCodeRepository.map((repo) => Repo(repo))}</td>
-                    <td><ImageLink>{node.doiId && <a href={`https://www.doi.org/${node.doiId}`} aria-label='Document page using DOI'><Icon icon="academicons:doi" width="2em" height="2em" /></a>}</ImageLink></td>
-                    <td><ImageLink>{node.fileMain && <a href={node.fileMain} aria-label='Main document in HAL'><FaFilePdf /></a>}</ImageLink></td>
-                    <td>{ClipboardCopy({ copyText: node.label_bibtex })}</td>
+                    <td key={pubKey(node)+"-researchData"}>
+                        {node.researchData && node.researchData.map((rData,dIndex) => ResearchDataIcon(rData,`${node.id}-rd-${dIndex}`))}
+                    </td>
+                    <td key={pubKey(node)+"-code"}>
+                        {node.softCodeRepository && node.softCodeRepository.map((repo,cIndex) => Repo(repo,`${node.id}-code-${cIndex}`))}
+                    </td>
+                    <td key={pubKey(node)+"-doi"}><ImageLink>{node.doiId && <a href={`https://www.doi.org/${node.doiId}`} aria-label='Document page using DOI'><Icon icon="academicons:doi" width="2em" height="2em" /></a>}</ImageLink></td>
+                    <td key={pubKey(node)+"-file"}><ImageLink>{node.fileMain && <a href={node.fileMain} aria-label='Main document in HAL'><FaFilePdf /></a>}</ImageLink></td>
+                    <td key={pubKey(node)+"-bib"}>{ClipboardCopy({ copyText: node.label_bibtex })}</td>
                 </Publication>
-            ))}
-            {/* </tbody> */}
+            )})}
+            </tbody>
         </PublicationList>
     );
 }

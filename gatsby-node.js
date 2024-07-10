@@ -80,7 +80,7 @@ const fields = [
   'fileAnnexes_s', 'fileAnnexesFigure_s', 'invitedCommunication_s', 'proceedings_s', 'popularLevel_s', 'halId_s', 'authIdHalFullName_fs', 'producedDateY_i',
   'docType_s', 'files_s', 'fileMain_s', 'fileMainAnnex_s', 'linkExtUrl_s', 'title_s', 'en_title_s', 'fr_title_s', 'label_bibtex', 'citationRef_s', 'labStructId_i',
   'journalTitle_s', 'researchData_s', 'peerReviewing_s', 'audience_s', 'doiId_s', 'softCodeRepository_s', 'arxivId_s', 'anrProjectTitle_s', 'europeanProjectTitle_s',
-  'publicationDate_s', 'journalUrl_s'
+  'publicationDate_s', 'journalUrl_s', 'keyword_s'
 ]
 exports.sourceNodes = async ({ actions }) => {
   const { createNode } = actions;
@@ -135,7 +135,8 @@ exports.sourceNodes = async ({ actions }) => {
           arxivId: doc.arxivId_s,
           anrProjectTitle: doc.anrProjectTitle_s,
           europeanProjectTitle: doc.europeanProjectTitle_s,
-          publicationDate: doc.publicationDate_s
+          publicationDate: doc.publicationDate_s,
+          keywords: doc.keyword_s
         }
         // Get content digest of node. (Required field)
         const contentDigest = crypto
@@ -214,7 +215,7 @@ exports.onCreateNode = async ({
         const ignoreNoise = str => str.replaceAll("-", " ").replaceAll(".", "")
         const removeAccents = str => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
         const clean = str => ignoreNoise(removeAccents(str))
-        peopleData.forEach((n) => console.log(clean(`${n.firstname} ${n.lastname}`)))
+        // peopleData.forEach((n) => console.log(clean(`${n.firstname} ${n.lastname}`)))
         first = false
       }
       function match(n, a) {
@@ -239,8 +240,33 @@ exports.onCreateNode = async ({
         const people = peopleData.filter((peopleNode) => match(peopleNode, author));
         return people.map((p) => p.team);
       })))
-      if (teams.length == 0) console.log(node.halId + " => " + teams + " => " + node.authIdHalFullName.map((a) => a.fullName).join(', '));
+      // if (teams.length == 0) console.log(node.halId + " => " + teams + " => " + node.authIdHalFullName.map((a) => a.fullName).join(', '));
       createNodeField({ node, name: 'teams', value: teams })
+    }
+    else {
+      if (node.internal.type === `PeopleCsv`) {
+        const ids = ["researcheridId_s","idrefId_s","orcidId_s","viafId_s","isniId_s","google scholarId_s","arxivId_s"]
+        const halId = node.HAL
+        if (halId) {
+          const url = `https://api.archives-ouvertes.fr/ref/author/?q=idHal_s:${halId}&wt=json&fl=fullName_s,idHal_s,*Id_s`
+          await axios.get(url, proxy = ign_proxy).then(({ data }) => {
+            if (data.response.docs.length > 0) {
+              const doc = data.response.docs[0]
+              ids.forEach((id) => {
+                createNodeField({ node, name: id, value: id in doc ? String(doc[id]) : "" })
+              })  
+            } else {
+              ids.forEach((id) => {
+                createNodeField({ node, name: id, value: "" })
+              })
+            }
+          });
+        } else {
+          ids.forEach((id) => {
+            createNodeField({ node, name: id, value: "" })
+          })
+        }
+      }
     }
   }
 }

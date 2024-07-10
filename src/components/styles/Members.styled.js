@@ -7,12 +7,10 @@ export const Members = styled.div`
 `
 
 export const StyledMember = styled.div`
-    div {
-        img {
-            // width: 100%;
-            border-radius: 50% !important;
-            height: 100px;
-            width: 100px;
-        }
+    img {
+        // width: 100%;
+        border-radius: 50% !important;
+        height: 100px;
+        width: 100px;
     }
 `

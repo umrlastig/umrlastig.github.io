@@ -11,7 +11,7 @@ import { Location } from "@reach/router";
 export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
     const [click, setClick] = useState(false)
     const [scroll, setScroll] = useState(false)
-    const handleClick = () => { console.log("clicked"); setClick(!click) }
+    const handleClick = () => { setClick(!click) }
     const closeMobileMenu = () => setClick(false)
     const changeNav = () => { setScroll(window.scrollY >= 80) }
     useEffect(() => {
@@ -25,9 +25,9 @@ export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
         if (menu.subMenu && menu.subMenu.length > 0) {
             const subMenuItems = menu.subMenu.map((submenu) => createMenuItem(submenu))
             if (topMenu) {
-                console.log(`TOP MENU = ${team}-${menu.link}-${menu.name}`)
+                // console.log(`TOP MENU = ${team}-${menu.link}-${menu.name}`)
                 return (
-                    <NavMenu key={`${team}-${menu.link}-${menu.name}`} team={team} align="center" onClick={(e) => {
+                    <NavMenu key={`${team}-${menu.link}-${menu.name}`} $team={team} align="center" onClick={(e) => {
                         e.stopPropagation();
                         e.keepOpen = true;
                     }}
@@ -39,9 +39,9 @@ export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
                     </NavMenu>
                 )
             }
-            console.log(`SUB MENU = ${team}-${menu.link}-${menu.name}`)
+            // console.log(`SUB MENU = ${team}-${menu.link}-${menu.name}`)
             return (
-                <NavSubMenu key={`${team}-${menu.link}-${menu.name}`} align="center" team={team} onClick={(e) => {
+                <NavSubMenu key={`${team}-${menu.link}-${menu.name}`} align="center" $team={team} onClick={(e) => {
                     // console.log(`[SubMenu] $router{e.value} clicked`);
                     // Stop the `onItemClick` of root menu component from firing
                     e.stopPropagation();
@@ -51,7 +51,7 @@ export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
                 </NavSubMenu>
             )
         }
-        console.log(`ITEM = ${team}-${menu.link}-${menu.name}`)
+        // console.log(`ITEM = ${team}-${menu.link}-${menu.name}`)
         return (
             <NavMenuItem key={`${team}-${menu.link}-${menu.name}`} onClick={(e) => {
                 // console.log(`[MenuItem] ${e.value} clicked`);
@@ -73,26 +73,26 @@ export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
     return (
         <>
             <IconContext.Provider value={{ color: "#131313" }}>
-                <Nav active={`${scroll}`} $click={click} team={team}>
+                <Nav $active={`${scroll}`} $click={click} $team={team}>
                     <NavBarContainer>
-                        <NavBarLogo to="/" onClick={closeMobileMenu}>
+                        <NavBarLogo key="NavBarLogo" to="/" onClick={closeMobileMenu}>
                             {
                                 lastigLogo ?
                                     <img src={'https://www.umr-lastig.fr/img/lastig1.svg'} alt="LASTIG LOGO" style={{ width: "auto", height: 60 }}></img> :
                                     title
                             }
                         </NavBarLogo>
-                        <MobileIcon onClick={handleClick}>
+                        <MobileIcon key="NavBarIcon" onClick={handleClick}>
                             {click ? <FaTimes /> : <FaBars />}
                         </MobileIcon>
-                        <NavBarMenu team={team} onClick={handleClick} $click={click}>
+                        <NavBarMenu key="NavBarMenu" $team={team} onClick={handleClick} $click={click}>
                             {navMenuItems}
                         </NavBarMenu>
                         {useLocale &&
-                            <Location>
+                            <Location key="NavBarLocation">
                                 {({ location }) =>
-                                    <NavMenu team={team} align="center" menuButton={<NavMenuButton><img src={'https://languageicon.org/language-icon.svg'} alt="Language" style={{ width: 32, height: 32 }}></img></NavMenuButton>}>
-                                        {config.map((loc) => <NavMenuItem><NavLink to={location.pathname.replace(`/${locale}/`, '/')} language={loc.code}>{loc.code}</NavLink></NavMenuItem>)}
+                                    <NavMenu key={"NavBarLocation-"+location.key} $team={team} align="center" menuButton={<NavMenuButton><img src={'https://languageicon.org/language-icon.svg'} alt="Language" style={{ width: 32, height: 32 }}></img></NavMenuButton>}>
+                                        {config.map((loc) => <NavMenuItem key={`"NavBarLocation-${loc.code}`}><NavLink to={location.pathname.replace(`/${locale}/`, '/')} language={loc.code}>{loc.code}</NavLink></NavMenuItem>)}
                                     </NavMenu>
                                 }
                             </Location>}

@@ -7,5 +7,11 @@ export const GlobalStyles = createGlobalStyle`
     }
     a {
         text-decoration: none;
+        h3 {
+            color: #ff7f00;
+        }
+        p {
+            color: #2269a6;
+        }
     }
 `;

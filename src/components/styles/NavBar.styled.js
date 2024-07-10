@@ -5,14 +5,14 @@ import { FaHamburger } from "react-icons/fa";
 import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
 
 export const Nav = styled.nav`
-    background: ${({theme, team}) => team ? theme.colors[team] : theme.colors.header};
+    background: ${({theme, $team}) => $team ? theme.colors[$team] : theme.colors.header};
     height: 80px;
     display: flex;
     justify-content: center;
     font-size: 1rem;
     position: sticky;
     top: 0;
-    z-index: ${({theme, team}) => team ? 999:1000};
+    z-index: ${({theme, $team}) => $team ? 999:1000};
     @media screen and (max-width: 960px) {
         transition: 0.8s all ease;
     }
@@ -140,7 +140,7 @@ export const NavMenuButton = styled(MenuButton)`
 `
 
 export const NavMenu = styled(Menu)`
-    background: ${({theme, team}) => team ? theme.colors[team] : theme.colors.header};
+    background: ${({theme, $team}) => $team ? theme.colors[$team] : theme.colors.header};
     ul {
         background: inherit;
     }
@@ -149,7 +149,7 @@ export const NavSubMenu = styled(SubMenu)`
     align-content: center;
     color: white;
     ul {
-        background: ${({theme, team}) => team ? theme.colors[team] : theme.colors.header};
+        background: ${({theme, $team}) => $team ? theme.colors[$team] : theme.colors.header};
     }
     div {
         padding: 0.375rem 1.5rem;
