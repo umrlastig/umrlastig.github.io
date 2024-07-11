@@ -20,6 +20,19 @@ export const theme = {
     Urban: "#ea0604",
     LULC: "#fbc422",
     Security :"#0ceee3",
-    Climate: "#f6f812"
+    Climate: "#f6f812",
+    H2020: "#d1eeeaff",
+    'Horizon Europe': "#a8dbd9ff",
+    ERA4CS: "#85c4c9ff",
+    ENIAC: "#68abb8ff",
+    ANR: "#fef6b5ff",
+    TOSCA: "#ffdd9aff",
+    AID: "#ffc47dff",
+    iSite: "#fde0c5ff",
+    PEPR: "#facba6ff",
+    FUI: "#f8b58bff",
+    'AAP Excellences': "#f59e72ff",
+    TIGA: "#f2855dff",
+    PEPS: "#ef6a4cff"
   }
 }

@@ -48,7 +48,12 @@ exports.createPages = async function ({ actions, graphql }) {
       component: require.resolve(`./src/templates/members-page.js`),
       context: { team: [team] },
     })
-  })
+    actions.createPage({
+      path: `/teams/${team.toLowerCase()}/projects`,
+      component: require.resolve(`./src/templates/projects.js`),
+      context: { team: [team] },
+    })
+    })
   actions.createPage({
     path: `/publications`,
     component: require.resolve(`./src/templates/publications.js`),
@@ -57,6 +62,11 @@ exports.createPages = async function ({ actions, graphql }) {
   actions.createPage({
     path: `/datasets`,
     component: require.resolve(`./src/templates/datasets.js`),
+    context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
+  })
+  actions.createPage({
+    path: `/projects`,
+    component: require.resolve(`./src/templates/projects.js`),
     context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
   })
   actions.createPage({
@@ -318,6 +328,24 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
       },
       fields: {
         teams: {
+          type: '[String]',
+          resolve: (src, args, context, info) => {
+            const { fieldName } = info
+            const content = src[fieldName]
+            const teams = content.split(',').map(str => str.trim())
+            return teams
+          }
+        }
+      }
+    }),
+    schema.buildObjectType({
+      name: 'ProjectsCsv',
+      interfaces: ['Node'],
+      extensions: {
+        infer: true,
+      },
+      fields: {
+        Teams: {
           type: '[String]',
           resolve: (src, args, context, info) => {
             const { fieldName } = info

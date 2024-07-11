@@ -96,7 +96,7 @@ module.exports = {
             },
             {
               name: `Projects`,
-              link: `/projects`,
+              link: `/teams/strudel/projects`,
             }
           ]
         },
@@ -130,7 +130,7 @@ module.exports = {
             },
             {
               name: `Projects`,
-              link: `/projects`,
+              link: `/teams/acte/projects`,
             }
           ]
         },
@@ -164,7 +164,7 @@ module.exports = {
             },
             {
               name: `Projects`,
-              link: `/projects`,
+              link: `/teams/meig/projects`,
             }
           ]
         },
@@ -198,7 +198,7 @@ module.exports = {
             },
             {
               name: `Projects`,
-              link: `/projects`,
+              link: `/teams/geovis/projects`,
             }
           ]
         },

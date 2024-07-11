@@ -18,6 +18,7 @@
   "dependencies": {
     "@ericcote/gatsby-theme-i18n": "^4.1.13",
     "@ericcote/gatsby-theme-i18n-react-intl": "^4.1.13",
+    "@observablehq/plot": "^0.6.15",
     "@szhsin/react-menu": "^4.1.0",
     "babel-plugin-styled-components": "^2.1.4",
     "chart.js": "^4.4.3",
