@@ -1,3 +1,24 @@
+const axios = require('axios')
+const crypto = require('crypto')
+const cheerio = require('cheerio')
+var qs = require('qs')
+var fs = require('fs')
+// const ign_proxy = {
+//   protocol: 'http',
+//   host: 'proxy.ign.fr',
+//   port: 3128,
+// }
+const ign_proxy = {
+}
+
+var count = 0;
+var personNodes = 0;
+
+exports.onPreBootstrap = async function() {
+  await fs.createReadStream('src/data/people.csv')
+  .on('data', function(chunk) { for (var i=0; i < chunk.length; ++i) if (chunk[i] == 10) count++ })
+  .on('end', function() { console.log(count," lines in people.csv") });
+}
 exports.createPages = async function ({ actions, graphql }) {
   var { data } = await graphql(`
         query {
@@ -75,16 +96,6 @@ exports.createPages = async function ({ actions, graphql }) {
     context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
   })
 }
-const axios = require('axios')
-const crypto = require('crypto')
-var qs = require('qs')
-// const ign_proxy = {
-//   protocol: 'http',
-//   host: 'proxy.ign.fr',
-//   port: 3128,
-// }
-const ign_proxy = {
-}
 
 const fields = [
   'fileAnnexes_s', 'fileAnnexesFigure_s', 'invitedCommunication_s', 'proceedings_s', 'popularLevel_s', 'halId_s', 'authIdHalFullName_fs', 'producedDateY_i',
@@ -92,7 +103,8 @@ const fields = [
   'journalTitle_s', 'researchData_s', 'peerReviewing_s', 'audience_s', 'doiId_s', 'softCodeRepository_s', 'arxivId_s', 'anrProjectTitle_s', 'europeanProjectTitle_s',
   'publicationDate_s', 'journalUrl_s', 'keyword_s'
 ]
-exports.sourceNodes = async ({ actions }) => {
+exports.sourceNodes = async ({ actions,getNodes }) => {
+  // console.log(`sourceNodes ${getNodes().map((node) => node.internal.type)}`)
   const { createNode } = actions;
   // fetch raw data from the HAL api
   const queryParams = {
@@ -107,7 +119,6 @@ exports.sourceNodes = async ({ actions }) => {
   await axios.get(`https://api.archives-ouvertes.fr/search/?${params}`,
     proxy = ign_proxy).then(res => {
       console.log(`Found ${res.data.response.docs.length} publications`);
-
       // map into these results and create nodes
       res.data.response.docs.map((doc, i) => {
         // Create your node object
@@ -161,13 +172,21 @@ exports.sourceNodes = async ({ actions }) => {
     }).catch(err => console.error(err));
 }
 
-const cheerio = require('cheerio');
-var first = true
+function waitForCsv() {
+  const poll = resolve => {
+    // console.log(personNodes,count)
+    if(personNodes == count) resolve();
+    else setTimeout(_ => poll(resolve), 400);
+  }
+  return new Promise(poll);
+}
+
 exports.onCreateNode = async ({
   node, // the node that was just created
   actions: { createNodeField },
   getNodesByType
 }) => {
+  // console.log(`onCreateNode ${node.internal.type}`)
   if (node.internal.type === `DatasetCsv`) {
     var url = node.url;
     if (url.includes("zenodo")) {
@@ -219,37 +238,48 @@ exports.onCreateNode = async ({
     }
   } else {
     if (node.internal.type === `HAL`) {
+      await waitForCsv()
+      // console.log("Im done waiting!!!")
       const peopleData = getNodesByType("PeopleCsv")
       // Identify the teams
-      if (first) {
-        const ignoreNoise = str => str.replaceAll("-", " ").replaceAll(".", "")
-        const removeAccents = str => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        const clean = str => ignoreNoise(removeAccents(str))
-        // peopleData.forEach((n) => console.log(clean(`${n.firstname} ${n.lastname}`)))
-        first = false
-      }
-      function match(n, a) {
+      function match(person, author) {
         function getInitials(name) {
           let words = name.split(' ');
           let initials = words.map(word => word.charAt(0));
-          return initials.join('-').toUpperCase();
+          return initials.join(' ').toUpperCase();
         }
         const ignoreNoise = str => str.replaceAll("-", " ").replaceAll(".", "")
         const removeAccents = str => str.normalize('NFD').replaceAll(/[\u0300-\u036f]/g, '')
         const clean = str => ignoreNoise(removeAccents(str))
-        const fullName = clean(a.fullName)
+        const fullName = clean(author.fullName)
+        if (author.fullName.includes("Daakir") && person.lastname === "Daakir") {
+          console.log('author=',author)
+          console.log('person=',{firstname: person.firstname, lastname: person.lastname})
+          console.log((person.HAL && (author.idHal === person.HAL)) ||
+          fullName.includes(clean(`${person.firstname} ${person.lastname}`)) ||
+          fullName.includes(clean(`${person.alt_firstname} ${person.lastname}`)) ||
+          fullName.includes(clean(`${getInitials(person.firstname)} ${person.lastname}`)) ||
+          fullName.includes(clean(`${person.lastname} ${person.firstname}`)))
+        }
         return (
-          (n.HAL && (a.idHal === n.HAL)) ||
-          fullName.includes(clean(`${n.firstname} ${n.lastname}`)) ||
-          fullName.includes(clean(`${n.alt_firstname} ${n.lastname}`)) ||
-          fullName.includes(clean(`${getInitials(n.firstname)} ${n.lastname}`)) ||
-          fullName.includes(clean(`${n.lastname} ${n.firstname}`))
+          (person.HAL && (author.idHal === person.HAL)) ||
+          fullName.includes(clean(`${person.firstname} ${person.lastname}`)) ||
+          fullName.includes(clean(`${person.alt_firstname} ${person.lastname}`)) ||
+          fullName.includes(clean(`${getInitials(person.firstname)} ${person.lastname}`)) ||
+          fullName.includes(clean(`${person.lastname} ${person.firstname}`))
         )
       }
       const teams = Array.from(new Set(node.authIdHalFullName.flatMap((author) => {
-        const people = peopleData.filter((peopleNode) => match(peopleNode, author));
-        return people.map((p) => p.team);
+        const people = peopleData.filter((peopleNode) => match(peopleNode, author))
+        return people.map((p) => p.team)
       })))
+      const authorIds = node.authIdHalFullName.flatMap((author) => {
+        const people = peopleData.filter((peopleNode) => match(peopleNode, author))
+        return people.map((p)=>p.id)
+      })
+      console.log(authorIds)
+      createNodeField({ node, name: 'authors', value: authorIds })
+      console.log(node.halId + "(" + teams + ") with " + node.authIdHalFullName.map((a) => `${a.fullName} [${a.idHal}]`).join(', '));
       // if (teams.length == 0) console.log(node.halId + " => " + teams + " => " + node.authIdHalFullName.map((a) => a.fullName).join(', '));
       createNodeField({ node, name: 'teams', value: teams })
     }
@@ -276,6 +306,7 @@ exports.onCreateNode = async ({
             createNodeField({ node, name: id, value: "" })
           })
         }
+        personNodes++
       }
     }
   }
@@ -359,3 +390,20 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
   ]
   createTypes(typeDefs)
 }
+
+exports.onPostBuild = async ({ reporter }) => {
+  reporter.info('Waiting for plugin to finish...');
+
+  // Add your code here to wait for the plugin to finish
+  // You can use promises, async/await, or any other method to wait for the plugin to complete its task
+
+  reporter.info('Plugin has finished.');
+};
+exports.onPostBootstrap = async ({ reporter }) => {
+  reporter.info('Waiting for gatsby-transformer-csv plugin to finish...');
+
+  // Add your code here to wait for the gatsby-transformer-csv plugin to finish
+  // You can use promises, async/await, or any other method to wait for the plugin to complete its task
+
+  reporter.info('gatsby-transformer-csv plugin has finished.');
+};

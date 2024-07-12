@@ -26,15 +26,14 @@ const modifyPhotoUrl = (url) => {
 export default function MemberPage({ data }) {
   const node = data.peopleCsv
   const allNodes = data.allHal.nodes;
-  function checkAuthor(authIdHalFullName) { return authIdHalFullName.fullName === `${node.firstname} ${node.lastname}` || authIdHalFullName.idHal === node.HAL; }
-  const filteredNodes = allNodes.filter((node) => node.authIdHalFullName.some(checkAuthor));
+  const filteredNodes = allNodes.filter((pubNode) => pubNode.fields.authors.includes(node.id));
   const classifiedNodes = filteredNodes.map((node) => ({ pubType: getPubType(node), ...node }));
   function Pub({ pubType }) {
-    const filteredNodes = classifiedNodes.filter((node) => node.pubType === pubType);
-    if (filteredNodes.length > 0) {
+    const filteredNodesForType = classifiedNodes.filter((node) => node.pubType === pubType);
+    if (filteredNodesForType.length > 0) {
       return <div id={`pub${pubType}`}>
         <h2> {trans(pubType)} </h2>
-        <CreateNodes nodes={filteredNodes} type={pubType} theme={theme} />
+        <CreateNodes nodes={filteredNodesForType} type={pubType} theme={theme} />
       </div>;
     }
     return null;
@@ -49,8 +48,8 @@ export default function MemberPage({ data }) {
         <h1>{node.firstname} {node.alt_firstname && `(${node.alt_firstname}) `}{node.lastname}</h1>
         <div><img src={modifyPhotoUrl(node.photo)} alt={`${node.firstname} ${node.lastname}`} /></div>
         <h2>{(locale === 'en') ? node.status : node.statut}</h2>
-        {node.team && <h3><FormattedMessage id="inteam" defaultMessage=" in the {team} team" values={{ team: node.team }} /></h3>}
-        <a href={modifyUrl(node.webpage)}>{trans("Personal webpage")}</a>
+        {node.team && <h3><FormattedMessage id="inteam" values={{ team: node.team }} /></h3>}
+        {node.webpage && <a href={modifyUrl(node.webpage)}>{trans("Personal webpage")}</a>}
         <Ids>
           {node.HAL && <a href={`https://cv.hal.science/${node.HAL}`} aria-label="HAL"><Icon icon="simple-icons:hal" width="2em" height="2em" /></a>}
           {node.fields.orcidId_s && <a href={node.fields.orcidId_s} aria-label="orcid"><Icon icon="simple-icons:orcid" width="2em" height="2em" /></a>}
@@ -87,60 +86,62 @@ export default function MemberPage({ data }) {
 export const query = graphql`
   query($firstName: String, $lastName: String!) {
     peopleCsv(firstname: { eq: $firstName }, lastname: { eq: $lastName }) {
-        firstname
-        alt_firstname
-        lastname
-        photo
-        HAL
-        member
-        start_date
-        end_date
-        status
-        statut
-        team
-        webpage
-        fields {
-          arxivId_s
-          google_scholarId_s
-          idrefId_s
-          isniId_s
-          orcidId_s
-          researcheridId_s
-          viafId_s
-        }
+      id
+      firstname
+      alt_firstname
+      lastname
+      photo
+      HAL
+      member
+      start_date
+      end_date
+      status
+      statut
+      team
+      webpage
+      fields {
+        arxivId_s
+        google_scholarId_s
+        idrefId_s
+        isniId_s
+        orcidId_s
+        researcheridId_s
+        viafId_s
+      }
     }
     allHal {
-        nodes {
-            halId
-            id
-            citationRef
-            docType
-            fileMain
-            files
-            invitedCommunication
-            label_bibtex
-            popularLevel
-            proceedings
-            producedDate
-            title
-            authIdHalFullName {
-                fullName
-                idHal
-            }
-            peerReviewing
-            researchData
-            audience
-            doiId
-            softCodeRepository
-            arxivId
-            anrProjectTitle
-            europeanProjectTitle
-            publicationDate
-            fields {
-                teams
-            }
-            keywords
-        }
+      nodes {
+          halId
+          id
+          citationRef
+          docType
+          fileMain
+          files
+          invitedCommunication
+          label_bibtex
+          popularLevel
+          proceedings
+          producedDate
+          title
+          authIdHalFullName {
+              fullName
+              idHal
+          }
+          peerReviewing
+          researchData
+          audience
+          doiId
+          softCodeRepository
+          arxivId
+          anrProjectTitle
+          europeanProjectTitle
+          publicationDate
+          fields {
+              teams
+              authors
+          }
+          keywords
+      }
     }
   }
 `

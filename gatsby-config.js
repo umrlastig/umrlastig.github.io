@@ -220,6 +220,7 @@ module.exports = {
     },
   },
   plugins: [
+    `gatsby-transformer-csv`,
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
@@ -256,7 +257,6 @@ module.exports = {
         path: `${__dirname}/src/data/`,
       },
     },
-    `gatsby-transformer-csv`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
