@@ -11,13 +11,13 @@ var fs = require('fs')
 const ign_proxy = {
 }
 
-var count = 0;
+var peopleCsvLines = 0;
 var personNodes = 0;
 
-exports.onPreBootstrap = async function() {
+exports.onPreBootstrap = async function({reporter}) {
   await fs.createReadStream('src/data/people.csv')
-  .on('data', function(chunk) { for (var i=0; i < chunk.length; ++i) if (chunk[i] == 10) count++ })
-  .on('end', function() { console.log(count," lines in people.csv") });
+  .on('data', function(chunk) { for (var i=0; i < chunk.length; ++i) if (chunk[i] == 10) peopleCsvLines++ })
+  .on('end', function() { reporter.info(`${peopleCsvLines} lines in people.csv`) });
 }
 exports.createPages = async function ({ actions, graphql }) {
   var { data } = await graphql(`
@@ -103,7 +103,7 @@ const fields = [
   'journalTitle_s', 'researchData_s', 'peerReviewing_s', 'audience_s', 'doiId_s', 'softCodeRepository_s', 'arxivId_s', 'anrProjectTitle_s', 'europeanProjectTitle_s',
   'publicationDate_s', 'journalUrl_s', 'keyword_s'
 ]
-exports.sourceNodes = async ({ actions,getNodes }) => {
+exports.sourceNodes = async ({ actions,getNodes,reporter }) => {
   // console.log(`sourceNodes ${getNodes().map((node) => node.internal.type)}`)
   const { createNode } = actions;
   // fetch raw data from the HAL api
@@ -118,7 +118,7 @@ exports.sourceNodes = async ({ actions,getNodes }) => {
   const params = qs.stringify(queryParams);
   await axios.get(`https://api.archives-ouvertes.fr/search/?${params}`,
     proxy = ign_proxy).then(res => {
-      console.log(`Found ${res.data.response.docs.length} publications`);
+      reporter.info(`Found ${res.data.response.docs.length} publications`);
       // map into these results and create nodes
       res.data.response.docs.map((doc, i) => {
         // Create your node object
@@ -169,14 +169,14 @@ exports.sourceNodes = async ({ actions,getNodes }) => {
         // Create node with the gatsby createNode() API
         createNode(docNode);
       });
-    }).catch(err => console.error(err));
+    }).catch(err => reporter.error(err));
 }
 
 function waitForCsv() {
   const poll = resolve => {
     // console.log(personNodes,count)
-    if(personNodes == count) resolve();
-    else setTimeout(_ => poll(resolve), 400);
+    if (personNodes == peopleCsvLines) resolve();
+    else setTimeout(_ => poll(resolve), 1000);
   }
   return new Promise(poll);
 }
@@ -184,7 +184,8 @@ function waitForCsv() {
 exports.onCreateNode = async ({
   node, // the node that was just created
   actions: { createNodeField },
-  getNodesByType
+  getNodesByType,
+  reporter
 }) => {
   // console.log(`onCreateNode ${node.internal.type}`)
   if (node.internal.type === `DatasetCsv`) {
@@ -252,15 +253,6 @@ exports.onCreateNode = async ({
         const removeAccents = str => str.normalize('NFD').replaceAll(/[\u0300-\u036f]/g, '')
         const clean = str => ignoreNoise(removeAccents(str))
         const fullName = clean(author.fullName)
-        if (author.fullName.includes("Daakir") && person.lastname === "Daakir") {
-          console.log('author=',author)
-          console.log('person=',{firstname: person.firstname, lastname: person.lastname})
-          console.log((person.HAL && (author.idHal === person.HAL)) ||
-          fullName.includes(clean(`${person.firstname} ${person.lastname}`)) ||
-          fullName.includes(clean(`${person.alt_firstname} ${person.lastname}`)) ||
-          fullName.includes(clean(`${getInitials(person.firstname)} ${person.lastname}`)) ||
-          fullName.includes(clean(`${person.lastname} ${person.firstname}`)))
-        }
         return (
           (person.HAL && (author.idHal === person.HAL)) ||
           fullName.includes(clean(`${person.firstname} ${person.lastname}`)) ||
@@ -277,9 +269,8 @@ exports.onCreateNode = async ({
         const people = peopleData.filter((peopleNode) => match(peopleNode, author))
         return people.map((p)=>p.id)
       })
-      console.log(authorIds)
       createNodeField({ node, name: 'authors', value: authorIds })
-      console.log(node.halId + "(" + teams + ") with " + node.authIdHalFullName.map((a) => `${a.fullName} [${a.idHal}]`).join(', '));
+      // console.log(node.halId + "(" + teams + ") with " + node.authIdHalFullName.map((a) => `${a.fullName} [${a.idHal}]`).join(', '));
       // if (teams.length == 0) console.log(node.halId + " => " + teams + " => " + node.authIdHalFullName.map((a) => a.fullName).join(', '));
       createNodeField({ node, name: 'teams', value: teams })
     }

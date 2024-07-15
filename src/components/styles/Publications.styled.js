@@ -5,7 +5,7 @@ export const PublicationListOfLists = styled.div`
     margin: 2rem;
 `
 
-export const PublicationList = styled.table`
+export const StyledPublicationList = styled.table`
   width: 100%;
 `
 

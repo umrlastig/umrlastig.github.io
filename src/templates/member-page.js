@@ -5,7 +5,7 @@ import Layout from "../components/Layout"
 import { FormattedMessage, useIntl } from 'react-intl'
 
 import { getPubType } from '../util'
-import { CreateNodes } from '../components/CreateNodes'
+import { PublicationList } from '../components/CreateNodes'
 import { Icon } from '@iconify-icon/react';
 
 import { StyledMemberPage, Ids } from '../components/styles/MemberPage.styled'
@@ -33,7 +33,7 @@ export default function MemberPage({ data }) {
     if (filteredNodesForType.length > 0) {
       return <div id={`pub${pubType}`}>
         <h2> {trans(pubType)} </h2>
-        <CreateNodes nodes={filteredNodesForType} type={pubType} theme={theme} />
+        <PublicationList nodes={filteredNodesForType} type={pubType} theme={theme} />
       </div>;
     }
     return null;

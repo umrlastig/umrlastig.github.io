@@ -5,7 +5,7 @@ import Seo from '../components/seo'
 import { useIntl } from 'react-intl'
 import { PublicationListOfLists } from '../components/styles/Publications.styled'
 import { getPubType } from '../util'
-import { CreateNodes } from '../components/CreateNodes'
+import { PublicationList } from '../components/CreateNodes'
 import { NavBar } from '../components/NavBar'
 import {theme} from '../theme'
 
@@ -23,7 +23,7 @@ export default function PublicationsPage({ data, pageContext }) {
             return (
                 <div key={`pub${pubType}`}>
                     <h2> {trans(pubType)} </h2>
-                    <CreateNodes nodes = {filteredNodes} type={pubType} theme={theme}/>
+                    <PublicationList nodes = {filteredNodes} type={pubType} theme={theme}/>
                 </div>
             );
         }

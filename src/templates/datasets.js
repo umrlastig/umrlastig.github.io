@@ -11,6 +11,7 @@ import { DatasetLegend, DatasetLegendItem, DatasetList, Dataset, DatasetHead, Da
 import { useIntl } from 'react-intl'
 import { Icon } from '@iconify-icon/react';
 import { NavBar } from '../components/NavBar'
+import { PublicationList } from '../components/CreateNodes';
 
 Chart.register(CategoryScale);
 
@@ -37,11 +38,18 @@ export default function DatasetsPage({ data, pageContext }) {
     }
     function Doi({ doi }) {
         if (!doi) { return <div></div>; }
-        return <div><a href={`https://www.doi.org/${doi}`}><Icon icon="academicons:doi" width="2em" height="2em" />{doi}</a></div>;
+        return <div><a href={`https://www.doi.org/${doi}`} aria-label='doi'><Icon icon="academicons:doi" width="2em" height="2em" /></a></div>;
     }
     function Teams({ teams }) {
         if (!teams) { return <div></div>; }
         return <div>Team(s): <b>{teams.join(", ")}</b></div>;
+    }
+    function Publications({ doi }) {
+        if (!doi) { return <div></div>; }
+        const publications = data.allHal.nodes.filter((n)=>n.researchData && n.researchData.includes(doi))
+        return <div>
+            <PublicationList nodes = {publications} type={null} theme={theme}/>
+        </div>;
     }
 
     return (
@@ -71,6 +79,7 @@ export default function DatasetsPage({ data, pageContext }) {
                                 <Teams teams={node.teams} />
                                 <Downloads>{trans('Downloads:')} <b>{node.fields ? node.fields.downloads : 0}</b></Downloads>
                             </DatasetInfo>
+                            <Publications doi={node.doi} />
                         </Dataset>
                     ))
                 }
@@ -145,6 +154,40 @@ export const query = graphql`
                         }
                     }
                 }
+            }
+        }
+        allHal {
+            nodes {
+                halId
+                id
+                citationRef
+                docType
+                fileMain
+                files
+                invitedCommunication
+                label_bibtex
+                popularLevel
+                proceedings
+                producedDate
+                title
+                authIdHalFullName {
+                    fullName
+                    idHal
+                }
+                peerReviewing
+                researchData
+                audience
+                doiId
+                softCodeRepository
+                arxivId
+                anrProjectTitle
+                europeanProjectTitle
+                publicationDate
+                fields {
+                    teams
+                    authors
+                }
+                keywords
             }
         }
     }

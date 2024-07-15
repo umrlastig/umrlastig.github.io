@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FaClipboardCheck, FaFilePdf } from 'react-icons/fa6'
 import { Icon } from '@iconify-icon/react';
-import { PublicationList, Publication, ImageLink } from './styles/Publications.styled'
+import { StyledPublicationList, Publication, ImageLink } from './styles/Publications.styled'
 
 // Component adapted from: https://blog.logrocket.com/implementing-copy-clipboard-react-clipboard-api/
 function ClipboardCopy({ copyText }) {
@@ -46,10 +46,10 @@ function Repo(repo, key) {
     return null;
 }
 
-export const CreateNodes = ({nodes, type, theme}) => {
+export const PublicationList = ({nodes, type, theme}) => {
     function pubKey(node) { return `${node.id}-${type}` };
     return (
-        <PublicationList>
+        <StyledPublicationList>
             <thead />
             <tbody>
             {nodes.map((node, index) => {
@@ -83,6 +83,6 @@ export const CreateNodes = ({nodes, type, theme}) => {
                 </Publication>
             )})}
             </tbody>
-        </PublicationList>
+        </StyledPublicationList>
     );
 }
