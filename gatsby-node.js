@@ -19,7 +19,7 @@ exports.onPreBootstrap = async function({reporter}) {
   .on('data', function(chunk) { for (var i=0; i < chunk.length; ++i) if (chunk[i] == 10) peopleCsvLines++ })
   .on('end', function() { reporter.info(`${peopleCsvLines} lines in people.csv`) });
 }
-exports.createPages = async function ({ actions, graphql }) {
+exports.createPages = async function ({ actions, graphql,reporter }) {
   var { data } = await graphql(`
         query {
             allPeopleCsv {
@@ -53,7 +53,7 @@ exports.createPages = async function ({ actions, graphql }) {
   })
   const teams = ['STRUDEL','ACTE','MEIG','GEOVIS']
   teams.forEach((team) => {
-    console.log(`Team ${team}`)
+    reporter.info(`Creating pages for team ${team}`)
     actions.createPage({
       path: `/teams/${team.toLowerCase()}/publications`,
       component: require.resolve(`./src/templates/publications.js`),
@@ -174,9 +174,8 @@ exports.sourceNodes = async ({ actions,getNodes,reporter }) => {
 
 function waitForCsv() {
   const poll = resolve => {
-    // console.log(personNodes,count)
     if (personNodes == peopleCsvLines) resolve();
-    else setTimeout(_ => poll(resolve), 1000);
+    else setTimeout(_ => poll(resolve), 400);
   }
   return new Promise(poll);
 }
