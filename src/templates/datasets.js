@@ -47,7 +47,7 @@ export default function DatasetsPage({ data, pageContext }) {
     }
     function Publications({ doi }) {
         if (!doi) { return <div></div>; }
-        const publications = data.allHal.nodes.filter((n)=>n.researchData && n.researchData.includes(doi))
+        const publications = data.allHal.nodes.filter((n)=>n.researchData && n.researchData.some((rdata)=>rdata.includes(doi)))
         return <div>
             <PublicationList nodes = {publications} type={null} theme={theme}/>
         </div>;
