@@ -69,4 +69,5 @@ export const Downloads = styled.div`
     border-radius: 1rem;
     padding: 1rem;
     font-family: avenir, sans-serif;
+    height: 23px;
 `

@@ -72,6 +72,10 @@ module.exports = {
           {
             name: `Datasets`,
             link: `/datasets`,
+          },
+          {
+            name: `Softwares`,
+            link: `/softwares`,
           }
         ]
       },
@@ -112,6 +116,10 @@ module.exports = {
               name: `Datasets`,
               link: `/teams/strudel/datasets`,
             },
+            {
+              name: `Softwares`,
+              link: `/teams/strudel/softwares`,
+            }
           ]
         },
       ],

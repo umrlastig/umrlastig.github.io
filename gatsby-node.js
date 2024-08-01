@@ -15,9 +15,18 @@ var peopleCsvLines = 0;
 var personNodes = 0;
 
 exports.onPreBootstrap = async function({reporter}) {
-  await fs.createReadStream('src/data/people.csv')
-  .on('data', function(chunk) { for (var i=0; i < chunk.length; ++i) if (chunk[i] == 10) peopleCsvLines++ })
-  .on('end', function() { reporter.info(`${peopleCsvLines} lines in people.csv`) });
+  // Read the file
+  await fs.readFile('src/data/people.csv', 'utf8', (err, data) => {
+    if (err) {
+        console.error(`Error reading file: ${err}`);
+        return;
+    }
+    // Split the data into lines
+    const lines = data.split('\n');
+    // Count non-empty lines (without header)
+    peopleCsvLines = lines.filter(line => line.trim() !== '').length - 1;
+    reporter.info(`${peopleCsvLines} lines in people.csv`);
+  });
 }
 exports.createPages = async function ({ actions, graphql,reporter }) {
   var { data } = await graphql(`
@@ -74,7 +83,12 @@ exports.createPages = async function ({ actions, graphql,reporter }) {
       component: require.resolve(`./src/templates/projects.js`),
       context: { team: [team] },
     })
+    actions.createPage({
+      path: `/teams/${team.toLowerCase()}/softwares`,
+      component: require.resolve(`./src/templates/softwares.js`),
+      context: { team: [team] },
     })
+  })
   actions.createPage({
     path: `/publications`,
     component: require.resolve(`./src/templates/publications.js`),
@@ -93,6 +107,11 @@ exports.createPages = async function ({ actions, graphql,reporter }) {
   actions.createPage({
     path: `/members`,
     component: require.resolve(`./src/templates/members-page.js`),
+    context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
+  })
+  actions.createPage({
+    path: `/softwares`,
+    component: require.resolve(`./src/templates/softwares.js`),
     context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
   })
 }
@@ -172,19 +191,26 @@ exports.sourceNodes = async ({ actions,getNodes,reporter }) => {
     }).catch(err => reporter.error(err));
 }
 
+var lastNodeDisplayed = 0;
 function waitForCsv() {
   const poll = resolve => {
+    if (lastNodeDisplayed != personNodes) {
+      console.log(`${personNodes} / ${peopleCsvLines}`)
+      lastNodeDisplayed = personNodes;
+    }
     if (personNodes == peopleCsvLines) resolve();
-    else setTimeout(_ => poll(resolve), 400);
+    else setTimeout(_ => poll(resolve), 100);
   }
   return new Promise(poll);
 }
-
+const { createRemoteFileNode } = require("gatsby-source-filesystem")
 exports.onCreateNode = async ({
   node, // the node that was just created
-  actions: { createNodeField },
+  actions: { createNode, createNodeField },
   getNodesByType,
-  reporter
+  reporter,
+  createNodeId,
+  getCache
 }) => {
   // console.log(`onCreateNode ${node.internal.type}`)
   if (node.internal.type === `DatasetCsv`) {
@@ -236,10 +262,24 @@ exports.onCreateNode = async ({
         }
       }
     }
+    if (node.image_url !== null && node.image_url) {
+      reporter.info(`Image url = ${node.image_url}.`);
+      const fileNode = await createRemoteFileNode({
+        url: node.image_url, // string that points to the URL of the image
+        parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
+        createNode, // helper function in gatsby-node to generate the node
+        createNodeId, // helper function in gatsby-node to generate the node id
+        getCache,
+      })
+      // if the file was created, extend the node with "image"
+      if (fileNode) {
+        createNodeField({ node, name: "image", value: fileNode.id })
+      }
+    }
   } else {
     if (node.internal.type === `HAL`) {
       await waitForCsv()
-      // console.log("Im done waiting!!!")
+      reporter.info("Im done waiting for people.csv!!!")
       const peopleData = getNodesByType("PeopleCsv")
       // Identify the teams
       function match(person, author) {
@@ -297,7 +337,22 @@ exports.onCreateNode = async ({
           })
         }
         personNodes++
-      }
+      } else {
+        if (node.internal.type === `SoftwareCsv` && node.image_url !== null && node.image_url) {
+          reporter.info(`Image url = ${node.image_url}.`);
+          const fileNode = await createRemoteFileNode({
+            url: node.image_url, // string that points to the URL of the image
+            parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
+            createNode, // helper function in gatsby-node to generate the node
+            createNodeId, // helper function in gatsby-node to generate the node id
+            getCache,
+          })
+          // if the file was created, extend the node with "image"
+          if (fileNode) {
+            createNodeField({ node, name: "image", value: fileNode.id })
+          }
+        }  
+      }  
     }
   }
 }
@@ -356,6 +411,14 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
             const teams = content.split(',').map(str => str.trim())
             return teams
           }
+        },
+        image: {
+          type: 'File',
+          extensions: {
+            link: {
+              from: "fields.image"
+            }
+          }
         }
       }
     }),
@@ -376,7 +439,33 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
           }
         }
       }
-    })
+    }),
+    schema.buildObjectType({
+      name: 'SoftwareCsv',
+      interfaces: ['Node'],
+      extensions: {
+        infer: true,
+      },
+      fields: {
+        teams: {
+          type: '[String]',
+          resolve: (src, args, context, info) => {
+            const { fieldName } = info
+            const content = src[fieldName]
+            const teams = content.split(',').map(str => str.trim().toUpperCase())
+            return teams
+          }
+        },
+        image: {
+          type: 'File',
+          extensions: {
+            link: {
+              from: "fields.image"
+            }
+          }
+        }
+      }
+    }),
   ]
   createTypes(typeDefs)
 }

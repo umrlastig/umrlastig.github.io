@@ -148,11 +148,12 @@ export const NavMenu = styled(Menu)`
 export const NavSubMenu = styled(SubMenu)`
     align-content: center;
     color: white;
+    padding: 0.375rem 2.5rem 0.375rem 1.5rem;
     ul {
         background: ${({theme, $team}) => $team ? theme.colors[$team] : theme.colors.header};
     }
     div {
-        padding: 0.375rem 1.5rem;
+        padding: 0rem 2.5rem 0rem 1rem;
     }
 `
 export const NavMenuItem = styled(MenuItem)`

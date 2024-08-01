@@ -34,5 +34,6 @@ export const theme = {
     'AAP Excellences': "#f59e72ff",
     TIGA: "#f2855dff",
     PEPS: "#ef6a4cff"
-  }
+  },
+  teams: ["ACTE","GEOVIS","MEIG","STRUDEL","LASTIG"]
 }
