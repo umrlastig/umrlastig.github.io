@@ -76,6 +76,10 @@ module.exports = {
           {
             name: `Softwares`,
             link: `/softwares`,
+          },
+          {
+            name: `PhD Theses`,
+            link: `/theses`,
           }
         ]
       },

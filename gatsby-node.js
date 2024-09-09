@@ -114,6 +114,11 @@ exports.createPages = async function ({ actions, graphql,reporter }) {
     component: require.resolve(`./src/templates/softwares.js`),
     context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
   })
+  actions.createPage({
+    path: `/theses`,
+    component: require.resolve(`./src/templates/theses.js`),
+    context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
+  })
 }
 
 const fields = [
@@ -132,7 +137,7 @@ exports.sourceNodes = async ({ actions,getNodes,reporter }) => {
     sort: "producedDateY_i desc",
     rows: 10000,
     fl: fields.join(','),
-    fq: "((labStructId_i:1003089 OR labStructId_i:536752) producedDateY_i:[2019 TO *])"
+    fq: "((labStructId_i:1003089 OR labStructId_i:536752))"// producedDateY_i:[2019 TO *])"
   };
   const params = qs.stringify(queryParams);
   await axios.get(`https://api.archives-ouvertes.fr/search/?${params}`,
@@ -351,8 +356,8 @@ exports.onCreateNode = async ({
           if (fileNode) {
             createNodeField({ node, name: "image", value: fileNode.id })
           }
-        }  
-      }  
+        } 
+      }
     }
   }
 }
