@@ -14,12 +14,12 @@ const ign_proxy = {
 var peopleCsvLines = 0;
 var personNodes = 0;
 
-exports.onPreBootstrap = async function({reporter}) {
+exports.onPreBootstrap = async function ({ reporter }) {
   // Read the file
   await fs.readFile('src/data/people.csv', 'utf8', (err, data) => {
     if (err) {
-        console.error(`Error reading file: ${err}`);
-        return;
+      console.error(`Error reading file: ${err}`);
+      return;
     }
     // Split the data into lines
     const lines = data.split('\n');
@@ -28,7 +28,7 @@ exports.onPreBootstrap = async function({reporter}) {
     reporter.info(`${peopleCsvLines} lines in people.csv`);
   });
 }
-exports.createPages = async function ({ actions, graphql,reporter }) {
+exports.createPages = async function ({ actions, graphql, reporter }) {
   var { data } = await graphql(`
         query {
             allPeopleCsv {
@@ -60,7 +60,7 @@ exports.createPages = async function ({ actions, graphql,reporter }) {
       context: { firstName: firstName, lastName: lastName },
     })
   })
-  const teams = ['STRUDEL','ACTE','MEIG','GEOVIS']
+  const teams = ['STRUDEL', 'ACTE', 'MEIG', 'GEOVIS']
   teams.forEach((team) => {
     reporter.info(`Creating pages for team ${team}`)
     actions.createPage({
@@ -127,7 +127,7 @@ const fields = [
   'journalTitle_s', 'researchData_s', 'peerReviewing_s', 'audience_s', 'doiId_s', 'softCodeRepository_s', 'arxivId_s', 'anrProjectTitle_s', 'europeanProjectTitle_s',
   'publicationDate_s', 'journalUrl_s', 'keyword_s'
 ]
-exports.sourceNodes = async ({ actions,getNodes,reporter }) => {
+exports.sourceNodes = async ({ actions, getNodes, reporter }) => {
   // console.log(`sourceNodes ${getNodes().map((node) => node.internal.type)}`)
   const { createNode } = actions;
   // fetch raw data from the HAL api
@@ -225,8 +225,14 @@ exports.onCreateNode = async ({
       // console.log("Z = "+url)
       await axios.get(url, proxy = ign_proxy).then(res => {
         const downloads = res.data["stats"]["downloads"];
-        // console.log(`Z => ${downloads}`)
-        createNodeField({ node, name: 'downloads', value: +downloads })
+        console.log(`Z => ${downloads}`)
+        if (downloads)
+          createNodeField({ node, name: 'downloads', value: +downloads })
+        else
+          createNodeField({ node, name: 'downloads', value: +0 })
+      }).catch(err => {
+        reporter.error(err);
+        createNodeField({ node, name: 'downloads', value: +0 })
       });
     } else {
       if (url.includes("dataverse") || url.includes("entrepot.recherche.data.gouv.fr")) {
@@ -239,8 +245,14 @@ exports.onCreateNode = async ({
               return $block.text().substring(0, $block.text().indexOf(" Downloads")).replace(",", "")
             })
             .toArray()[0];
-          // console.log(`D => ${downloads}`)
-          createNodeField({ node, name: 'downloads', value: +downloads })
+          console.log(`D => ${downloads}`)
+          if (downloads)
+            createNodeField({ node, name: 'downloads', value: +downloads })
+          else
+            createNodeField({ node, name: 'downloads', value: +0 })
+        }).catch(err => {
+          reporter.error(err);
+          createNodeField({ node, name: 'downloads', value: +0 })
         });
       } else {
         if (url.includes("figshare")) {
@@ -248,8 +260,14 @@ exports.onCreateNode = async ({
           // console.log(`F = ${url} (${dataId})`);
           await axios.get(`https://stats.figshare.com/total/article/${dataId}`, proxy = ign_proxy).then(res => {
             const downloads = res.data["downloads"];
-            // console.log(`F => ${downloads} from ${`https://stats.figshare.com/total/article/${dataId}`}`)
-            createNodeField({ node, name: 'downloads', value: +downloads })
+            console.log(`F => ${downloads} from ${`https://stats.figshare.com/total/article/${dataId}`}`)
+            if (downloads)
+              createNodeField({ node, name: 'downloads', value: +downloads })
+            else
+              createNodeField({ node, name: 'downloads', value: +0 })
+          }).catch(err => {
+            reporter.error(err);
+            createNodeField({ node, name: 'downloads', value: +0 })
           });
         } else {
           if (url.includes("mendeley")) {
@@ -257,8 +275,14 @@ exports.onCreateNode = async ({
             const dataId = url.substring(url.lastIndexOf("/") + 1)
             await axios.get(`https://api.plu.mx/widget/elsevier/artifact?type=mendeley_data_id&id=${dataId}&hidePrint=true&site=plum&href=https://plu.mx/plum/a?mendeley_data_id=${dataId}`, proxy = ign_proxy).then(res => {
               const downloads = res.data["statistics"]["Usage"][0]["count"];
-              // console.log("M => " + downloads)
-              createNodeField({ node, name: 'downloads', value: +downloads })
+              console.log("M => " + downloads)
+              if (downloads)
+                createNodeField({ node, name: 'downloads', value: +downloads })
+              else
+                createNodeField({ node, name: 'downloads', value: +0 })
+            }).catch(err => {
+              reporter.error(err);
+              createNodeField({ node, name: 'downloads', value: +0 })
             });
           } else {
             // console.log("OTHER = " + url)
@@ -311,7 +335,7 @@ exports.onCreateNode = async ({
       })))
       const authorIds = node.authIdHalFullName.flatMap((author) => {
         const people = peopleData.filter((peopleNode) => match(peopleNode, author))
-        return people.map((p)=>p.id)
+        return people.map((p) => p.id)
       })
       createNodeField({ node, name: 'authors', value: authorIds })
       // console.log(node.halId + "(" + teams + ") with " + node.authIdHalFullName.map((a) => `${a.fullName} [${a.idHal}]`).join(', '));
@@ -320,7 +344,7 @@ exports.onCreateNode = async ({
     }
     else {
       if (node.internal.type === `PeopleCsv`) {
-        const ids = ["researcheridId_s","idrefId_s","orcidId_s","viafId_s","isniId_s","google scholarId_s","arxivId_s"]
+        const ids = ["researcheridId_s", "idrefId_s", "orcidId_s", "viafId_s", "isniId_s", "google scholarId_s", "arxivId_s"]
         const halId = node.HAL
         if (halId) {
           const url = `https://api.archives-ouvertes.fr/ref/author/?q=idHal_s:${halId}&wt=json&fl=fullName_s,idHal_s,*Id_s`
@@ -329,7 +353,7 @@ exports.onCreateNode = async ({
               const doc = data.response.docs[0]
               ids.forEach((id) => {
                 createNodeField({ node, name: id, value: id in doc ? String(doc[id]) : "" })
-              })  
+              })
             } else {
               ids.forEach((id) => {
                 createNodeField({ node, name: id, value: "" })
@@ -345,18 +369,21 @@ exports.onCreateNode = async ({
       } else {
         if (node.internal.type === `SoftwareCsv` && node.image_url !== null && node.image_url) {
           reporter.info(`Image url = ${node.image_url}.`);
+          const extension = node.image_url.includes(".png") ? ".png" : ".jpg"
           const fileNode = await createRemoteFileNode({
             url: node.image_url, // string that points to the URL of the image
             parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
             createNode, // helper function in gatsby-node to generate the node
             createNodeId, // helper function in gatsby-node to generate the node id
             getCache,
+            ext: extension,
+            name: node.short_name,
           })
           // if the file was created, extend the node with "image"
           if (fileNode) {
             createNodeField({ node, name: "image", value: fileNode.id })
           }
-        } 
+        }
       }
     }
   }
