@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { FaClipboardCheck, FaFilePdf } from 'react-icons/fa6'
 import { Icon } from '@iconify-icon/react';
 import { StyledPublicationList, Publication, ImageLink } from './styles/Publications.styled'
+import {Buffer} from 'buffer';
 
 // Component adapted from: https://blog.logrocket.com/implementing-copy-clipboard-react-clipboard-api/
 function ClipboardCopy({ copyText }) {
@@ -46,6 +47,12 @@ function Repo(repo, key) {
     return null;
 }
 
+function getBibtex(label_bibtex) {
+    console.log(label_bibtex)
+    console.log(Buffer.from(label_bibtex, 'base64').toString('utf8'))
+    return Buffer.from(label_bibtex, 'base64').toString('utf8')
+}
+
 export const PublicationList = ({nodes, type, theme}) => {
     function pubKey(node) { return `${node.id}-${type}` };
     return (
@@ -60,7 +67,7 @@ export const PublicationList = ({nodes, type, theme}) => {
                         <div aria-label="Team" style={{
                         width:32, 
                         height: 32, 
-                        background:`conic-gradient(${node.fields.teams.map((team,index)=>`${theme.colors[team]} ${index*360.0/node.fields.teams.length}deg ${(index+1)*360.0/node.fields.teams.length}deg`).join(", ")})`,
+                        background:`conic-gradient(${node.teams.map((team,index)=>`${theme.colors[team]} ${index*360.0/node.teams.length}deg ${(index+1)*360.0/node.teams.length}deg`).join(", ")})`,
                         borderRadius: 5
                         }} />
                     </td>
@@ -79,7 +86,7 @@ export const PublicationList = ({nodes, type, theme}) => {
                     </td>
                     <td key={pubKey(node)+"-doi"}><ImageLink>{node.doiId && <a href={`https://www.doi.org/${node.doiId}`} aria-label='Document page using DOI'><Icon icon="academicons:doi" width="2em" height="2em" /></a>}</ImageLink></td>
                     <td key={pubKey(node)+"-file"}><ImageLink>{node.fileMain && <a href={node.fileMain} aria-label='Main document in HAL'><FaFilePdf /></a>}</ImageLink></td>
-                    <td key={pubKey(node)+"-bib"}>{ClipboardCopy({ copyText: node.label_bibtex })}</td>
+                    <td key={pubKey(node)+"-bib"}>{ClipboardCopy({ copyText: getBibtex(node.label_bibtex) })}</td>
                 </Publication>
             )})}
             </tbody>

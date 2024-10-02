@@ -34,7 +34,7 @@ export default function SoftwaresPage({ data, pageContext }) {
     }
     function Publications({ repo }) {
         if (!repo) { return <div></div>; }
-        const publications = data.allHal.nodes.filter((n)=>n.softCodeRepository && n.softCodeRepository.includes(repo))
+        const publications = data.allHalCsv.nodes.filter((n)=>n.softCodeRepository && n.softCodeRepository.includes(repo))
         return <div>
             <PublicationList nodes = {publications} type={null} theme={theme}/>
         </div>;
@@ -135,7 +135,7 @@ export const query = graphql`
                 }
             }
         }
-        allHal {
+        allHalCsv {
             nodes {
                 halId
                 id
@@ -162,10 +162,8 @@ export const query = graphql`
                 anrProjectTitle
                 europeanProjectTitle
                 publicationDate
-                fields {
-                    teams
-                    authors
-                }
+                teams
+                authors
                 keywords
             }
         }

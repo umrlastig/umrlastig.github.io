@@ -15,7 +15,7 @@ export default function PublicationsPage({ data, pageContext }) {
     console.log(`Publication PAGE : ${team} => ${isLastigPage}`)
     const intl = useIntl()
     function trans(text) { return intl.formatMessage({ id: text }) }
-    const nodes = data.allHal.nodes;
+    const nodes = data.allHalCsv.nodes;
     const classifiedNodes = nodes.map((node) => ({ pubType: getPubType(node), ...node }));
     function Pub({ pubType }) {
         const filteredNodes = classifiedNodes.filter((node) => node.pubType === pubType);
@@ -55,7 +55,7 @@ export default function PublicationsPage({ data, pageContext }) {
 
 export const query = graphql`
     query ($team: [String]) {
-        allHal(filter: { fields: { teams: { in: $team } } }) {
+        allHalCsv(filter: { teams: { in: $team } }) {
             nodes {
                 halId
                 id
@@ -82,9 +82,7 @@ export const query = graphql`
                 anrProjectTitle
                 europeanProjectTitle
                 publicationDate
-                fields {
-                    teams
-                }
+                teams
             }
         }
         site {

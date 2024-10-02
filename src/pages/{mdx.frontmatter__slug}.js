@@ -21,10 +21,10 @@ const Page = ({ data, children }) => {
   const pageSlug = data.mdx.frontmatter.slug
   const team = (pageSlug.includes("teams/")) ? pageSlug.replace("teams/","").split("/")[0].toUpperCase() : null
   const pageMenu = team ? data.site.siteMetadata.menus[team] : null
-  const nodes = data.allHal.nodes;
+  const nodes = data.allHalCsv.nodes;
   console.log("Team = " + team)
-  console.log("Node Team = " + nodes[0].fields.teams)
-  const filteredNodes = team ? nodes.filter((node)=>node.fields.teams.includes(team)) : nodes
+  console.log("Node Team = " + nodes[0].teams)
+  const filteredNodes = team ? nodes.filter((node)=>node.teams.includes(team)) : nodes
   // console.log(`Page ${pageSlug} - team ${team} menu ${pageMenu}`)
   const shortcodes = {
     Link, ContainerWithSlider, Columns,Column2,Column4, Projects, LastigMapContainer, 
@@ -112,7 +112,7 @@ export const query = graphql`
         }
       }
     }
-    allHal {
+    allHalCsv {
         nodes {
             halId
             id
@@ -121,7 +121,6 @@ export const query = graphql`
             fileMain
             files
             invitedCommunication
-            label_bibtex
             popularLevel
             proceedings
             producedDate
@@ -139,9 +138,7 @@ export const query = graphql`
             anrProjectTitle
             europeanProjectTitle
             publicationDate
-            fields {
-                teams
-            }
+            teams
             keywords
         }
     }

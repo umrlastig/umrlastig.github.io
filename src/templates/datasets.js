@@ -22,13 +22,14 @@ export default function DatasetsPage({ data, pageContext }) {
     console.log(`Dataset PAGE : ${team} => ${isLastigPage}`)
     const intl = useIntl()
     function trans(text) { return intl.formatMessage({ id: text }) }
-  
+    const nodes = data.allDatasetCsv.nodes;
+    nodes.sort(function (a, b) {return b.downloads - a.downloads;});
     const [chartData] = useState({
         labels: data.allDatasetCsv.nodes.map((node) => `${node.short_name}`),
         datasets: [
             {
                 label: "Datasets downloads",
-                data: data.allDatasetCsv.nodes.map((node) => node.fields ? node.fields.downloads : 0),
+                data: data.allDatasetCsv.nodes.map((node) => node.downloads),
                 backgroundColor: data.allDatasetCsv.nodes.map((node) => theme.colors[node.theme]),
             }
         ]
@@ -47,7 +48,7 @@ export default function DatasetsPage({ data, pageContext }) {
     }
     function Publications({ doi }) {
         if (!doi) { return <div></div>; }
-        const publications = data.allHal.nodes.filter((n)=>n.researchData && n.researchData.some((rdata)=>rdata.includes(doi)))
+        const publications = data.allHalCsv.nodes.filter((n)=>n.researchData && n.researchData.some((rdata)=>rdata.includes(doi)))
         return <div>
             <PublicationList nodes = {publications} type={null} theme={theme}/>
         </div>;
@@ -78,7 +79,7 @@ export default function DatasetsPage({ data, pageContext }) {
                                 <Doi doi={node.doi} />
                                 <Project project={node.project} />
                                 <Teams teams={node.teams} />
-                                <Downloads>{trans('Downloads:')} <b>{node.fields ? node.fields.downloads : 0}</b></Downloads>
+                                <Downloads>{trans('Downloads:')} <b>{node.downloads }</b></Downloads>
                             </DatasetInfo>
                             <Publications doi={node.doi} />
                         </Dataset>
@@ -91,11 +92,9 @@ export default function DatasetsPage({ data, pageContext }) {
 
 export const query = graphql`
     query ($team: [String]) {
-        allDatasetCsv(filter: { teams: { in: $team } }, sort: { fields: { downloads: DESC } }) {
+        allDatasetCsv(filter: { teams: { in: $team } }, sort: { downloads: DESC }) {
             nodes {
-                fields {
-                    downloads
-                }
+                downloads
                 doi
                 id
                 name
@@ -162,7 +161,7 @@ export const query = graphql`
                 }
             }
         }
-        allHal {
+        allHalCsv {
             nodes {
                 halId
                 id
@@ -189,10 +188,8 @@ export const query = graphql`
                 anrProjectTitle
                 europeanProjectTitle
                 publicationDate
-                fields {
-                    teams
-                    authors
-                }
+                teams
+                authors
                 keywords
             }
         }
