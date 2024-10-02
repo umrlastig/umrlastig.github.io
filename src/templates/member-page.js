@@ -26,7 +26,7 @@ const modifyPhotoUrl = (url) => {
 export default function MemberPage({ data }) {
   const node = data.peopleCsv
   const allNodes = data.allHalCsv.nodes;
-  const filteredNodes = allNodes.filter((pubNode) => pubNode.authors.includes(node.id));
+  const filteredNodes = allNodes.filter((pubNode) => pubNode.authors.includes(node.fid));
   const classifiedNodes = filteredNodes.map((node) => ({ pubType: getPubType(node), ...node }));
   function Pub({ pubType }) {
     const filteredNodesForType = classifiedNodes.filter((node) => node.pubType === pubType);
@@ -106,6 +106,7 @@ export const query = graphql`
       orcidId_s
       researcheridId_s
       viafId_s
+      fid
     }
     allHalCsv {
       nodes {
