@@ -1,4 +1,4 @@
-firstname,alt_firstname,lastname,team,statut,status,webpage,HAL,start_date,end_date,member,photo,perm,fid,researcheridId_s,idrefId_s,orcidId_s,viafId_s,isniId_s,google scholarId_s,arxivId_s
+firstname,alt_firstname,lastname,teams,statut,status,webpage,HAL,start_date,end_date,member,photo,perm,fid,researcheridId_s,idrefId_s,orcidId_s,viafId_s,isniId_s,google scholarId_s,arxivId_s
 Saif,,Aati,ACTE,Doctorant,PhD student,/saif-aati,,2020-07-01,2023-03-31,false,,false,0,,,,,,,
 Nathalie,,Abadie,STRUDEL,CR IGN,Researcher,/nathalie-abadie,nathalie-abadie,2005-10-01,,true,/nathalie-abadie/img/abadie.png,true,1,,https://www.idref.fr/167625594,https://orcid.org/0000-0001-8741-2398,,,https://scholar.google.com/citations?hl=en&user=n208lNQAAAAJ,
 Mohamed,,Ali-Chebbi,ACTE,Doctorant,PhD student,/mohamed-alichebbi,,2020-07-01,,true,,false,2,,,,,,,
@@ -53,7 +53,7 @@ Florent,,Geniet,ACTE,Doctorant,PhD student,/florent-geniet,florent-geniet,2021-0
 Sébastien,,Giordano,STRUDEL,Chargé de Recherches,Researcher,/sebastien-giordano,sebastien-giordano,2016-09-01,2020-06-30,false,/lastig_data/img/giordano.jpg,true,51,,https://www.idref.fr/19252271X,https://orcid.org/0000-0001-9408-3334,,,,
 Dimitri,,Gominski,ACTE,Doctorant,PhD student,,,2018-01-22,2021-11-09,false,,false,52,,,,,,,
 Nicolas,,Gonthier,STRUDEL,Chercheur,Researcher,https://ngonthier.github.io/,gonthier.nicolas,2022-09-01,,true,https://ngonthier.github.io/images/avatar.jpg,true,53,,,,,,,
-Valérie,,Gouet-Brunet,ACTE,DR1 MTE,Senior Researcher,/vgouet,valerie-gouet-brunet,2012-10-01,,true,/vgouet/img/photo_valerie.jpg,true,54,,https://www.idref.fr/174365020,https://orcid.org/0000-0003-3666-5146,,,,
+Valérie,,Gouet-Brunet,"ACTE,STRUDEL",DR1 MTE,Senior Researcher,/vgouet,valerie-gouet-brunet,2012-10-01,,true,/vgouet/img/photo_valerie.jpg,true,54,,https://www.idref.fr/174365020,https://orcid.org/0000-0003-3666-5146,,,,
 Malika,,Grim-Yefsah,MEIG,MCF,Lecturer and Researcher,/malika-grim-yefsah,malika-grim,2017-04-01,,true,/malika-grim-yefsah/img/mgrim.jpg,true,55,,https://www.idref.fr/166752304,https://orcid.org/0000-0002-6743-0692,,,,
 Maieul,,Gruget,GEOVIS,Doctorant,PhD student,/maieul-gruget,maieul-gruget,2021-09-01,,true,/geovis/faces/maieul-gruget.jpg,false,56,,,,,,,
 Grégoire,,Grzeczkowicz,ACTE,Doctorant,PhD student,/gregoire-grzeczkowicz,ggrzeczkowicz,2021-04-14,2024-08-31,true,/gregoire-grzeczkowicz/img/grzeczkowicz.jpg,false,57,,,https://orcid.org/0000-0003-2913-2608,,,,

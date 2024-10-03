@@ -6,7 +6,7 @@ const { stringify } = require("csv-stringify");
 const csv = require('csv-parser');
 const { HttpsProxyAgent } = require('https-proxy-agent');
 
-const use_proxy = false;
+const use_proxy = true;
 const axiosDefaultConfig = use_proxy ? {
     proxy: false,
     httpsAgent: new HttpsProxyAgent('http://proxy.ign.fr:3128')
@@ -34,7 +34,7 @@ function getPeople(inputPeopleFilename, peopleFilename) {
                 console.log("Finished reading and found", persons.length);
                 const writableStream = fs.createWriteStream(peopleFilename);
                 const columns = [
-                    "firstname", "alt_firstname", "lastname", "team", "statut", "status", "webpage", "HAL", "start_date", "end_date", "member", "photo", "perm",
+                    "firstname", "alt_firstname", "lastname", "teams", "statut", "status", "webpage", "HAL", "start_date", "end_date", "member", "photo", "perm",
                     "fid", "researcheridId_s", "idrefId_s", "orcidId_s", "viafId_s", "isniId_s", "google scholarId_s", "arxivId_s"
                 ];
                 const stringifier = stringify({ header: true, columns: columns });
@@ -62,8 +62,9 @@ function getPeople(inputPeopleFilename, peopleFilename) {
                             person[id] = ""
                         })
                     }
+                    console.log(person.teams);
                     stringifier.write([
-                        person.firstname, person.alt_firstname, person.lastname, person.team, person.statut, person.status, person.webpage, person.HAL,
+                        person.firstname, person.alt_firstname, person.lastname, person.teams, person.statut, person.status, person.webpage, person.HAL,
                         person.start_date, person.end_date, person.member, person.photo, person.perm,
                         person.fid, person.researcheridId_s, person.idrefId_s, person.orcidId_s, person.viafId_s, person.isniId_s, person["google scholarId_s"], person.arxivId_s,
                     ]);
@@ -84,7 +85,7 @@ async function getTheses(peopleFilename, thesesFilename) {
         fs.createReadStream(peopleFilename)
             .pipe(csv())
             .on("data", (data) => {
-                const o = { team: data.team, webpage: data.webpage, HAL: data.HAL, firstname: data.firstname, lastname: data.lastname };
+                const o = { teams: data.teams, webpage: data.webpage, HAL: data.HAL, firstname: data.firstname, lastname: data.lastname };
                 people.set(`${data.firstname.toLowerCase()} ${data.lastname.toLowerCase()}`, o);
                 if (data.alt_firstname) {
                     people.set(`${data.alt_firstname.toLowerCase()} ${data.lastname.toLowerCase()}`, o);
@@ -212,12 +213,12 @@ async function getTheses(peopleFilename, thesesFilename) {
                         await getHalInfo();
                         let firstname = (firstNamePatch.has(thesis.id)) ? firstNamePatch.get(thesis.id) : thesis.auteurs[0].prenom;
                         let lastname = thesis.auteurs[0].nom;
-                        let team = "";
+                        let teams = "";
                         let webpage = "";
                         let HAL = "";
                         if (people.has(`${firstname.toLowerCase()} ${lastname.toLowerCase()}`)) {
                             const r = people.get(`${firstname.toLowerCase()} ${lastname.toLowerCase()}`);
-                            team = r.team;
+                            teams = r.teams;
                             webpage = r.webpage;
                             HAL = r.HAL;
                         }
@@ -232,7 +233,7 @@ async function getTheses(peopleFilename, thesesFilename) {
                             lastname,
                             authorIdHal,
                             HAL,
-                            team,
+                            teams,
                             webpage,
                             thesis.discipline,
                             status,
@@ -265,7 +266,7 @@ function getPublications(peopleFilename, halFilename) {
     fs.createReadStream(peopleFilename)
         .pipe(csv())
         .on("data", (data) => {
-            const o = { team: data.team, webpage: data.webpage, HAL: data.HAL, firstname: data.firstname, alt_firstname: data.alt_firstname, lastname: data.lastname, team: data.team, fid: data.fid };
+            const o = { teams: data.teams, webpage: data.webpage, HAL: data.HAL, firstname: data.firstname, alt_firstname: data.alt_firstname, lastname: data.lastname, fid: data.fid };
             people.push(o);
             // people.set(`${data.firstname.toLowerCase()} ${data.lastname.toLowerCase()}`, o);
             // if (data.alt_firstname) {
@@ -349,7 +350,7 @@ function getPublications(peopleFilename, halFilename) {
                     }
                     const teams = Array.from(new Set(authors.flatMap((author) => {
                         const person = people.filter((peopleNode) => match(peopleNode, author))
-                        return person.map((p) => p.team)
+                        return person.flatMap((p) => p.teams.split(','))
                     })))
                     const authorIds = authors.flatMap((author) => {
                         const person = people.filter((peopleNode) => match(peopleNode, author))
@@ -494,18 +495,18 @@ function getDatasets(inputDatasetFilename, datasetFilename) {
 }
 /*
  TODO: 
-- add fid from people file to join the files
+- get the input data from lastig_data ?
 - add info about previous positions? education?
 */
 
-// getPeople("src/input_data/people.csv", "src/data/people.csv")
-//     .then(() =>
-//         getTheses("src/data/people.csv", "src/data/theses.csv")
-//             .then(() =>
-//                 getPublications("src/data/people.csv", "src/data/hal.csv")
+getPeople("src/input_data/people.csv", "src/data/people.csv")
+    .then(() =>
+        getTheses("src/data/people.csv", "src/data/theses.csv")
+            .then(() =>
+                getPublications("src/data/people.csv", "src/data/hal.csv")
 //             // .then(()=>
 //             //     getDatasets("src/input_data/dataset.csv","src/data/dataset.csv"))
-//             )
-//     )
+            )
+    )
 
-getPublications("src/data/people.csv", "src/data/hal.csv")
+// getPublications("src/data/people.csv", "src/data/hal.csv")

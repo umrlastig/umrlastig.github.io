@@ -46,7 +46,7 @@ exports.createPages = async function ({ actions, graphql, reporter }) {
                     start_date
                     status
                     statut
-                    team
+                    teams
                     webpage
                 }
             }
@@ -63,63 +63,23 @@ exports.createPages = async function ({ actions, graphql, reporter }) {
     })
   })
   const teams = ['STRUDEL', 'ACTE', 'MEIG', 'GEOVIS']
+  const pages = ['publications', 'datasets', 'members', 'projects', 'softwares', 'theses']
   teams.forEach((team) => {
     reporter.info(`Creating pages for team ${team}`)
-    actions.createPage({
-      path: `/teams/${team.toLowerCase()}/publications`,
-      component: require.resolve(`./src/templates/publications.js`),
-      context: { team: [team] },
-    })
-    actions.createPage({
-      path: `/teams/${team.toLowerCase()}/datasets`,
-      component: require.resolve(`./src/templates/datasets.js`),
-      context: { team: [team] },
-    })
-    actions.createPage({
-      path: `/teams/${team.toLowerCase()}/members`,
-      component: require.resolve(`./src/templates/members-page.js`),
-      context: { team: [team] },
-    })
-    actions.createPage({
-      path: `/teams/${team.toLowerCase()}/projects`,
-      component: require.resolve(`./src/templates/projects.js`),
-      context: { team: [team] },
-    })
-    actions.createPage({
-      path: `/teams/${team.toLowerCase()}/softwares`,
-      component: require.resolve(`./src/templates/softwares.js`),
-      context: { team: [team] },
+    pages.forEach((page) => {
+      actions.createPage({
+        path: `/teams/${team.toLowerCase()}/${page}`,
+        component: require.resolve(`./src/templates/${page}.js`),
+        context: { team: [team] },
+      })
     })
   })
-  actions.createPage({
-    path: `/publications`,
-    component: require.resolve(`./src/templates/publications.js`),
-    context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
-  })
-  actions.createPage({
-    path: `/datasets`,
-    component: require.resolve(`./src/templates/datasets.js`),
-    context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
-  })
-  actions.createPage({
-    path: `/projects`,
-    component: require.resolve(`./src/templates/projects.js`),
-    context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
-  })
-  actions.createPage({
-    path: `/members`,
-    component: require.resolve(`./src/templates/members-page.js`),
-    context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
-  })
-  actions.createPage({
-    path: `/softwares`,
-    component: require.resolve(`./src/templates/softwares.js`),
-    context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
-  })
-  actions.createPage({
-    path: `/theses`,
-    component: require.resolve(`./src/templates/theses.js`),
-    context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
+  pages.forEach((page) => {
+    actions.createPage({
+      path: `/${page}`,
+      component: require.resolve(`./src/templates/${page}.js`),
+      context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
+    })
   })
 }
 
@@ -211,6 +171,24 @@ exports.createSchemaCustomization = ({ actions, schema, reporter }) => {
       idHal: String
     }
   `,
+    schema.buildObjectType({
+      name: 'PeopleCsv',
+      interfaces: ['Node'],
+      extensions: {
+        infer: true,
+      },
+      fields: {
+        teams: {
+          type: '[String]',
+          resolve: (src, args, context, info) => {
+            const { fieldName } = info
+            const content = src[fieldName]
+            const teams = content.split(',').map(str => str.trim())
+            return teams
+          }
+        }
+      }
+    }),
     schema.buildObjectType({
       name: 'HalCsv',
       interfaces: ['Node'],

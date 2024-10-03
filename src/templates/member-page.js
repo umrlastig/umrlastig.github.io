@@ -48,7 +48,7 @@ export default function MemberPage({ data }) {
         <h1>{node.firstname} {node.alt_firstname && `(${node.alt_firstname}) `}{node.lastname}</h1>
         <div><img src={modifyPhotoUrl(node.photo)} alt={`${node.firstname} ${node.lastname}`} /></div>
         <h2>{(locale === 'en') ? node.status : node.statut}</h2>
-        {node.team && <h3><FormattedMessage id="inteam" values={{ team: node.team }} /></h3>}
+        {node.teams && <h3><FormattedMessage id="inteam" values={{ teams: node.teams.join(" & ") }} /></h3>}
         {node.webpage && <a href={modifyUrl(node.webpage)}>{trans("Personal webpage")}</a>}
         <Ids>
           {node.HAL && <a href={`https://cv.hal.science/${node.HAL}`} aria-label="HAL"><Icon icon="simple-icons:hal" width="2em" height="2em" /></a>}
@@ -97,7 +97,7 @@ export const query = graphql`
       end_date
       status
       statut
-      team
+      teams
       webpage
       arxivId_s
       google_scholarId_s
