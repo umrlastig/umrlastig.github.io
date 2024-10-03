@@ -6,7 +6,7 @@ const { stringify } = require("csv-stringify");
 const csv = require('csv-parser');
 const { HttpsProxyAgent } = require('https-proxy-agent');
 
-const use_proxy = true;
+const use_proxy = false;
 const axiosDefaultConfig = use_proxy ? {
     proxy: false,
     httpsAgent: new HttpsProxyAgent('http://proxy.ign.fr:3128')
@@ -374,7 +374,7 @@ function getPublications(peopleFilename, halFilename) {
                         (doc.researchData_s) ? doc.researchData_s.join(",") : "",
                         doc.audience_s,
                         doc.doiId_s,
-                        (doc.softCodeRepository_s) ? doc.softCodeRepository_s.join(","): "",
+                        (doc.softCodeRepository_s) ? doc.softCodeRepository_s.join(",") : "",
                         doc.arxivId_s,
                         doc.anrProjectTitle_s,
                         doc.europeanProjectTitle_s,
@@ -385,9 +385,9 @@ function getPublications(peopleFilename, halFilename) {
                     ]
                 });
                 Promise.all(promises).then((values) => {
-                    values.forEach((v)=>stringifier.write(v));
+                    values.forEach((v) => stringifier.write(v));
                     stringifier.pipe(writableStream);
-                    console.log("Finished writing data for publications");        
+                    console.log("Finished writing data for publications");
                 })
             }).catch(err => console.error(err));
         });
@@ -504,9 +504,7 @@ getPeople("src/input_data/people.csv", "src/data/people.csv")
         getTheses("src/data/people.csv", "src/data/theses.csv")
             .then(() =>
                 getPublications("src/data/people.csv", "src/data/hal.csv")
-//             // .then(()=>
-//             //     getDatasets("src/input_data/dataset.csv","src/data/dataset.csv"))
+                    .then(() =>
+                        getDatasets("src/input_data/dataset.csv", "src/data/dataset.csv"))
             )
     )
-
-// getPublications("src/data/people.csv", "src/data/hal.csv")
