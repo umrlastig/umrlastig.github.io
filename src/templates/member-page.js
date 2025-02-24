@@ -138,6 +138,7 @@ export const query = graphql`
           teams
           authors
           keywords
+          keywords_lastig
       }
     }
   }

@@ -223,6 +223,15 @@ exports.createSchemaCustomization = ({ actions, schema, reporter }) => {
             return keywords
           }
         },
+        keywords_lastig: {
+          type: '[String]',
+          resolve: (src, args, context, info) => {
+            const { fieldName } = info
+            const content = src[fieldName]
+            const keywords = content.split(',').map(str => str.trim())
+            return keywords
+          }
+        },
         researchData: {
           type: '[String]',
           resolve: (src, args, context, info) => {

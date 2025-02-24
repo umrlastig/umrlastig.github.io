@@ -260,136 +260,289 @@ async function getTheses(peopleFilename, thesesFilename) {
 }
 
 //HAL
-function getPublications(peopleFilename, halFilename) {
+async function getPublications(base, peopleFilename, halFilename) {
+    const synonyms = base.synonyms;
+    const toRemove = base.toRemove;
     //input people data
     const people = new Array();
-    fs.createReadStream(peopleFilename)
+    return new Promise((resolve, _reject) => {
+        fs.createReadStream(peopleFilename)
+            .pipe(csv())
+            .on("data", (data) => {
+                const o = { teams: data.teams, webpage: data.webpage, HAL: data.HAL, firstname: data.firstname, alt_firstname: data.alt_firstname, lastname: data.lastname, fid: data.fid };
+                people.push(o);
+                // people.set(`${data.firstname.toLowerCase()} ${data.lastname.toLowerCase()}`, o);
+                // if (data.alt_firstname) {
+                //     people.set(`${data.alt_firstname.toLowerCase()} ${data.lastname.toLowerCase()}`, o);
+                // }
+            })
+            .on("end", async () => {
+                console.log(people.length, "persons found for publications");
+                const fields = [
+                    'fileAnnexes_s', 'fileAnnexesFigure_s', 'invitedCommunication_s', 'proceedings_s', 'popularLevel_s', 'halId_s', 'authIdHalFullName_fs', 'producedDateY_i',
+                    'docType_s', 'files_s', 'fileMain_s', 'fileMainAnnex_s', 'linkExtUrl_s', 'title_s', 'en_title_s', 'fr_title_s', 'label_bibtex', 'citationRef_s', 'labStructId_i',
+                    'journalTitle_s', 'researchData_s', 'peerReviewing_s', 'audience_s', 'doiId_s', 'softCodeRepository_s', 'arxivId_s', 'anrProjectTitle_s', 'europeanProjectTitle_s',
+                    'publicationDate_s', 'journalUrl_s', 'keyword_s'
+                ];
+                // fetch raw data from the HAL api
+                const queryParams = {
+                    q: "*",
+                    wt: "json",
+                    sort: "producedDateY_i desc",
+                    rows: 10000,
+                    fl: fields.join(','),
+                    fq: "((labStructId_i:1003089 OR labStructId_i:536752))"// producedDateY_i:[2019 TO *])"
+                };
+                const params = qs.stringify(queryParams);
+                const writableStream = fs.createWriteStream(halFilename);
+                const columns = [
+                    "id",
+                    "title",
+                    "halId",
+                    "authIdHalFullName",
+                    "docType",
+                    "producedDate",
+                    "fileMain",
+                    "files",
+                    "citationRef",
+                    "label_bibtex",
+                    "proceedings",
+                    "popularLevel",
+                    "invitedCommunication",
+                    "peerReviewing",
+                    "researchData",
+                    "audience",
+                    "doiId",
+                    "softCodeRepository",
+                    "arxivId",
+                    "anrProjectTitle",
+                    "europeanProjectTitle",
+                    "publicationDate",
+                    "teams",
+                    "authors",
+                    "keywords",
+                    "keywords_lastig"
+                ];
+                const stringifier = stringify({ header: true, columns: columns });
+                await get(`https://api.archives-ouvertes.fr/search/?${params}`).then(res => {
+                    console.log(`Found ${res.data.response.docs.length} publications`);
+                    // map into these results and create nodes
+                    const promises = res.data.response.docs.map((doc, i) => {
+                        // Create your node object
+                        const authors = doc.authIdHalFullName_fs.map((authIdHalFullName) => {
+                            const [_idHal, _fullName] = authIdHalFullName.split('_FacetSep_');
+                            return { fullName: _fullName, idHal: _idHal }
+                        });
+                        // Identify the teams
+                        function match(person, author) {
+                            function getInitials(name) {
+                                let words = name.split(' ');
+                                let initials = words.map(word => word.charAt(0));
+                                return initials.join(' ').toUpperCase();
+                            }
+                            const ignoreNoise = str => str.replaceAll("-", " ").replaceAll(".", "")
+                            const removeAccents = str => str.normalize('NFD').replaceAll(/[\u0300-\u036f]/g, '')
+                            const clean = str => ignoreNoise(removeAccents(str))
+                            const fullName = clean(author.fullName)
+                            return (
+                                (person.HAL && (author.idHal === person.HAL)) ||
+                                fullName.includes(clean(`${person.firstname} ${person.lastname}`)) ||
+                                (!!person.alt_firstname && fullName.includes(clean(`${person.alt_firstname} ${person.lastname}`))) ||
+                                fullName.includes(clean(`${getInitials(person.firstname)} ${person.lastname}`)) ||
+                                fullName.includes(clean(`${person.lastname} ${person.firstname}`))
+                            )
+                        }
+                        const teams = Array.from(new Set(authors.flatMap((author) => {
+                            const person = people.filter((peopleNode) => match(peopleNode, author))
+                            return person.flatMap((p) => p.teams.split(','))
+                        })));
+                        const authorIds = authors.flatMap((author) => {
+                            const person = people.filter((peopleNode) => match(peopleNode, author))
+                            return person.map((p) => p.fid)
+                        });
+                        const keywords = (doc.keyword_s) ? doc.keyword_s.join(",") : "";
+                        const keywords_lastig = (doc.keyword_s) ? rewriteKeywords(base, doc.keyword_s).join(",") : "";
+                        return [
+                            `${i}`,
+                            (doc.title_s) ? doc.title_s.join(",") : "",
+                            doc.halId_s,
+                            JSON.stringify(authors),
+                            doc.docType_s,
+                            doc.producedDateY_i,
+                            doc.fileMain_s,
+                            (doc.files_s) ? doc.files_s.join(",") : "",
+                            doc.citationRef_s,
+                            Buffer.from(doc.label_bibtex).toString('base64'),
+                            doc.proceedings_s,
+                            doc.popularLevel_s,
+                            doc.invitedCommunication_s,
+                            doc.peerReviewing_s,
+                            (doc.researchData_s) ? doc.researchData_s.join(",") : "",
+                            doc.audience_s,
+                            doc.doiId_s,
+                            (doc.softCodeRepository_s) ? doc.softCodeRepository_s.join(",") : "",
+                            doc.arxivId_s,
+                            doc.anrProjectTitle_s,
+                            doc.europeanProjectTitle_s,
+                            doc.publicationDate_s,
+                            teams.join(","),
+                            authorIds.join(","),
+                            keywords,
+                            keywords_lastig
+                        ]
+                    });
+                    Promise.all(promises).then((values) => {
+                        values.forEach((v) => stringifier.write(v));
+                        stringifier.pipe(writableStream);
+                        console.log("Finished writing data for publications with ", values.length);
+                        resolve();
+                    })
+                }).catch(err => console.error(err));
+            });
+    })
+}
+
+async function getKeywordBase(synonymsFilename, toRemoveFilename) {
+    const synonyms = new Map();
+    const toRemove = [];
+    return new Promise((resolve, _reject) => {
+        fs.createReadStream(synonymsFilename)
+            .pipe(csv({ headers: false }))
+            .on("data", (data) => {
+                Object.getOwnPropertyNames(data).filter((k) => k != "0").forEach((k) => {
+                    if (data[k].length > 0) synonyms.set(data[k], data["0"]);
+                });
+            })
+            .on("end", () => {
+                fs.createReadStream(toRemoveFilename)
+                    .pipe(csv({ headers: false }))
+                    .on("data", (data) => {
+                        toRemove.push(data["0"]);
+                    })
+                    .on("end", () => {
+                        console.log(toRemove);
+                        resolve({ "synonyms": synonyms, "toRemove": toRemove })
+                    })
+            });
+    });
+}
+
+function rewriteKeywords(base, keywords) {
+    if (!keywords) return [];
+    // console.log("keywords = ",keywords.join(", "));
+    return Array.from(new Set(keywords
+        .map((k) => k.trim())
+        .filter((k) => k.length > 2)
+        .map((k) => k.toLowerCase())
+        .map((k) => base.synonyms.has(k) ? base.synonyms.get(k) : k)
+        .filter((k) => !base.toRemove.includes(k))));
+}
+function getKeywords(halFilename, keywordsFilename, cooccurenceFilename) {
+    //input hal data
+    const publications = new Array();
+    const allTeams = ["acte", "meig", "geovis", "strudel", "lastig"]
+    // const synonyms = base.synonyms;
+    // const toRemove = base.toRemove;
+    fs.createReadStream(halFilename)
         .pipe(csv())
         .on("data", (data) => {
-            const o = { teams: data.teams, webpage: data.webpage, HAL: data.HAL, firstname: data.firstname, alt_firstname: data.alt_firstname, lastname: data.lastname, fid: data.fid };
-            people.push(o);
-            // people.set(`${data.firstname.toLowerCase()} ${data.lastname.toLowerCase()}`, o);
-            // if (data.alt_firstname) {
-            //     people.set(`${data.alt_firstname.toLowerCase()} ${data.lastname.toLowerCase()}`, o);
-            // }
+            const o = { teams: data.teams, keywords: data.keywords_lastig };
+            publications.push(o);
         })
-        .on("end", async () => {
-            console.log(people.length, "persons found for publications");
-            const fields = [
-                'fileAnnexes_s', 'fileAnnexesFigure_s', 'invitedCommunication_s', 'proceedings_s', 'popularLevel_s', 'halId_s', 'authIdHalFullName_fs', 'producedDateY_i',
-                'docType_s', 'files_s', 'fileMain_s', 'fileMainAnnex_s', 'linkExtUrl_s', 'title_s', 'en_title_s', 'fr_title_s', 'label_bibtex', 'citationRef_s', 'labStructId_i',
-                'journalTitle_s', 'researchData_s', 'peerReviewing_s', 'audience_s', 'doiId_s', 'softCodeRepository_s', 'arxivId_s', 'anrProjectTitle_s', 'europeanProjectTitle_s',
-                'publicationDate_s', 'journalUrl_s', 'keyword_s'
-            ];
-            // fetch raw data from the HAL api
-            const queryParams = {
-                q: "*",
-                wt: "json",
-                sort: "producedDateY_i desc",
-                rows: 10000,
-                fl: fields.join(','),
-                fq: "((labStructId_i:1003089 OR labStructId_i:536752))"// producedDateY_i:[2019 TO *])"
-            };
-            const params = qs.stringify(queryParams);
-            const writableStream = fs.createWriteStream(halFilename);
+        .on("end", () => {
+            console.log(publications.length, "publications as input for Keywords");
+            const writableStream = fs.createWriteStream(keywordsFilename);
             const columns = [
-                "id",
-                "title",
-                "halId",
-                "authIdHalFullName",
-                "docType",
-                "producedDate",
-                "fileMain",
-                "files",
-                "citationRef",
-                "label_bibtex",
-                "proceedings",
-                "popularLevel",
-                "invitedCommunication",
-                "peerReviewing",
-                "researchData",
-                "audience",
-                "doiId",
-                "softCodeRepository",
-                "arxivId",
-                "anrProjectTitle",
-                "europeanProjectTitle",
-                "publicationDate",
-                "keywords",
-                "teams",
-                "authors"
+                "keyword",
+                "acte",
+                "meig",
+                "geovis",
+                "strudel",
+                "total"
             ];
+            const keywordTeamMap = new Map();
+            const keywordCoOccurenceMap = {
+                "acte": new Map(),
+                "meig": new Map(),
+                "geovis": new Map(),
+                "strudel": new Map(),
+                "lastig": new Map()
+            };
             const stringifier = stringify({ header: true, columns: columns });
-            await get(`https://api.archives-ouvertes.fr/search/?${params}`).then(res => {
-                console.log(`Found ${res.data.response.docs.length} publications`);
-                // map into these results and create nodes
-                const promises = res.data.response.docs.map((doc, i) => {
-                    // Create your node object
-                    const authors = doc.authIdHalFullName_fs.map((authIdHalFullName) => {
-                        const [_idHal, _fullName] = authIdHalFullName.split('_FacetSep_');
-                        return { fullName: _fullName, idHal: _idHal }
-                    });
-                    // Identify the teams
-                    function match(person, author) {
-                        function getInitials(name) {
-                            let words = name.split(' ');
-                            let initials = words.map(word => word.charAt(0));
-                            return initials.join(' ').toUpperCase();
+            publications.forEach((v) => {
+                const teams = v.teams.split(",").map((k) => k.trim()).filter((k) => k.length > 0);
+                const keywords = v.keywords ? v.keywords.split(",") : [];//rewriteKeywords(v.keywords.split(","))
+                // const keywords = Array.from(new Set(v.keywords
+                //     .split(",")
+                //     .map((k) => k.trim())
+                //     .filter((k) => k.length > 2)
+                //     .map((k) => k.toLowerCase())
+                //     .map((k) => synonyms.has(k) ? synonyms.get(k) : k)
+                //     .filter((k) => !toRemove.includes(k))));
+                // console.log(keywords, teams);
+                if (teams.length > 0) {
+                    keywords.forEach((keyword) => {
+                        if (keywordTeamMap.has(keyword)) {
+                            const entry = keywordTeamMap.get(keyword);
+                            keywordTeamMap.set(keyword, {
+                                "acte": entry.acte + (teams.includes("ACTE") ? 1 : 0),
+                                "meig": entry.meig + (teams.includes("MEIG") ? 1 : 0),
+                                "geovis": entry.geovis + (teams.includes("GEOVIS") ? 1 : 0),
+                                "strudel": entry.strudel + (teams.includes("STRUDEL") ? 1 : 0)
+                            });
+                        } else {
+                            // console.log(keyword, teams);
+                            keywordTeamMap.set(keyword, {
+                                "acte": teams.includes("ACTE") ? 1 : 0,
+                                "meig": teams.includes("MEIG") ? 1 : 0,
+                                "geovis": teams.includes("GEOVIS") ? 1 : 0,
+                                "strudel": teams.includes("STRUDEL") ? 1 : 0
+                            });
                         }
-                        const ignoreNoise = str => str.replaceAll("-", " ").replaceAll(".", "")
-                        const removeAccents = str => str.normalize('NFD').replaceAll(/[\u0300-\u036f]/g, '')
-                        const clean = str => ignoreNoise(removeAccents(str))
-                        const fullName = clean(author.fullName)
-                        return (
-                            (person.HAL && (author.idHal === person.HAL)) ||
-                            fullName.includes(clean(`${person.firstname} ${person.lastname}`)) ||
-                            fullName.includes(clean(`${person.alt_firstname} ${person.lastname}`)) ||
-                            fullName.includes(clean(`${getInitials(person.firstname)} ${person.lastname}`)) ||
-                            fullName.includes(clean(`${person.lastname} ${person.firstname}`))
-                        )
-                    }
-                    const teams = Array.from(new Set(authors.flatMap((author) => {
-                        const person = people.filter((peopleNode) => match(peopleNode, author))
-                        return person.flatMap((p) => p.teams.split(','))
-                    })))
-                    const authorIds = authors.flatMap((author) => {
-                        const person = people.filter((peopleNode) => match(peopleNode, author))
-                        return person.map((p) => p.fid)
-                    })
-                    return [
-                        `${i}`,
-                        (doc.title_s) ? doc.title_s.join(",") : "",
-                        doc.halId_s,
-                        JSON.stringify(authors),
-                        doc.docType_s,
-                        doc.producedDateY_i,
-                        doc.fileMain_s,
-                        (doc.files_s) ? doc.files_s.join(",") : "",
-                        doc.citationRef_s,
-                        Buffer.from(doc.label_bibtex).toString('base64'),
-                        doc.proceedings_s,
-                        doc.popularLevel_s,
-                        doc.invitedCommunication_s,
-                        doc.peerReviewing_s,
-                        (doc.researchData_s) ? doc.researchData_s.join(",") : "",
-                        doc.audience_s,
-                        doc.doiId_s,
-                        (doc.softCodeRepository_s) ? doc.softCodeRepository_s.join(",") : "",
-                        doc.arxivId_s,
-                        doc.anrProjectTitle_s,
-                        doc.europeanProjectTitle_s,
-                        doc.publicationDate_s,
-                        (doc.keyword_s) ? doc.keyword_s.join(",") : "",
-                        teams.join(","),
-                        authorIds.join(",")
-                    ]
+                        allTeams.forEach((team) => {
+                            if (team == "lastig" || teams.includes(team.toUpperCase())) {
+                                if (keywordCoOccurenceMap[team].has(keyword)) {
+                                    let entry = keywordCoOccurenceMap[team].get(keyword);
+                                    keywords.filter((k) => k != keyword).forEach((k) => entry[k] = (Object.hasOwn(entry, k) ? entry[k] : 0) + 1);
+                                    keywordCoOccurenceMap[team].set(keyword, entry);
+                                } else {
+                                    keywordCoOccurenceMap[team].set(keyword, Object.fromEntries(new Map(keywords.filter((k) => k != keyword).map((k) => [k, 1]))));
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+            // function logMapElements(value, key, map) {
+            //     console.log(`map.get('${key}') = ${value}`);
+            // };
+            // keywordMap.forEach(logMapElements);
+            // keywordMap.forEach((value, keyword, map) => stringifier.write([keyword, value[0].join(","), value[1]]));
+            keywordTeamMap.forEach((value, keyword, _map) => stringifier.write([keyword, value.acte, value.meig, value.geovis, value.strudel, value.acte + value.meig + value.geovis + value.strudel]));
+            stringifier.pipe(writableStream);
+            console.log("Finished writing data for keywords");
+            const keywordCoOccurences = {
+                "acte": {},
+                "meig": {},
+                "geovis": {},
+                "strudel": {},
+                "lastig": {}
+            };
+            allTeams.forEach((team) => {
+                Array.from(keywordCoOccurenceMap[team].keys()).forEach((k) => {
+                    const value = keywordTeamMap.get(k);
+                    // return [k,value.acte + value.meig + value.geovis + value.strudel,keywordCoOccurenceMap.get(k)]
+                    keywordCoOccurences[team][k] = { "occurences": (team == "lastig") ? value.acte + value.meig + value.geovis + value.strudel : value[team], "cooccurences": keywordCoOccurenceMap[team].get(k) }
                 });
-                Promise.all(promises).then((values) => {
-                    values.forEach((v) => stringifier.write(v));
-                    stringifier.pipe(writableStream);
-                    console.log("Finished writing data for publications");
-                })
-            }).catch(err => console.error(err));
+            });
+            // console.log(JSON.stringify(keywordCoOccurences, null, 2));
+            fs.writeFile(cooccurenceFilename, JSON.stringify(keywordCoOccurences, null, 2), (error) => {
+                if (error) {
+                    console.log('An error has occurred ', error);
+                    return;
+                }
+                console.log('Data written successfully to disk for co-occurences');
+            });
         });
 }
 
@@ -441,6 +594,24 @@ function getDatasets(inputDatasetFilename, datasetFilename) {
                                 console.log(`D => ${downloads} (${url})`)
                                 if (downloads)
                                     downloadValue = downloads;
+                            } else {
+                                // use previous values (harvard dataverse blocks requests now apparently)
+                                switch (url) {
+                                    case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/ZKRJFA":
+                                        downloadValue = 8190;
+                                        break;
+                                    case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/XP8J6P":
+                                        downloadValue = 6558;
+                                        break;
+                                    case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/28674":
+                                        downloadValue = 2543;
+                                        break;
+                                    case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/CCESX4":
+                                        downloadValue = 371;
+                                        break;
+                                    default:
+                                        console.log(`Sorry, not found ${url}.`);
+                                }
                             }
                         }).catch(err => {
                             console.error(err);
@@ -499,12 +670,21 @@ function getDatasets(inputDatasetFilename, datasetFilename) {
 - add info about previous positions? education?
 */
 
+// getPeople("src/input_data/people.csv", "src/data/people.csv")
+//     .then(() => getTheses("src/data/people.csv", "src/data/theses.csv")
+//         .then(() => getPublications("src/data/people.csv", "src/data/hal.csv")
+//             .then(() => getKeywords("src/data/hal.csv", "src/data/keywords.csv")
+//                 // .then(() => getDatasets("src/input_data/dataset.csv", "src/data/dataset.csv"))
+//             )
+//         )
+//     )
+// getTheses("src/data/people.csv", "src/data/theses.csv")
 getPeople("src/input_data/people.csv", "src/data/people.csv")
-    .then(() =>
-        getTheses("src/data/people.csv", "src/data/theses.csv")
-            .then(() =>
-                getPublications("src/data/people.csv", "src/data/hal.csv")
-                    .then(() =>
-                        getDatasets("src/input_data/dataset.csv", "src/data/dataset.csv"))
+    .then(() => getTheses("src/data/people.csv", "src/data/theses.csv")
+        .then(() => getKeywordBase("src/input_data/synonyms.csv", "src/input_data/remove.csv")
+            .then((kb) => getPublications(kb, "src/data/people.csv", "src/data/hal.csv")
+                .then((_kb) => getKeywords("src/data/hal.csv", "src/data/keywords.csv", "src/data/keywords-co-occurences.json"))
+                .then(() => getDatasets("src/input_data/dataset.csv", "src/data/dataset.csv"))
             )
+        )
     )
