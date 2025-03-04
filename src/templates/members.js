@@ -107,7 +107,7 @@ export default function MembersPage({ data, pageContext }) {
 
 export const query = graphql`
   query MembersQuery($team: [String]!) {
-    allPeopleCsv(filter: { team: { in: $team } }) {
+    allPeopleCsv(filter: { teams: { in: $team } }) {
       nodes {
         HAL
         end_date
@@ -121,7 +121,7 @@ export const query = graphql`
         start_date
         status
         statut
-        team
+        teams
         webpage
       }
     }

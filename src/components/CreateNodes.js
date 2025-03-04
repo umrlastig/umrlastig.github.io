@@ -113,6 +113,12 @@ function Repo(repo, key) {
   return null;
 }
 
+function getBibtex(label_bibtex) {
+  console.log(label_bibtex);
+  console.log(Buffer.from(label_bibtex, "base64").toString("utf8"));
+  return Buffer.from(label_bibtex, "base64").toString("utf8");
+}
+
 export const PublicationList = ({ nodes, type, theme }) => {
   function pubKey(node) {
     return `${node.id}-${type}`;
@@ -132,14 +138,12 @@ export const PublicationList = ({ nodes, type, theme }) => {
                   style={{
                     width: 32,
                     height: 32,
-                    background: `conic-gradient(${node.fields.teams
+                    background: `conic-gradient(${node.teams
                       .map(
                         (team, index) =>
                           `${theme.colors[team]} ${
-                            (index * 360.0) / node.fields.teams.length
-                          }deg ${
-                            ((index + 1) * 360.0) / node.fields.teams.length
-                          }deg`
+                            (index * 360.0) / node.teams.length
+                          }deg ${((index + 1) * 360.0) / node.teams.length}deg`
                       )
                       .join(", ")})`,
                     borderRadius: 5,
@@ -206,7 +210,7 @@ export const PublicationList = ({ nodes, type, theme }) => {
                 </ImageLink>
               </td>
               <td key={pubKey(node) + "-bib"}>
-                {ClipboardCopy({ copyText: node.label_bibtex })}
+                {ClipboardCopy({ copyText: getBibtex(node.label_bibtex) })}
               </td>
             </Publication>
           );

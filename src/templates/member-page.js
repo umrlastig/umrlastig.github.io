@@ -25,8 +25,8 @@ const modifyPhotoUrl = (url) => {
 
 export default function MemberPage({ data }) {
   const node = data.peopleCsv
-  const allNodes = data.allHal.nodes;
-  const filteredNodes = allNodes.filter((pubNode) => pubNode.fields.authors.includes(node.id));
+  const allNodes = data.allHalCsv.nodes;
+  const filteredNodes = allNodes.filter((pubNode) => pubNode.authors.includes(node.fid));
   const classifiedNodes = filteredNodes.map((node) => ({ pubType: getPubType(node), ...node }));
   function Pub({ pubType }) {
     const filteredNodesForType = classifiedNodes.filter((node) => node.pubType === pubType);
@@ -48,17 +48,17 @@ export default function MemberPage({ data }) {
         <h1>{node.firstname} {node.alt_firstname && `(${node.alt_firstname}) `}{node.lastname}</h1>
         <div><img src={modifyPhotoUrl(node.photo)} alt={`${node.firstname} ${node.lastname}`} /></div>
         <h2>{(locale === 'en') ? node.status : node.statut}</h2>
-        {node.team && <h3><FormattedMessage id="inteam" values={{ team: node.team }} /></h3>}
+        {node.teams && <h3><FormattedMessage id="inteam" values={{ teams: node.teams.join(" & ") }} /></h3>}
         {node.webpage && <a href={modifyUrl(node.webpage)}>{trans("Personal webpage")}</a>}
         <Ids>
           {node.HAL && <a href={`https://cv.hal.science/${node.HAL}`} aria-label="HAL"><Icon icon="simple-icons:hal" width="2em" height="2em" /></a>}
-          {node.fields.orcidId_s && <a href={node.fields.orcidId_s} aria-label="orcid"><Icon icon="simple-icons:orcid" width="2em" height="2em" /></a>}
-          {node.fields.google_scholarId_s && <a href={node.fields.google_scholarId_s.includes('http') ? node.fields.google_scholarId_s : `https://scholar.google.com/citations?user=${node.fields.google_scholarId_s}`} aria-label="google_scholarId"><Icon icon="simple-icons:googlescholar" width="2em" height="2em" /></a>}
-          {node.fields.idrefId_s && <a href={node.fields.idrefId_s} aria-label="idref"><Icon icon="token:id" width="2em" height="2em" /></a>}
-          {node.fields.researcheridId_s && <a href={first(node.fields.researcheridId_s)} aria-label="researcherId"><Icon icon="academicons:researcherid" width="2em" height="2em" /> </a>}
-          {node.fields.isniId_s && <a href={node.fields.isniId_s} aria-label="isni"><Icon icon="academicons:isni" width="2em" height="2em" /></a>}
-          {node.fields.viafId_s && <a href={node.fields.viafId_s} aria-label="viaf"><Icon icon="academicons:viaf" width="2em" height="2em" /></a>}
-          {node.fields.arxivId_s && <a href={node.fields.arxivId_s} aria-label="arxiv"><Icon icon="simple-icons:arxiv" width="2em" height="2em" /></a>}
+          {node.orcidId_s && <a href={node.orcidId_s} aria-label="orcid"><Icon icon="simple-icons:orcid" width="2em" height="2em" /></a>}
+          {node.google_scholarId_s && <a href={node.google_scholarId_s.includes('http') ? node.google_scholarId_s : `https://scholar.google.com/citations?user=${node.google_scholarId_s}`} aria-label="google_scholarId"><Icon icon="simple-icons:googlescholar" width="2em" height="2em" /></a>}
+          {node.idrefId_s && <a href={node.idrefId_s} aria-label="idref"><Icon icon="token:id" width="2em" height="2em" /></a>}
+          {node.researcheridId_s && <a href={first(node.researcheridId_s)} aria-label="researcherId"><Icon icon="academicons:researcherid" width="2em" height="2em" /> </a>}
+          {node.isniId_s && <a href={node.isniId_s} aria-label="isni"><Icon icon="academicons:isni" width="2em" height="2em" /></a>}
+          {node.viafId_s && <a href={node.viafId_s} aria-label="viaf"><Icon icon="academicons:viaf" width="2em" height="2em" /></a>}
+          {node.arxivId_s && <a href={node.arxivId_s} aria-label="arxiv"><Icon icon="simple-icons:arxiv" width="2em" height="2em" /></a>}
         </Ids>
         <WordCloud nodes={filteredNodes}/>
         <h1>Publications</h1>
@@ -97,19 +97,18 @@ export const query = graphql`
       end_date
       status
       statut
-      team
+      teams
       webpage
-      fields {
-        arxivId_s
-        google_scholarId_s
-        idrefId_s
-        isniId_s
-        orcidId_s
-        researcheridId_s
-        viafId_s
-      }
+      arxivId_s
+      google_scholarId_s
+      idrefId_s
+      isniId_s
+      orcidId_s
+      researcheridId_s
+      viafId_s
+      fid
     }
-    allHal {
+    allHalCsv {
       nodes {
           halId
           id
@@ -136,11 +135,10 @@ export const query = graphql`
           anrProjectTitle
           europeanProjectTitle
           publicationDate
-          fields {
-              teams
-              authors
-          }
+          teams
+          authors
           keywords
+          keywords_lastig
       }
     }
   }

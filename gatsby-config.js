@@ -76,6 +76,10 @@ module.exports = {
           {
             name: `Softwares`,
             link: `/softwares`,
+          },
+          {
+            name: `PhD Theses`,
+            link: `/theses`,
           }
         ]
       },
@@ -238,6 +242,13 @@ module.exports = {
     "gatsby-plugin-image",
     "gatsby-plugin-sharp",
     {
+      resolve: `gatsby-transformer-sharp`,
+      options: {
+        // The option defaults to true
+        checkSupportedExtensions: false,
+      },
+    },
+    {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `pages`,
@@ -257,7 +268,7 @@ module.exports = {
         ],
       },
     },
-    "gatsby-transformer-sharp",
+    // "gatsby-transformer-sharp",
     {
       resolve: `gatsby-source-filesystem`,
       options: {

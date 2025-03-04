@@ -57,6 +57,42 @@ export default function SoftwaresPage({ data, pageContext }) {
     if (!repo) {
       return <div></div>;
     }
+    const publications = data.allHalCsv.nodes.filter(
+      (n) => n.softCodeRepository && n.softCodeRepository.includes(repo)
+    );
+    return (
+      <div>
+        <PublicationList nodes={publications} type={null} theme={theme} />
+      </div>
+    );
+  }
+
+  function Doi({ doi }) {
+    if (!doi) {
+      return <div></div>;
+    }
+    return (
+      <div>
+        <a href={`https://www.doi.org/${doi}`} aria-label="doi">
+          <Icon icon="academicons:doi" width="2em" height="2em" />
+        </a>
+      </div>
+    );
+  }
+  function Teams({ teams }) {
+    if (!teams) {
+      return <div></div>;
+    }
+    return (
+      <div>
+        Team(s): <b>{teams.join(", ")}</b>
+      </div>
+    );
+  }
+  function Publications({ repo }) {
+    if (!repo) {
+      return <div></div>;
+    }
     const publications = data.allHal.nodes.filter(
       (n) => n.softCodeRepository && n.softCodeRepository.includes(repo)
     );
@@ -168,7 +204,7 @@ export const query = graphql`
         }
       }
     }
-    allHal {
+    allHalCsv {
       nodes {
         halId
         id
@@ -195,10 +231,8 @@ export const query = graphql`
         anrProjectTitle
         europeanProjectTitle
         publicationDate
-        fields {
-          teams
-          authors
-        }
+        teams
+        authors
         keywords
       }
     }
