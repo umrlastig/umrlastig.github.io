@@ -1,66 +1,148 @@
-import React from "react"
-import { graphql } from "gatsby"
-import Layout from "../components/Layout"
+import React from "react";
+import { graphql } from "gatsby";
+import Layout from "../components/Layout";
 
-import { FormattedMessage, useIntl } from 'react-intl'
+import { FormattedMessage, useIntl } from "react-intl";
 
-import { getPubType } from '../util'
-import { PublicationList } from '../components/CreateNodes'
-import { Icon } from '@iconify-icon/react';
+import { getPubType } from "../util";
+import { PublicationList } from "../components/CreateNodes";
+import { Icon } from "@iconify-icon/react";
 
-import { StyledMemberPage, Ids } from '../components/styles/MemberPage.styled'
-import {WordCloud} from '../components/WordCloud'
-import { theme } from '../theme'
+import { StyledMemberPage, Ids } from "../components/styles/MemberPage.styled";
+import { WordCloud } from "../components/WordCloud";
+import { theme } from "../theme";
 
-import { useLocalization } from "@ericcote/gatsby-theme-i18n"
+import { useLocalization } from "@ericcote/gatsby-theme-i18n";
 
 const modifyUrl = (url) => {
   if (url.startsWith("/")) return "https://www.umr-lastig.fr" + url;
   return url;
 };
 const modifyPhotoUrl = (url) => {
-  if (!url) return "https://www.umr-lastig.fr/lastig_data/img/abstract-user-icon.svg";
+  if (!url)
+    return "https://www.umr-lastig.fr/lastig_data/img/abstract-user-icon.svg";
   return modifyUrl(url);
 };
 
 export default function MemberPage({ data }) {
-  const node = data.peopleCsv
+  const node = data.peopleCsv;
   const allNodes = data.allHalCsv.nodes;
-  const filteredNodes = allNodes.filter((pubNode) => pubNode.authors.includes(node.fid));
-  const classifiedNodes = filteredNodes.map((node) => ({ pubType: getPubType(node), ...node }));
+  const filteredNodes = allNodes.filter((pubNode) =>
+    pubNode.authors.includes(node.fid),
+  );
+  const classifiedNodes = filteredNodes.map((node) => ({
+    pubType: getPubType(node),
+    ...node,
+  }));
   function Pub({ pubType }) {
-    const filteredNodesForType = classifiedNodes.filter((node) => node.pubType === pubType);
+    const filteredNodesForType = classifiedNodes.filter(
+      (node) => node.pubType === pubType,
+    );
     if (filteredNodesForType.length > 0) {
-      return <div id={`pub${pubType}`}>
-        <h2> {trans(pubType)} </h2>
-        <PublicationList nodes={filteredNodesForType} type={pubType} theme={theme} />
-      </div>;
+      return (
+        <div id={`pub${pubType}`}>
+          <h2> {trans(pubType)} </h2>
+          <PublicationList
+            nodes={filteredNodesForType}
+            type={pubType}
+            theme={theme}
+          />
+        </div>
+      );
     }
     return null;
   }
-  const intl = useIntl()
+  const intl = useIntl();
   const { locale } = useLocalization();
-  function trans(text) { return intl.formatMessage({ id: text }) }
-  function first(text) { return text.split(',')[0] }
+  function trans(text) {
+    return intl.formatMessage({ id: text });
+  }
+  function first(text) {
+    return text.split(",")[0];
+  }
   return (
     <Layout>
       <StyledMemberPage>
-        <h1>{node.firstname} {node.alt_firstname && `(${node.alt_firstname}) `}{node.lastname}</h1>
-        <div><img src={modifyPhotoUrl(node.photo)} alt={`${node.firstname} ${node.lastname}`} /></div>
-        <h2>{(locale === 'en') ? node.status : node.statut}</h2>
-        {node.teams && <h3><FormattedMessage id="inteam" values={{ teams: node.teams.join(" & ") }} /></h3>}
-        {node.webpage && <a href={modifyUrl(node.webpage)}>{trans("Personal webpage")}</a>}
+        <h1>
+          {node.firstname} {node.alt_firstname && `(${node.alt_firstname}) `}
+          {node.lastname}
+        </h1>
+        <div>
+          <img
+            src={modifyPhotoUrl(node.photo)}
+            alt={`${node.firstname} ${node.lastname}`}
+          />
+        </div>
+        <h2>{locale === "en" ? node.status : node.statut}</h2>
+        {node.teams && (
+          <h3>
+            <FormattedMessage
+              id="inteam"
+              values={{ teams: node.teams.join(" & ") }}
+            />
+          </h3>
+        )}
+        {node.webpage && (
+          <a href={modifyUrl(node.webpage)}>{trans("Personal webpage")}</a>
+        )}
         <Ids>
-          {node.HAL && <a href={`https://cv.hal.science/${node.HAL}`} aria-label="HAL"><Icon icon="simple-icons:hal" width="2em" height="2em" /></a>}
-          {node.orcidId_s && <a href={node.orcidId_s} aria-label="orcid"><Icon icon="simple-icons:orcid" width="2em" height="2em" /></a>}
-          {node.google_scholarId_s && <a href={node.google_scholarId_s.includes('http') ? node.google_scholarId_s : `https://scholar.google.com/citations?user=${node.google_scholarId_s}`} aria-label="google_scholarId"><Icon icon="simple-icons:googlescholar" width="2em" height="2em" /></a>}
-          {node.idrefId_s && <a href={node.idrefId_s} aria-label="idref"><Icon icon="token:id" width="2em" height="2em" /></a>}
-          {node.researcheridId_s && <a href={first(node.researcheridId_s)} aria-label="researcherId"><Icon icon="academicons:researcherid" width="2em" height="2em" /> </a>}
-          {node.isniId_s && <a href={node.isniId_s} aria-label="isni"><Icon icon="academicons:isni" width="2em" height="2em" /></a>}
-          {node.viafId_s && <a href={node.viafId_s} aria-label="viaf"><Icon icon="academicons:viaf" width="2em" height="2em" /></a>}
-          {node.arxivId_s && <a href={node.arxivId_s} aria-label="arxiv"><Icon icon="simple-icons:arxiv" width="2em" height="2em" /></a>}
+          {node.HAL && (
+            <a href={`https://cv.hal.science/${node.HAL}`} aria-label="HAL">
+              <Icon icon="simple-icons:hal" width="2em" height="2em" />
+            </a>
+          )}
+          {node.orcidId_s && (
+            <a href={node.orcidId_s} aria-label="orcid">
+              <Icon icon="simple-icons:orcid" width="2em" height="2em" />
+            </a>
+          )}
+          {node.google_scholarId_s && (
+            <a
+              href={
+                node.google_scholarId_s.includes("http")
+                  ? node.google_scholarId_s
+                  : `https://scholar.google.com/citations?user=${node.google_scholarId_s}`
+              }
+              aria-label="google_scholarId"
+            >
+              <Icon
+                icon="simple-icons:googlescholar"
+                width="2em"
+                height="2em"
+              />
+            </a>
+          )}
+          {node.idrefId_s && (
+            <a href={node.idrefId_s} aria-label="idref">
+              <Icon icon="token:id" width="2em" height="2em" />
+            </a>
+          )}
+          {node.researcheridId_s && (
+            <a href={first(node.researcheridId_s)} aria-label="researcherId">
+              <Icon
+                icon="academicons:researcherid"
+                width="2em"
+                height="2em"
+              />{" "}
+            </a>
+          )}
+          {node.isniId_s && (
+            <a href={node.isniId_s} aria-label="isni">
+              <Icon icon="academicons:isni" width="2em" height="2em" />
+            </a>
+          )}
+          {node.viafId_s && (
+            <a href={node.viafId_s} aria-label="viaf">
+              <Icon icon="academicons:viaf" width="2em" height="2em" />
+            </a>
+          )}
+          {node.arxivId_s && (
+            <a href={node.arxivId_s} aria-label="arxiv">
+              <Icon icon="simple-icons:arxiv" width="2em" height="2em" />
+            </a>
+          )}
         </Ids>
-        <WordCloud nodes={filteredNodes}/>
+        <WordCloud nodes={filteredNodes} />
         <h1>Publications</h1>
         <div>
           <Pub pubType="ACL"></Pub>
@@ -80,11 +162,11 @@ export default function MemberPage({ data }) {
         </div>
       </StyledMemberPage>
     </Layout>
-  )
+  );
 }
 
 export const query = graphql`
-  query($firstName: String, $lastName: String!) {
+  query ($firstName: String, $lastName: String!) {
     peopleCsv(firstname: { eq: $firstName }, lastname: { eq: $lastName }) {
       id
       firstname
@@ -110,36 +192,36 @@ export const query = graphql`
     }
     allHalCsv {
       nodes {
-          halId
-          id
-          citationRef
-          docType
-          fileMain
-          files
-          invitedCommunication
-          label_bibtex
-          popularLevel
-          proceedings
-          producedDate
-          title
-          authIdHalFullName {
-              fullName
-              idHal
-          }
-          peerReviewing
-          researchData
-          audience
-          doiId
-          softCodeRepository
-          arxivId
-          anrProjectTitle
-          europeanProjectTitle
-          publicationDate
-          teams
-          authors
-          keywords
-          keywords_lastig
+        halId
+        id
+        citationRef
+        docType
+        fileMain
+        files
+        invitedCommunication
+        label_bibtex
+        popularLevel
+        proceedings
+        producedDate
+        title
+        authIdHalFullName {
+          fullName
+          idHal
+        }
+        peerReviewing
+        researchData
+        audience
+        doiId
+        softCodeRepository
+        arxivId
+        anrProjectTitle
+        europeanProjectTitle
+        publicationDate
+        teams
+        authors
+        keywords
+        keywords_lastig
       }
     }
   }
-`
+`;

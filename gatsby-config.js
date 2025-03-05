@@ -22,8 +22,8 @@ module.exports = {
           {
             name: `Access`,
             link: `/access`,
-          }
-        ]
+          },
+        ],
       },
       {
         name: `Research`,
@@ -48,8 +48,8 @@ module.exports = {
               {
                 name: `STRUDEL`,
                 link: `/teams/strudel`,
-              }
-            ]
+              },
+            ],
           },
           {
             name: `Members`,
@@ -58,8 +58,8 @@ module.exports = {
           {
             name: `Projects`,
             link: `/projects`,
-          }
-        ]
+          },
+        ],
       },
       {
         name: `Production`,
@@ -80,13 +80,13 @@ module.exports = {
           {
             name: `PhD Theses`,
             link: `/theses`,
-          }
-        ]
+          },
+        ],
       },
       {
         name: `Join`,
         link: `/join`,
-      }
+      },
     ],
     menus: {
       STRUDEL: [
@@ -105,8 +105,8 @@ module.exports = {
             {
               name: `Projects`,
               link: `/teams/strudel/projects`,
-            }
-          ]
+            },
+          ],
         },
         {
           name: `Production`,
@@ -123,8 +123,8 @@ module.exports = {
             {
               name: `Softwares`,
               link: `/teams/strudel/softwares`,
-            }
-          ]
+            },
+          ],
         },
       ],
       ACTE: [
@@ -143,8 +143,8 @@ module.exports = {
             {
               name: `Projects`,
               link: `/teams/acte/projects`,
-            }
-          ]
+            },
+          ],
         },
         {
           name: `Production`,
@@ -158,7 +158,7 @@ module.exports = {
               name: `Datasets`,
               link: `/teams/acte/datasets`,
             },
-          ]
+          ],
         },
       ],
       MEIG: [
@@ -177,8 +177,8 @@ module.exports = {
             {
               name: `Projects`,
               link: `/teams/meig/projects`,
-            }
-          ]
+            },
+          ],
         },
         {
           name: `Production`,
@@ -192,7 +192,7 @@ module.exports = {
               name: `Datasets`,
               link: `/teams/meig/datasets`,
             },
-          ]
+          ],
         },
       ],
       GEOVIS: [
@@ -211,8 +211,8 @@ module.exports = {
             {
               name: `Projects`,
               link: `/teams/geovis/projects`,
-            }
-          ]
+            },
+          ],
         },
         {
           name: `Production`,
@@ -226,17 +226,17 @@ module.exports = {
               name: `Datasets`,
               link: `/teams/geovis/datasets`,
             },
-          ]
+          ],
         },
-      ]
+      ],
     },
   },
   plugins: [
     `gatsby-transformer-csv`,
     {
-      resolve: 'gatsby-plugin-manifest',
+      resolve: "gatsby-plugin-manifest",
       options: {
-        icon: 'src/images/icon.png',
+        icon: "src/images/icon.png",
       },
     },
     "gatsby-plugin-image",
@@ -283,12 +283,12 @@ module.exports = {
       },
     },
     {
-      resolve: 'gatsby-plugin-react-svg',
+      resolve: "gatsby-plugin-react-svg",
       options: {
         rule: {
-          include: /images\/.*\.svg/
-        }
-      }
+          include: /images\/.*\.svg/,
+        },
+      },
     },
     {
       resolve: `@ericcote/gatsby-theme-i18n`,
@@ -304,11 +304,11 @@ module.exports = {
       },
     },
     {
-      resolve: 'gatsby-plugin-react-leaflet',
+      resolve: "gatsby-plugin-react-leaflet",
       options: {
-        linkStyles: true // (default: true) Enable/disable loading stylesheets via CDN
-      }
+        linkStyles: true, // (default: true) Enable/disable loading stylesheets via CDN
+      },
     },
-    `gatsby-plugin-styled-components`
+    `gatsby-plugin-styled-components`,
   ],
 };

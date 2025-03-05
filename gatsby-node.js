@@ -1,8 +1,8 @@
-const axios = require('axios')
-const crypto = require('crypto')
-const cheerio = require('cheerio')
-var qs = require('qs')
-var fs = require('fs')
+const axios = require("axios");
+const crypto = require("crypto");
+const cheerio = require("cheerio");
+var qs = require("qs");
+var fs = require("fs");
 
 // const { decompress } = require('shrink-string')
 
@@ -32,64 +32,71 @@ var fs = require('fs')
 // }
 exports.createPages = async function ({ actions, graphql, reporter }) {
   var { data } = await graphql(`
-        query {
-            allPeopleCsv {
-                nodes {
-                    HAL
-                    end_date
-                    firstname
-                    id
-                    lastname
-                    member
-                    perm
-                    photo
-                    start_date
-                    status
-                    statut
-                    teams
-                    webpage
-                }
-            }
+    query {
+      allPeopleCsv {
+        nodes {
+          HAL
+          end_date
+          firstname
+          id
+          lastname
+          member
+          perm
+          photo
+          start_date
+          status
+          statut
+          teams
+          webpage
         }
-    `)
-  data.allPeopleCsv.nodes.forEach(node => {
-    const firstName = node.firstname
-    const lastName = node.lastname
+      }
+    }
+  `);
+  data.allPeopleCsv.nodes.forEach((node) => {
+    const firstName = node.firstname;
+    const lastName = node.lastname;
     // console.log(`${node.firstname}-${node.lastname}`)
     actions.createPage({
       path: `/members/${node.firstname}-${node.lastname}`,
       component: require.resolve(`./src/templates/member-page.js`),
       context: { firstName: firstName, lastName: lastName },
-    })
-  })
-  const teams = ['STRUDEL', 'ACTE', 'MEIG', 'GEOVIS']
-  const pages = ['publications', 'datasets', 'members', 'projects', 'softwares', 'theses']
+    });
+  });
+  const teams = ["STRUDEL", "ACTE", "MEIG", "GEOVIS"];
+  const pages = [
+    "publications",
+    "datasets",
+    "members",
+    "projects",
+    "softwares",
+    "theses",
+  ];
   teams.forEach((team) => {
-    reporter.info(`Creating pages for team ${team}`)
+    reporter.info(`Creating pages for team ${team}`);
     pages.forEach((page) => {
       actions.createPage({
         path: `/teams/${team.toLowerCase()}/${page}`,
         component: require.resolve(`./src/templates/${page}.js`),
         context: { team: [team] },
-      })
-    })
-  })
+      });
+    });
+  });
   pages.forEach((page) => {
     actions.createPage({
       path: `/${page}`,
       component: require.resolve(`./src/templates/${page}.js`),
       context: { team: ["ACTE", "GEOVIS", "MEIG", "STRUDEL"] },
-    })
-  })
-}
+    });
+  });
+};
 
-const { createRemoteFileNode } = require("gatsby-source-filesystem")
+const { createRemoteFileNode } = require("gatsby-source-filesystem");
 exports.onCreateNode = async ({
   node, // the node that was just created
   actions: { createNode, createNodeField },
   reporter,
   createNodeId,
-  getCache
+  getCache,
 }) => {
   // console.log(`onCreateNode ${node.internal.type}`)
   if (node.internal.type === `DatasetCsv`) {
@@ -100,15 +107,19 @@ exports.onCreateNode = async ({
         parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
         createNode, // helper function in gatsby-node to generate the node
         createNodeId, // helper function in gatsby-node to generate the node id
-        getCache
-      })
+        getCache,
+      });
       // if the file was created, extend the node with "image"
       if (fileNode) {
-        createNodeField({ node, name: "image", value: fileNode.id })
+        createNodeField({ node, name: "image", value: fileNode.id });
       }
     }
   } else {
-    if (node.internal.type === `SoftwareCsv` && node.image_url !== null && node.image_url) {
+    if (
+      node.internal.type === `SoftwareCsv` &&
+      node.image_url !== null &&
+      node.image_url
+    ) {
       reporter.info(`SoftwareCsv Image url = ${node.image_url}.`);
       // const extension = node.image_url.includes(".png") ? ".png" : ".jpg"
       const fileNode = await createRemoteFileNode({
@@ -116,34 +127,35 @@ exports.onCreateNode = async ({
         parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
         createNode, // helper function in gatsby-node to generate the node
         createNodeId, // helper function in gatsby-node to generate the node id
-        getCache
+        getCache,
         // ext: extension,
         // name: node.short_name,
-      })
+      });
       // if the file was created, extend the node with "image"
       if (fileNode) {
-        createNodeField({ node, name: "image", value: fileNode.id })
+        createNodeField({ node, name: "image", value: fileNode.id });
       }
     }
   }
-}
+};
 
 exports.createSchemaCustomization = ({ actions, schema, reporter }) => {
-  const { createFieldExtension, createTypes } = actions
+  const { createFieldExtension, createTypes } = actions;
   createFieldExtension({
     name: `defaultArray`,
     extend() {
       return {
         resolve(source, args, context, info) {
           if (source[info.fieldName] == null) {
-            return []
+            return [];
           }
-          return source[info.fieldName]
+          return source[info.fieldName];
         },
-      }
+      };
     },
-  })
-  const typeDefs = [`
+  });
+  const typeDefs = [
+    `
     type Site implements Node {
       siteMetadata: SiteMetadata
     }
@@ -172,200 +184,204 @@ exports.createSchemaCustomization = ({ actions, schema, reporter }) => {
     }
   `,
     schema.buildObjectType({
-      name: 'PeopleCsv',
-      interfaces: ['Node'],
+      name: "PeopleCsv",
+      interfaces: ["Node"],
       extensions: {
         infer: true,
       },
       fields: {
         teams: {
-          type: '[String]',
+          type: "[String]",
           resolve: (src, args, context, info) => {
-            const { fieldName } = info
-            const content = src[fieldName]
-            const teams = content.split(',').map(str => str.trim())
-            return teams
-          }
-        }
-      }
+            const { fieldName } = info;
+            const content = src[fieldName];
+            const teams = content.split(",").map((str) => str.trim());
+            return teams;
+          },
+        },
+      },
     }),
     schema.buildObjectType({
-      name: 'HalCsv',
-      interfaces: ['Node'],
+      name: "HalCsv",
+      interfaces: ["Node"],
       extensions: {
         infer: true,
       },
       fields: {
         teams: {
-          type: '[String]',
+          type: "[String]",
           resolve: (src, args, context, info) => {
-            const { fieldName } = info
-            const content = src[fieldName]
-            const teams = content.split(',').map(str => str.trim())
-            return teams
-          }
+            const { fieldName } = info;
+            const content = src[fieldName];
+            const teams = content.split(",").map((str) => str.trim());
+            return teams;
+          },
         },
         authors: {
-          type: '[String]',
+          type: "[String]",
           resolve: (src, args, context, info) => {
-            const { fieldName } = info
-            const content = src[fieldName]
-            const authors = content.split(',').map(str => str.trim())
-            return authors
-          }
+            const { fieldName } = info;
+            const content = src[fieldName];
+            const authors = content.split(",").map((str) => str.trim());
+            return authors;
+          },
         },
         keywords: {
-          type: '[String]',
+          type: "[String]",
           resolve: (src, args, context, info) => {
-            const { fieldName } = info
-            const content = src[fieldName]
-            const keywords = content.split(',').map(str => str.trim())
-            return keywords
-          }
+            const { fieldName } = info;
+            const content = src[fieldName];
+            const keywords = content.split(",").map((str) => str.trim());
+            return keywords;
+          },
         },
         keywords_lastig: {
-          type: '[String]',
+          type: "[String]",
           resolve: (src, args, context, info) => {
-            const { fieldName } = info
-            const content = src[fieldName]
-            const keywords = content.split(',').map(str => str.trim())
-            return keywords
-          }
+            const { fieldName } = info;
+            const content = src[fieldName];
+            const keywords = content.split(",").map((str) => str.trim());
+            return keywords;
+          },
         },
         researchData: {
-          type: '[String]',
+          type: "[String]",
           resolve: (src, args, context, info) => {
-            const { fieldName } = info
-            const content = src[fieldName]
-            const researchData = content.split(',').map(str => str.trim())
-            return researchData
-          }
+            const { fieldName } = info;
+            const content = src[fieldName];
+            const researchData = content.split(",").map((str) => str.trim());
+            return researchData;
+          },
         },
         files: {
-          type: '[String]',
+          type: "[String]",
           resolve: (src, args, context, info) => {
-            const { fieldName } = info
-            const content = src[fieldName]
-            const files = content.split(',').map(str => str.trim())
-            return files
-          }
+            const { fieldName } = info;
+            const content = src[fieldName];
+            const files = content.split(",").map((str) => str.trim());
+            return files;
+          },
         },
         title: {
-          type: '[String]',
+          type: "[String]",
           resolve: (src, args, context, info) => {
-            const { fieldName } = info
-            const content = src[fieldName]
-            const title = content.split(',').map(str => str.trim())
-            return title
-          }
+            const { fieldName } = info;
+            const content = src[fieldName];
+            const title = content.split(",").map((str) => str.trim());
+            return title;
+          },
         },
         softCodeRepository: {
-          type: '[String]',
+          type: "[String]",
           resolve: (src, args, context, info) => {
-            const { fieldName } = info
-            const content = src[fieldName]
-            const softCodeRepository = content.split(',').map(str => str.trim())
-            return softCodeRepository
-          }
+            const { fieldName } = info;
+            const content = src[fieldName];
+            const softCodeRepository = content
+              .split(",")
+              .map((str) => str.trim());
+            return softCodeRepository;
+          },
         },
         authIdHalFullName: {
           type: `[AuthIdHalFullName]`,
           resolve: (src, args, context, info) => {
-            const { fieldName } = info
-            const content = src[fieldName]
-            const authors = JSON.parse(content)
-            return authors
-          }
-        }
-      }
+            const { fieldName } = info;
+            const content = src[fieldName];
+            const authors = JSON.parse(content);
+            return authors;
+          },
+        },
+      },
     }),
     schema.buildObjectType({
-      name: 'DatasetCsv',
-      interfaces: ['Node'],
+      name: "DatasetCsv",
+      interfaces: ["Node"],
       extensions: {
         infer: true,
       },
       fields: {
         teams: {
-          type: '[String]',
+          type: "[String]",
           resolve: (src, args, context, info) => {
-            const { fieldName } = info
-            const content = src[fieldName]
-            const teams = content.split(',').map(str => str.trim())
-            return teams
-          }
+            const { fieldName } = info;
+            const content = src[fieldName];
+            const teams = content.split(",").map((str) => str.trim());
+            return teams;
+          },
         },
         image: {
-          type: 'File',
+          type: "File",
           extensions: {
             link: {
-              from: "fields.image"
-            }
-          }
-        }
-      }
+              from: "fields.image",
+            },
+          },
+        },
+      },
     }),
     schema.buildObjectType({
-      name: 'ProjectsCsv',
-      interfaces: ['Node'],
+      name: "ProjectsCsv",
+      interfaces: ["Node"],
       extensions: {
         infer: true,
       },
       fields: {
         Teams: {
-          type: '[String]',
+          type: "[String]",
           resolve: (src, args, context, info) => {
-            const { fieldName } = info
-            const content = src[fieldName]
-            const teams = content.split(',').map(str => str.trim())
-            return teams
-          }
-        }
-      }
+            const { fieldName } = info;
+            const content = src[fieldName];
+            const teams = content.split(",").map((str) => str.trim());
+            return teams;
+          },
+        },
+      },
     }),
     schema.buildObjectType({
-      name: 'SoftwareCsv',
-      interfaces: ['Node'],
+      name: "SoftwareCsv",
+      interfaces: ["Node"],
       extensions: {
         infer: true,
       },
       fields: {
         teams: {
-          type: '[String]',
+          type: "[String]",
           resolve: (src, args, context, info) => {
-            const { fieldName } = info
-            const content = src[fieldName]
-            const teams = content.split(',').map(str => str.trim().toUpperCase())
-            return teams
-          }
+            const { fieldName } = info;
+            const content = src[fieldName];
+            const teams = content
+              .split(",")
+              .map((str) => str.trim().toUpperCase());
+            return teams;
+          },
         },
         image: {
-          type: 'File',
+          type: "File",
           extensions: {
             link: {
-              from: "fields.image"
-            }
-          }
-        }
-      }
+              from: "fields.image",
+            },
+          },
+        },
+      },
     }),
-  ]
-  createTypes(typeDefs)
-}
+  ];
+  createTypes(typeDefs);
+};
 
 exports.onPostBuild = async ({ reporter }) => {
-  reporter.info('Waiting for plugin to finish...');
+  reporter.info("Waiting for plugin to finish...");
 
   // Add your code here to wait for the plugin to finish
   // You can use promises, async/await, or any other method to wait for the plugin to complete its task
 
-  reporter.info('Plugin has finished.');
+  reporter.info("Plugin has finished.");
 };
 exports.onPostBootstrap = async ({ reporter }) => {
-  reporter.info('Waiting for gatsby-transformer-csv plugin to finish...');
+  reporter.info("Waiting for gatsby-transformer-csv plugin to finish...");
 
   // Add your code here to wait for the gatsby-transformer-csv plugin to finish
   // You can use promises, async/await, or any other method to wait for the plugin to complete its task
 
-  reporter.info('gatsby-transformer-csv plugin has finished.');
+  reporter.info("gatsby-transformer-csv plugin has finished.");
 };
