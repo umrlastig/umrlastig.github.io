@@ -15,12 +15,17 @@ import {
   DatasetHead,
   DatasetInfo,
   Downloads,
+  DatasetImageHolder,
+  DatasetTitleHolder,
+  DatasetTheme,
 } from "../components/styles/Datasets.styled";
+import { SpaceDivider } from "../components/styles/Global";
 import { useIntl } from "react-intl";
 import { Icon } from "@iconify-icon/react";
 import { NavBar } from "../components/NavBar";
 import { PublicationList } from "../components/CreateNodes";
 import { GatsbyImage, getImage } from "gatsby-plugin-image";
+import { TextContainer } from "../components/styles/Container.styled";
 
 Chart.register(CategoryScale);
 
@@ -65,7 +70,7 @@ export default function DatasetsPage({ data, pageContext }) {
     return (
       <div>
         <a href={`https://www.doi.org/${doi}`} aria-label="doi">
-          <Icon icon="academicons:doi" width="2em" height="2em" />
+          <Icon icon="academicons:doi" width="1.8em" height="1.8em" />
         </a>
       </div>
     );
@@ -97,7 +102,7 @@ export default function DatasetsPage({ data, pageContext }) {
 
   return (
     <Layout pageTitle={`${isLastigPage ? "LASTIG" : team} Datasets`}>
-      <h1>{trans(`${isLastigPage ? "LASTIG" : team} Datasets`)}</h1>
+      <h3>{trans(`${isLastigPage ? "LASTIG" : team} Datasets`)}</h3>
       {!isLastigPage && (
         <NavBar
           title={team}
@@ -105,7 +110,7 @@ export default function DatasetsPage({ data, pageContext }) {
           team={team}
         />
       )}
-      <div>
+      <TextContainer>
         <DatasetLegend>
           {[
             "Agriculture",
@@ -123,23 +128,34 @@ export default function DatasetsPage({ data, pageContext }) {
           ))}
         </DatasetLegend>
         <BarChart chartData={chartData} />
-      </div>
+      </TextContainer>
       <DatasetList>
         {data.allDatasetCsv.nodes.map((node) => (
           <Dataset key={node.id}>
             <DatasetHead $dataTheme={node.theme}>
-              <div>
-                <a href={node.url}>{node.name}</a>
-              </div>
-              <div>{node.theme}</div>
+              <DatasetTitleHolder>
+                <div>
+                  <a href={node.url}>{node.name}</a>
+                </div>
+                <SpaceDivider />
+                <Doi doi={node.doi} />
+              </DatasetTitleHolder>
+              <DatasetTheme $dataTheme={node.theme}>{node.theme}</DatasetTheme>
             </DatasetHead>
             <DatasetInfo>
-              <GatsbyImage image={getImage(node.image)} alt={node.short_name} />
-              <Doi doi={node.doi} />
+              <DatasetImageHolder>
+                <GatsbyImage
+                  image={getImage(node.image)}
+                  alt={node.short_name}
+                />
+              </DatasetImageHolder>
+
               <Project project={node.project} />
               <Teams teams={node.teams} />
+
               <Downloads>
-                {trans("Downloads:")} <b>{node.downloads}</b>
+                {trans("Downloads:")}{" "}
+                <b>{node.fields ? node.fields.downloads : 0}</b>
               </Downloads>
             </DatasetInfo>
             <Publications doi={node.doi} />
@@ -258,6 +274,8 @@ export const query = graphql`
 
 export const Head = ({ pageContext }) => (
   <Seo
-    title={`${pageContext.team.length > 1 ? "LASTIG" : pageContext.team} Datasets`}
+    title={`${
+      pageContext.team.length > 1 ? "LASTIG" : pageContext.team
+    } Datasets`}
   />
 );

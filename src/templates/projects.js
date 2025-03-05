@@ -105,7 +105,7 @@ export default function ProjectsPage({ data, pageContext }) {
   );
   return (
     <Layout pageTitle={`${isLastigPage ? "LASTIG" : team} Projects`}>
-      <h1>{trans(`${isLastigPage ? "LASTIG" : team} Projects`)}</h1>
+      <h3>{trans(`${isLastigPage ? "LASTIG" : team} Projects`)}</h3>
       {!isLastigPage && (
         <NavBar
           title={team}
@@ -252,6 +252,8 @@ export const query = graphql`
 
 export const Head = ({ pageContext }) => (
   <Seo
-    title={`${pageContext.team.length > 1 ? "LASTIG" : pageContext.team} Projects`}
+    title={`${
+      pageContext.team.length > 1 ? "LASTIG" : pageContext.team
+    } Projects`}
   />
 );

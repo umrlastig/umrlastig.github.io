@@ -4,13 +4,13 @@ export const Position = styled.li`
   list-style: none;
   margin: 1rem;
   border-radius: 1rem;
-  border: 2px solid black;
+  border: 1px solid lightgrey;
   padding: 1rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   a {
-    color: #29af7f;
+    color: ${({ theme }) => theme.colors.link};
     text-decoration: none;
     &:after {
       content: ". ";
@@ -23,5 +23,10 @@ export const Position = styled.li`
     border-radius: 1rem;
     padding: 1rem;
     translate: 0 -40px;
+    margin-top: 10px;
   }
+`;
+
+export const PositionList = styled.ul`
+  width: 80%;
 `;

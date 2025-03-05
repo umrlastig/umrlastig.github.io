@@ -19,6 +19,7 @@ import "@szhsin/react-menu/dist/transitions/slide.css";
 import { useIntl } from "react-intl";
 import { useLocalization } from "@ericcote/gatsby-theme-i18n";
 import { Location } from "@reach/router";
+import { StaticImage } from "gatsby-plugin-image";
 
 export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
   const [click, setClick] = useState(false);
@@ -123,11 +124,11 @@ export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
           <NavBarContainer>
             <NavBarLogo key="NavBarLogo" to="/" onClick={closeMobileMenu}>
               {lastigLogo ? (
-                <img
-                  src={"https://www.umr-lastig.fr/img/lastig1.svg"}
+                <StaticImage
+                  src="../images/lastig1.svg"
                   alt="LASTIG LOGO"
-                  style={{ width: "auto", height: 60 }}
-                ></img>
+                  height={60}
+                ></StaticImage>
               ) : (
                 title
               )}

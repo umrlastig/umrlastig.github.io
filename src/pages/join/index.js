@@ -4,14 +4,15 @@ import Layout from "../../components/Layout";
 import Seo from "../../components/seo";
 import { useIntl } from "react-intl";
 import { useLocalization } from "@ericcote/gatsby-theme-i18n";
-import { Position } from "../../components/styles/Positions.styles";
+import {
+  Position,
+  PositionList,
+} from "../../components/styles/Positions.styles";
 
 function createPosition(id, type, team, pdf, text) {
   return (
     <Position $team={team}>
-      <span key={`${id}-position`}>
-        <b>{type}</b>
-      </span>
+      {/* <span key={`${id}-position`}><b>{type}</b></span> */}
       <a href={pdf} key={`${id}-title`}>
         {text}
       </a>
@@ -32,19 +33,78 @@ const JoinPage = ({ data }) => {
   return (
     <Layout pageTitle="Join Us">
       <h1>Join Us!</h1>
-      <ul>
+      <h3>PhD</h3>
+      <PositionList>
         {nodes.map(
-          (node) =>
-            createPosition(
-              node.id,
-              trans(node.type),
-              node.team,
-              locale === "en" ? node.pdf_en : node.pdf_fr,
-              locale === "en" ? node.title : node.titre,
-            ),
+          (node) => {
+            console.log("node!", node.type);
+            if (node.type == "PhD") {
+              return createPosition(
+                node.id,
+                trans(node.type),
+                node.team,
+                locale === "en" ? node.pdf_en : node.pdf_fr,
+                locale === "en" ? node.title : node.titre,
+              );
+            }
+          },
           // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
         )}
-      </ul>
+      </PositionList>
+      <h3>Postdoc</h3>
+      <PositionList>
+        {nodes.map(
+          (node) => {
+            console.log("node!", node.type);
+            if (node.type == "postdoc") {
+              return createPosition(
+                node.id,
+                trans(node.type),
+                node.team,
+                locale === "en" ? node.pdf_en : node.pdf_fr,
+                locale === "en" ? node.title : node.titre,
+              );
+            }
+          },
+          // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
+        )}
+      </PositionList>
+      <h3>Research engineer</h3>
+      <PositionList>
+        {nodes.map(
+          (node) => {
+            console.log("node!", node.type);
+            if (node.type == "ingenieur") {
+              return createPosition(
+                node.id,
+                trans(node.type),
+                node.team,
+                locale === "en" ? node.pdf_en : node.pdf_fr,
+                locale === "en" ? node.title : node.titre,
+              );
+            }
+          },
+          // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
+        )}
+      </PositionList>
+      <h3>Internship</h3>
+      <PositionList>
+        {nodes.map(
+          (node) => {
+            console.log("node!", node.type);
+            if (node.type == "Internship") {
+              return createPosition(
+                node.id,
+                trans(node.type),
+                node.team,
+                locale === "en" ? node.pdf_en : node.pdf_fr,
+                locale === "en" ? node.title : node.titre,
+              );
+            }
+          },
+          // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
+        )}
+      </PositionList>
     </Layout>
   );
 };

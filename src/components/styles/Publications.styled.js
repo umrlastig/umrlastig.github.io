@@ -14,7 +14,7 @@ export const Publication = styled.tr`
   width: 100%;
   span {
     a {
-      color: #bfbfbf;
+      color: ${({ theme }) => theme.colors.author_link};
       text-decoration: none;
       &:not(:last-child)::after {
         content: ", ";
@@ -25,11 +25,11 @@ export const Publication = styled.tr`
     }
   }
   a {
-    color: #29af7f;
+    color: ${({ theme }) => theme.colors.publication_link};
     text-decoration: none;
-    &:after {
-      content: ". ";
-    }
+    // &:after {
+    //   content: ". ";
+    // }
   }
 `;
 export const ImageLink = styled.div`
@@ -52,5 +52,9 @@ export const ImageLink = styled.div`
       width: 2em;
       height: 2em;
     }
+  }
+  a {
+    color: ${({ theme }) => theme.colors.publication_link};
+    text-decoration: none;
   }
 `;

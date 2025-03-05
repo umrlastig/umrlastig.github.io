@@ -109,21 +109,21 @@ const Layout = ({ children }) => {
             <a href="https://www.univ-gustave-eiffel.fr">
               <img
                 src="https://www.univ-gustave-eiffel.fr/fileadmin/logo_eiffel_white.svg"
-                style={{ width: "auto", height: 60 }}
+                style={{ width: "auto", height: 30, filter: "invert(1)" }}
                 alt="Université Gustave Eiffel"
               ></img>
             </a>
             <a href="https://ensg.eu">
               <img
                 src="https://www.univ-gustave-eiffel.fr/fileadmin/_processed_/9/6/csm_ENSG-footer-logo_c0b9f2880f.png"
-                style={{ width: "auto", height: 60 }}
+                style={{ width: "auto", height: 60, filter: "invert(1)" }}
                 alt="ENSG"
               ></img>
             </a>
             <a href="https://www.eivp-paris.fr/">
               <img
                 src="https://www.univ-gustave-eiffel.fr/fileadmin/_processed_/2/6/csm_EIVP-footer-logo_dd40d6347f.png"
-                style={{ width: "auto", height: 60 }}
+                style={{ width: "auto", height: 60, filter: "invert(1)" }}
                 alt="EIVP"
               ></img>
             </a>

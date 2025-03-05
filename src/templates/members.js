@@ -27,9 +27,9 @@ const Member = ({ node }) => {
           {node.firstname} {node.alt_firstname && `(${node.alt_firstname}) `}
           {node.lastname}{" "}
         </h3>
-        <p> {node.status} </p>
         {/* <p>Started: {node.start_date}</p> */}
       </Link>
+      <p> {node.status} </p>
     </StyledMember>
   );
 };
@@ -71,7 +71,7 @@ export default function MembersPage({ data, pageContext }) {
     <Layout
       pageTitle={<FormattedMessage id="members" values={{ team: team }} />}
     >
-      <h1>{<FormattedMessage id="members" values={{ team: team }} />}</h1>
+      <h3>{<FormattedMessage id="members" values={{ team: team }} />}</h3>
       {!isLastigPage && (
         <NavBar
           title={team}
@@ -79,27 +79,27 @@ export default function MembersPage({ data, pageContext }) {
           team={team}
         />
       )}
-      <h2>{trans("Permanent staff")}</h2>
+      <h4>{trans("Permanent staff")}</h4>
       <Members>{permanent.map((node) => Member((node = { node })))}</Members>
       {phD.length > 0 && (
         <>
-          <h2>{trans("PhD candidates")}</h2>
+          <h4>{trans("PhD candidates")}</h4>
           <Members>{phD.map((node) => Member((node = { node })))}</Members>
         </>
       )}
       {postDoc.length > 0 && (
         <>
-          <h2>{trans("Post-docs")}</h2>
+          <h4>{trans("Post-docs")}</h4>
           <Members>{postDoc.map((node) => Member((node = { node })))}</Members>
         </>
       )}
       {engineer.length > 0 && (
         <>
-          <h2>{trans("Engineers")}</h2>
+          <h4>{trans("Engineers")}</h4>
           <Members>{engineer.map((node) => Member((node = { node })))}</Members>
         </>
       )}
-      <h2>{trans("Alumni")}</h2>
+      <h4>{trans("Alumni")}</h4>
       <Members>{alumni.map((node) => Member((node = { node })))}</Members>
     </Layout>
   );
@@ -168,6 +168,8 @@ export const query = graphql`
 
 export const Head = ({ pageContext }) => (
   <Seo
-    title={`${pageContext.team.length > 1 ? "LASTIG" : pageContext.team} Members`}
+    title={`${
+      pageContext.team.length > 1 ? "LASTIG" : pageContext.team
+    } Members`}
   />
 );

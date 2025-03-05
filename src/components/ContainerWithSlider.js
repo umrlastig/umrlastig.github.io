@@ -3,10 +3,13 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Columns, Column2 } from "./styles/ContainerWithSlider.styled";
+import { WordCloud } from "./WordCloud";
 
 export const ContainerWithSlider = ({ children }) => {
+  debugger;
   return (
     <Columns>
+      <Column2>{children}</Column2>
       <Column2>
         <Slider infinite="true" autoplay="true" className="overflow-hidden">
           <img src="https://www.umr-lastig.fr/img/lastig_1920_EN.png" alt="" />
@@ -23,9 +26,9 @@ export const ContainerWithSlider = ({ children }) => {
           <img src="https://www.umr-lastig.fr/img/panop.png" alt="" />
           <img src="https://www.umr-lastig.fr/img/dti3d.jpg" alt="" />
           <img src="https://www.umr-lastig.fr/img/trees.png" alt="" />
+          {/* <WordCloud /> */}
         </Slider>
       </Column2>
-      <Column2>{children}</Column2>
     </Columns>
   );
 };

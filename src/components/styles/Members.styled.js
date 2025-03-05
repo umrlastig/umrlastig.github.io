@@ -4,6 +4,7 @@ export const Members = styled.div`
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  width: 80%;
 `;
 
 export const StyledMember = styled.div`

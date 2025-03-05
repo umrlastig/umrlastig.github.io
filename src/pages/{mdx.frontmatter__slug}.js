@@ -15,6 +15,8 @@ import {
 import { News } from "../components/News";
 import { NavBar } from "../components/NavBar";
 import { WordCloud } from "../components/WordCloud";
+import { ContainerWithSliderAndWordCloud } from "../components/ContainerWithSliderAndWordCloud";
+import { TextContainer } from "../components/styles/Container.styled";
 
 function LocalMenu(title, team, menus) {
   return <NavBar title={title} menus={menus} team={team} />;
@@ -45,7 +47,12 @@ const Page = ({ data, children }) => {
     News: () => <News data={data} />,
     LocalMenu: () => pageMenu && LocalMenu(pageTitle, team, pageMenu),
     WordCloud: () => <WordCloud nodes={filteredNodes} />,
+    ContainerWithSliderAndWordCloud: () => (
+      <ContainerWithSliderAndWordCloud nodes={filteredNodes} />
+    ),
+    TextContainer,
   }; // Provide common components here
+  //console.log("children", children);
   return (
     <Layout pageTitle={data.mdx.frontmatter.title}>
       <MDXProvider components={shortcodes}>{children}</MDXProvider>

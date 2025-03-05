@@ -130,6 +130,7 @@ export const PublicationList = ({ nodes, type, theme }) => {
       <tbody>
         {nodes.map((node, index) => {
           // console.log(index+"="+pubKey(node));
+          debugger;
           return (
             <Publication key={index + "=" + pubKey(node)}>
               <td key={pubKey(node) + "-teams"}>
@@ -138,7 +139,14 @@ export const PublicationList = ({ nodes, type, theme }) => {
                   style={{
                     width: 32,
                     height: 32,
-                    background: `conic-gradient(${node.teams.map((team, index) => `${theme.colors[team]} ${(index * 360.0) / node.teams.length}deg ${((index + 1) * 360.0) / node.teams.length}deg`).join(", ")})`,
+                    background: `conic-gradient(${node.teams
+                      .map(
+                        (team, index) =>
+                          `${theme.colors[team]} ${
+                            (index * 360.0) / node.teams.length
+                          }deg ${((index + 1) * 360.0) / node.teams.length}deg`,
+                      )
+                      .join(", ")})`,
                     borderRadius: 5,
                   }}
                 />
@@ -162,7 +170,7 @@ export const PublicationList = ({ nodes, type, theme }) => {
                   href={`https://hal.science/${node.halId}`}
                   key={`${node.id}-title`}
                 >
-                  {node.title}
+                  {node.title + ". "}
                 </a>
                 <span
                   key={`${node.id}-citation`}

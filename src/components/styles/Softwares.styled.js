@@ -11,7 +11,7 @@ export const SoftwareList = styled.div`
 
 export const Software = styled.div`
   border-radius: 1rem;
-  border: 2px solid black;
+  border: 1px solid lightgrey;
   padding: 1rem;
   margin: auto;
   width: 80%;
@@ -28,10 +28,7 @@ export const SoftwareHead = styled.div`
     text-decoration: inherit;
     a {
       text-decoration: inherit;
-      color: ${({ theme }) =>
-        theme.colors[
-          theme.teams[Math.floor(Math.random() * theme.teams.length)]
-        ]};
+      color: ${({ theme }) => theme.colors.publication_link};
     }
   }
 `;
@@ -40,10 +37,14 @@ export const SoftwareInfo = styled.div`
   flex-direction: row;
   justify-content: space-between;
   text-decoration: inherit;
+  height: 50px;
   div {
     text-decoration: inherit;
     a {
       text-decoration: inherit;
     }
+  }
+  img {
+    object-position: left top;
   }
 `;

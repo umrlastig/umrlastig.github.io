@@ -98,7 +98,7 @@ exports.onCreateNode = async ({
   createNodeId,
   getCache,
 }) => {
-  // console.log(`onCreateNode ${node.internal.type}`)
+  //console.log(`onCreateNode ${node.internal.type}`);
   if (node.internal.type === `DatasetCsv`) {
     if (node.image_url !== null && node.image_url) {
       reporter.info(`DatasetCsv Image url = ${node.image_url}.`);
