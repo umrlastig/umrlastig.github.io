@@ -155,7 +155,7 @@ export default function DatasetsPage({ data, pageContext }) {
 
               <Downloads>
                 {trans("Downloads:")}{" "}
-                <b>{node.fields ? node.fields.downloads : 0}</b>
+                <b>{node.downloads}</b>
               </Downloads>
             </DatasetInfo>
             <Publications doi={node.doi} />
