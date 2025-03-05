@@ -60,13 +60,13 @@ export default function ProjectsPage({ data, pageContext }) {
       a.theme.localeCompare(b.theme) ||
       a.start_date - b.start_date ||
       a.end_date - b.end_date ||
-      a.name.localeCompare(b.name)
+      a.name.localeCompare(b.name),
   );
   const sorted_projects = projects.map((p, index) => {
     return { index: index, ...p };
   });
   sorted_projects.forEach((p) =>
-    console.log(p.index, p.theme, p.start_date, p.end_date, p.name)
+    console.log(p.index, p.theme, p.start_date, p.end_date, p.name),
   );
   const teams = sorted_projects.flatMap((p) =>
     p.teams.map((t, index) => ({
@@ -74,7 +74,7 @@ export default function ProjectsPage({ data, pageContext }) {
       team: t,
       index: p.index,
       dx: -(index + 1) * 10,
-    }))
+    })),
   );
   const dxValues = [...new Set(teams.map((t) => t.dx))];
   teams.forEach((p) => console.log(p.index, p.index, p.dx));
@@ -100,8 +100,8 @@ export default function ProjectsPage({ data, pageContext }) {
       t.end_date,
       t.index_1,
       t.index_2,
-      t.index_middle
-    )
+      t.index_middle,
+    ),
   );
   return (
     <Layout pageTitle={`${isLastigPage ? "LASTIG" : team} Projects`}>
@@ -159,8 +159,8 @@ export default function ProjectsPage({ data, pageContext }) {
                     dx: value,
                     dy: -10,
                     fill: "team",
-                  }
-                )
+                  },
+                ),
               ),
               Plot.text(sorted_themes, {
                 x: "start_date",

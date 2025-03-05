@@ -43,28 +43,28 @@ export default function MembersPage({ data, pageContext }) {
     return intl.formatMessage({ id: text });
   }
   const phD = data.allPeopleCsv.nodes.filter(
-    (node) => node.status === "PhD student" && node.member === "true"
+    (node) => node.status === "PhD student" && node.member === "true",
   );
   const postDoc = data.allPeopleCsv.nodes.filter(
     (node) =>
       node.status === "Post-doc" &&
       node.member === "true" &&
-      node.perm === "false"
+      node.perm === "false",
   );
   const engineer = data.allPeopleCsv.nodes.filter(
     (node) =>
       node.status.toLowerCase().includes("engineer") &&
       node.member === "true" &&
-      node.perm === "false"
+      node.perm === "false",
   );
   const alumni = data.allPeopleCsv.nodes.filter(
-    (node) => node.member === "false"
+    (node) => node.member === "false",
   );
   const permanent = data.allPeopleCsv.nodes.filter(
     (node) =>
       node.perm === "true" &&
       node.status !== "PhD student" &&
-      node.member === "true"
+      node.member === "true",
   );
   return (
     //`${isLastigPage ? 'LASTIG' : team} Members`

@@ -32,24 +32,22 @@ var fs = require("fs");
 // }
 exports.createPages = async function ({ actions, graphql, reporter }) {
   var { data } = await graphql(`
-        query {
-            allPeopleCsv {
-                nodes {
-                    HAL
-                    end_date
-                    firstname
-                    id
-                    lastname
-                    member
-                    perm
-                    photo
-                    start_date
-                    status
-                    statut
-                    teams
-                    webpage
-                }
-            }
+    query {
+      allPeopleCsv {
+        nodes {
+          HAL
+          end_date
+          firstname
+          id
+          lastname
+          member
+          perm
+          photo
+          start_date
+          status
+          statut
+          teams
+          webpage
         }
       }
     }

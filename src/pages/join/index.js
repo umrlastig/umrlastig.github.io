@@ -44,10 +44,10 @@ const JoinPage = ({ data }) => {
                 trans(node.type),
                 node.team,
                 locale === "en" ? node.pdf_en : node.pdf_fr,
-                locale === "en" ? node.title : node.titre
+                locale === "en" ? node.title : node.titre,
               );
             }
-          }
+          },
           // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
         )}
       </PositionList>
@@ -62,10 +62,10 @@ const JoinPage = ({ data }) => {
                 trans(node.type),
                 node.team,
                 locale === "en" ? node.pdf_en : node.pdf_fr,
-                locale === "en" ? node.title : node.titre
+                locale === "en" ? node.title : node.titre,
               );
             }
-          }
+          },
           // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
         )}
       </PositionList>
@@ -80,10 +80,10 @@ const JoinPage = ({ data }) => {
                 trans(node.type),
                 node.team,
                 locale === "en" ? node.pdf_en : node.pdf_fr,
-                locale === "en" ? node.title : node.titre
+                locale === "en" ? node.title : node.titre,
               );
             }
-          }
+          },
           // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
         )}
       </PositionList>
@@ -98,10 +98,10 @@ const JoinPage = ({ data }) => {
                 trans(node.type),
                 node.team,
                 locale === "en" ? node.pdf_en : node.pdf_fr,
-                locale === "en" ? node.title : node.titre
+                locale === "en" ? node.title : node.titre,
               );
             }
-          }
+          },
           // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
         )}
       </PositionList>

@@ -48,7 +48,7 @@ export default function DatasetsPage({ data, pageContext }) {
         label: "Datasets downloads",
         data: data.allDatasetCsv.nodes.map((node) => node.downloads),
         backgroundColor: data.allDatasetCsv.nodes.map(
-          (node) => theme.colors[node.theme]
+          (node) => theme.colors[node.theme],
         ),
       },
     ],
@@ -91,7 +91,7 @@ export default function DatasetsPage({ data, pageContext }) {
     }
     const publications = data.allHalCsv.nodes.filter(
       (n) =>
-        n.researchData && n.researchData.some((rdata) => rdata.includes(doi))
+        n.researchData && n.researchData.some((rdata) => rdata.includes(doi)),
     );
     return (
       <div>

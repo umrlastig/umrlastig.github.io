@@ -43,7 +43,7 @@ export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
   function createMenuItem(menu, topMenu = false) {
     if (menu.subMenu && menu.subMenu.length > 0) {
       const subMenuItems = menu.subMenu.map((submenu) =>
-        createMenuItem(submenu)
+        createMenuItem(submenu),
       );
       if (topMenu) {
         // console.log(`TOP MENU = ${team}-${menu.link}-${menu.name}`)

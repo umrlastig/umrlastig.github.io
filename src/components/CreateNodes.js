@@ -6,6 +6,7 @@ import {
   Publication,
   ImageLink,
 } from "./styles/Publications.styled";
+import { Buffer } from "buffer";
 
 // Component adapted from: https://blog.logrocket.com/implementing-copy-clipboard-react-clipboard-api/
 function ClipboardCopy({ copyText }) {
@@ -62,43 +63,43 @@ function ResearchDataIcon(researchData, key) {
     return withLink(
       researchData,
       <Icon icon="simple-icons:figshare" width="2em" height="2em" />,
-      key
+      key,
     );
   if (researchData.includes("zenodo") || researchData.startsWith("10.5281/"))
     return withLink(
       researchData,
       <Icon icon="simple-icons:zenodo" width="2em" height="2em" />,
-      key
+      key,
     );
   if (researchData.startsWith("10.17632/"))
     return withLink(
       researchData,
       <Icon icon="simple-icons:mendeley" width="2em" height="2em" />,
-      key
+      key,
     );
   if (researchData.startsWith("10.57967/"))
     return withLink(
       researchData,
       <Icon icon="simple-icons:huggingface" width="2em" height="2em" />,
-      key
+      key,
     );
   if (researchData.startsWith("10.2760/"))
     return withLink(
       researchData,
       <Icon icon="twemoji:flag-european-union" width="2em" height="2em" />,
-      key
+      key,
     );
   if (researchData.includes("arXiv") || researchData.startsWith("10.48550/"))
     return withLink(
       researchData,
       <Icon icon="simple-icons:arxiv" width="2em" height="2em" />,
-      key
+      key,
     );
   if (researchData.startsWith("10.1145/"))
     return withLink(
       researchData,
       <Icon icon="academicons:acmdl" width="2em" height="2em" />,
-      key
+      key,
     );
   return null;
 }
@@ -108,7 +109,7 @@ function Repo(repo, key) {
     return withLink(
       repo,
       <Icon icon="fe:github-alt" width="2em" height="2em" />,
-      key
+      key,
     );
   return null;
 }
@@ -143,7 +144,7 @@ export const PublicationList = ({ nodes, type, theme }) => {
                         (team, index) =>
                           `${theme.colors[team]} ${
                             (index * 360.0) / node.teams.length
-                          }deg ${((index + 1) * 360.0) / node.teams.length}deg`
+                          }deg ${((index + 1) * 360.0) / node.teams.length}deg`,
                       )
                       .join(", ")})`,
                     borderRadius: 5,
@@ -179,13 +180,13 @@ export const PublicationList = ({ nodes, type, theme }) => {
               <td key={pubKey(node) + "-researchData"}>
                 {node.researchData &&
                   node.researchData.map((rData, dIndex) =>
-                    ResearchDataIcon(rData, `${node.id}-rd-${dIndex}`)
+                    ResearchDataIcon(rData, `${node.id}-rd-${dIndex}`),
                   )}
               </td>
               <td key={pubKey(node) + "-code"}>
                 {node.softCodeRepository &&
                   node.softCodeRepository.map((repo, cIndex) =>
-                    Repo(repo, `${node.id}-code-${cIndex}`)
+                    Repo(repo, `${node.id}-code-${cIndex}`),
                   )}
               </td>
               <td key={pubKey(node) + "-doi"}>

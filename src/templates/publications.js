@@ -24,7 +24,7 @@ export default function PublicationsPage({ data, pageContext }) {
   }));
   function Pub({ pubType }) {
     const filteredNodes = classifiedNodes.filter(
-      (node) => node.pubType === pubType
+      (node) => node.pubType === pubType,
     );
     if (filteredNodes.length > 0) {
       return (

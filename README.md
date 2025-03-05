@@ -6,7 +6,7 @@
 
 1.  **Get the site locally.**
 
-  Use git to download the code to build the site.
+Use git to download the code to build the site.
 
     ```shell
     git clone git@github.com:umrlastig/lastig-gatsby.git
@@ -31,7 +31,7 @@
 
     If you need to update the (csv) data for the website, run the script.
     It might take a while since it makes quite a few REST API requests...
-    Be careful of the *use_proxy* variable.
+    Be careful of the _use_proxy_ variable.
     Furthermore, do not hesitate to run only the process you actually need (publications, etc.).
 
     ```shell

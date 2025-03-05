@@ -6,7 +6,7 @@ export const WordCloud = ({ nodes }) => {
     .flatMap((node) =>
       node.keywords_lastig
         ? node.keywords_lastig /*.flatMap((k) => k.split(" "))*/
-        : []
+        : [],
     )
     .filter((x) => x)
     .filter((x) => x.length > 2)
