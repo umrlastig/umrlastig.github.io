@@ -72,7 +72,7 @@ export const NavBarMenu = styled.ul`
     position: absolute;
     margin: 0;
     top: 80px;
-    height: 80px;
+    //height: 80px;
     // top: ${({ $click }) => ($click ? "100%" : "-1000px")};
     opacity: 1;
     padding: 0;
@@ -95,11 +95,7 @@ export const NavItem = styled.li`
 `;
 
 export const NavLink = styled(Link)`
-<<<<<<< HEAD
-  color: #fff;
-=======
   color: #000;
->>>>>>> origin/merged
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -121,11 +117,7 @@ export const NavLink = styled(Link)`
 `;
 
 export const NavMenuButton = styled(MenuButton)`
-<<<<<<< HEAD
-  color: #fff;
-=======
   color: #000;
->>>>>>> origin/merged
   display: flex;
   align-items: center;
   text-decoration: none;
