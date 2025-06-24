@@ -5,8 +5,6 @@ import { LocalizedLink as Link } from "@ericcote/gatsby-theme-i18n";
 import { useIntl } from "react-intl";
 import { GlobalStyles } from "./styles/Global";
 import {
-  FaScaleBalanced,
-  FaTwitter,
   FaYoutube,
   FaGithub,
   FaLocationPin,
@@ -73,11 +71,11 @@ const Layout = ({ children }) => {
             </section>
             <section>
               <div>
-                <Button>
+                {/* <Button>
                   <Link to="/legal/">
                     <FaScaleBalanced /> {trans("Legal")}
                   </Link>
-                </Button>
+                </Button> */}
                 <Button>
                   <a href="https://github.com/umrlastig/lastig-gatsby">
                     <FaGithub /> {trans("Source")}
@@ -87,11 +85,11 @@ const Layout = ({ children }) => {
             </section>
             <section>
               <div>
-                <Button>
+                {/* <Button>
                   <a href="https://x.com/LASTIG_lab">
                     <FaTwitter /> Twitter
                   </a>
-                </Button>
+                </Button> */}
                 <Button>
                   <a href="https://www.youtube.com/channel/UCpVokwKUh9S4pqZ4cd-GTCQ">
                     <FaYoutube /> YouTube

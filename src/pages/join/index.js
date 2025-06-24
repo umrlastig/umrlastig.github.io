@@ -35,10 +35,10 @@ const JoinPage = ({ data }) => {
       <h1>Join Us!</h1>
       <h3>PhD</h3>
       <PositionList>
-        {nodes.map(
+        {nodes.foreach (
           (node) => {
             console.log("node!", node.type);
-            if (node.type == "PhD") {
+            if (node.type === "PhD") {
               return createPosition(
                 node.id,
                 trans(node.type),
@@ -53,10 +53,10 @@ const JoinPage = ({ data }) => {
       </PositionList>
       <h3>Postdoc</h3>
       <PositionList>
-        {nodes.map(
+        {nodes.foreach(
           (node) => {
             console.log("node!", node.type);
-            if (node.type == "postdoc") {
+            if (node.type === "postdoc") {
               return createPosition(
                 node.id,
                 trans(node.type),
@@ -71,10 +71,10 @@ const JoinPage = ({ data }) => {
       </PositionList>
       <h3>Research engineer</h3>
       <PositionList>
-        {nodes.map(
+        {nodes.foreach(
           (node) => {
             console.log("node!", node.type);
-            if (node.type == "ingenieur") {
+            if (node.type === "ingenieur") {
               return createPosition(
                 node.id,
                 trans(node.type),
@@ -89,10 +89,10 @@ const JoinPage = ({ data }) => {
       </PositionList>
       <h3>Internship</h3>
       <PositionList>
-        {nodes.map(
+        {nodes.foreach(
           (node) => {
             console.log("node!", node.type);
-            if (node.type == "Internship") {
+            if (node.type === "Internship") {
               return createPosition(
                 node.id,
                 trans(node.type),

@@ -55,7 +55,7 @@ exports.createPages = async function ({ actions, graphql, reporter }) {
   data.allPeopleCsv.nodes.forEach((node) => {
     const firstName = node.firstname;
     const lastName = node.lastname;
-    console.log(`${node.firstname}-${node.lastname}`)
+    console.log(`${node.firstname}-${node.lastname}`);
     actions.createPage({
       path: `/members/${node.firstname}-${node.lastname}`,
       component: require.resolve(`./src/templates/member-page.js`),

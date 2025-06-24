@@ -3,7 +3,6 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Columns, Column2 } from "./styles/ContainerWithSlider.styled";
-import { WordCloud } from "./WordCloud";
 
 export const ContainerWithSlider = ({ children }) => {
   debugger;

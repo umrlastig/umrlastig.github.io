@@ -24,7 +24,7 @@
 "ATLANTIS Dataset","ATLANTIS Dataset","10.5281/zenodo.10568800","https://zenodo.org/records/10568801",2023,"ATLANTIS","Security","STRUDEL",
 "Panoptic Agricultural Satellite TIme Series : optical time series, radar time series and very high resolution image ","PASTIS-HD ",,"https://huggingface.co/datasets/IGNF/PASTIS-HD",2024,,"Agriculture","STRUDEL","https://cdn-uploads.huggingface.co/production/uploads/6582b7dd75754a803e484487/sxmnCAGs0p2u_PALLsqyN.jpeg"
 "TreeSatAI-Time-Series ","TreeSatAI-Time-Series ",,"https://huggingface.co/datasets/IGNF/TreeSatAI-Time-Series",2024,,"LULC","STRUDEL",
-"FLAIR land-cover semantic segmentation ","FLAIR",,"https://huggingface.co/datasets/IGNF/FLAIR",2023,,"LULC","STRUDEL","https://huggingface.co/datasets/IGNF/FLAIR/resolve/main/flair-patches.png"
+"FLAIR land-cover semantic segmentation ","FLAIR",,"https://huggingface.co/datasets/IGNF/FLAIR-1-2",2023,,"LULC","STRUDEL","https://huggingface.co/datasets/IGNF/FLAIR-1-2/resolve/main/flair-patches.png"
 "Description and quality metadata files for four spatial landmark datasets","CHOUCAS metadata of the spatial landmark datasets","10.5281/zenodo.6494267","https://zenodo.org/records/6636472",2022,"Choucas","Security","MEIG",
 "Alignment between type of landmark in different sources and the concept in the spatial reference objects ontology","CHOUCAS alignment","10.5281/zenodo.6481338","https://zenodo.org/records/6542896",2022,"Choucas","Security","MEIG",
 "Five spatial landmark datasets","CHOUCAS landmark datasets","10.5281/zenodo.6480985","https://zenodo.org/records/6514812",2022,"Choucas","Security","MEIG",

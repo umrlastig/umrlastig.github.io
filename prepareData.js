@@ -9,12 +9,12 @@ const { HttpsProxyAgent } = require("https-proxy-agent");
 const use_proxy = false;
 const axiosDefaultConfig = use_proxy
   ? {
-      proxy: false,
-      httpsAgent: new HttpsProxyAgent("http://proxy.ign.fr:3128"),
-    }
+    proxy: false,
+    httpsAgent: new HttpsProxyAgent("http://proxy.ign.fr:3128"),
+  }
   : {
-      proxy: false,
-    };
+    proxy: false,
+  };
 
 const axios = require("axios").create(axiosDefaultConfig);
 
@@ -712,8 +712,8 @@ function getKeywords(halFilename, keywordsFilename, cooccurenceFilename) {
                     .filter((k) => k != keyword)
                     .forEach(
                       (k) =>
-                        (entry[k] =
-                          (Object.hasOwn(entry, k) ? entry[k] : 0) + 1),
+                      (entry[k] =
+                        (Object.hasOwn(entry, k) ? entry[k] : 0) + 1),
                     );
                   keywordCoOccurenceMap[team].set(keyword, entry);
                 } else {
@@ -853,16 +853,16 @@ function getDatasets(inputDatasetFilename, datasetFilename) {
                   // use previous values (harvard dataverse blocks requests now apparently)
                   switch (url) {
                     case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/ZKRJFA":
-                      downloadValue = 8190;
+                      downloadValue = 11045;//updated 2025/06/24
                       break;
                     case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/XP8J6P":
-                      downloadValue = 6558;
+                      downloadValue = 6569;//updated 2025/06/24
                       break;
                     case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/28674":
-                      downloadValue = 2543;
+                      downloadValue = 2649;//updated 2025/06/24
                       break;
                     case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/CCESX4":
-                      downloadValue = 371;
+                      downloadValue = 371;//updated 2025/06/24
                       break;
                     default:
                       console.log(`Sorry, not found ${url}.`);
@@ -894,7 +894,6 @@ function getDatasets(inputDatasetFilename, datasetFilename) {
               return modifiableDataset;
             } else {
               if (url.includes("mendeley")) {
-                // console.log("M = "+ url);
                 const dataId = url.substring(url.lastIndexOf("/") + 1);
                 var downloadValue = 0;
                 await get(
@@ -907,13 +906,35 @@ function getDatasets(inputDatasetFilename, datasetFilename) {
                     if (downloads) downloadValue = downloads;
                   })
                   .catch((err) => {
-                    reporter.error(err);
+                    console.error(err);
                   });
                 modifiableDataset["downloads"] = downloadValue;
                 return modifiableDataset;
               } else {
-                modifiableDataset["downloads"] = 0;
-                return modifiableDataset;
+                if (url.includes("huggingface")) {
+                  console.log("huggingface = " + url);
+                  const dataId = url.substring(url.lastIndexOf("datasets/") + 9);
+                  console.log("huggingface dataId = " + dataId);
+                  var downloadValue = 0;
+                  await get(
+                    `https://huggingface.co/api/datasets/${dataId}?expand%5B%5D=downloads&expand%5B%5D=downloadsAllTime`,
+                  )
+                    .then((res) => {
+                      console.log("huggingface data = " + res.data);
+                      const downloads =
+                        res.data["downloadsAllTime"];
+                      console.log("H => " + downloads);
+                      if (downloads) downloadValue = downloads;
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                  modifiableDataset["downloads"] = downloadValue;
+                  return modifiableDataset;
+                } else {
+                  modifiableDataset["downloads"] = 0;
+                  return modifiableDataset;
+                }
               }
             }
           }

@@ -23,6 +23,7 @@
     "@observablehq/plot": "^0.6.15",
     "@szhsin/react-menu": "^4.1.0",
     "babel-plugin-styled-components": "^2.1.4",
+    "caniuse-lite": "^1.0.30001724",
     "chart.js": "^4.4.3",
     "cross-env": "^7.0.3",
     "csv-parser": "^3.0.0",
@@ -60,7 +61,7 @@
     "@iconify-icon/react": "^2.1.0",
     "ajv": "^8.16.0",
     "ajv-keywords": "^5.1.0",
-    "gh-pages": "^6.1.1",
+    "gh-pages": "^6.3.0",
     "prettier": "3.5.3",
     "schema-utils": "^4.2.0"
   }

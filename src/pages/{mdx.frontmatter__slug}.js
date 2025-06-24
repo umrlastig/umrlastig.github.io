@@ -31,8 +31,8 @@ const Page = ({ data, children }) => {
     : null;
   const pageMenu = team ? data.site.siteMetadata.menus[team] : null;
   const nodes = data.allHalCsv.nodes;
-  console.log("Team = " + team);
-  console.log("Node Team = " + nodes[0].teams);
+  // console.log("Team = " + team);
+  // console.log("Node Team = " + nodes[0].teams);
   const filteredNodes = team
     ? nodes.filter((node) => node.teams.includes(team))
     : nodes;
@@ -52,7 +52,7 @@ const Page = ({ data, children }) => {
       <ContainerWithSliderAndWordCloud nodes={filteredNodes} />
     ),
     TextContainer,
-    TeamsDiagram: () => <TeamDiagramComponent/>
+    TeamsDiagram: () => <TeamDiagramComponent />,
   }; // Provide common components here
   //console.log("children", children);
   return (
