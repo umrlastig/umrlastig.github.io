@@ -42,7 +42,7 @@ export const WordCloud = ({ nodes }) => {
           spiral: "archimedean",
           transitionDuration: 1000,
         }}
-        size={[548, 400]}
+        //size={[548, 400]}
         words={words}
       />
     )

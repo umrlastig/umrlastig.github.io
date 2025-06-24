@@ -12,6 +12,7 @@ import {
   Column2,
   Column4,
 } from "../components/styles/ContainerWithSlider.styled";
+import { TeamDiagramComponent } from "../components/TeamDiagramComponent";
 import { News } from "../components/News";
 import { NavBar } from "../components/NavBar";
 import { WordCloud } from "../components/WordCloud";
@@ -51,6 +52,7 @@ const Page = ({ data, children }) => {
       <ContainerWithSliderAndWordCloud nodes={filteredNodes} />
     ),
     TextContainer,
+    TeamsDiagram: () => <TeamDiagramComponent/>
   }; // Provide common components here
   //console.log("children", children);
   return (

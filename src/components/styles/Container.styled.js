@@ -16,6 +16,7 @@ export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 5px;
   // svg {
   //     margin: 0 auto 0 auto;
   //     width: 50%;

@@ -24,3 +24,18 @@ export const Column4 = styled.div`
     }
   }
 `;
+
+export const ColumnFlex = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  width: calc(100% - 2rem);
+  a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    img {
+      width: 100%;
+    }
+  }
+`;
