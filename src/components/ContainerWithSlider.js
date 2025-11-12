@@ -3,7 +3,14 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Columns, Column2 } from "./styles/ContainerWithSlider.styled";
-
+import lastig_1920_EN from "../images/lastig_1920_EN.png"
+import lastig_crop1 from "../images/lastig_crop1.jpeg"
+import Labo_2021_03_18_bis from "../images/Labo_2021_03_18_bis.png"
+import larzac1 from "../images/larzac1.png"
+import GautierLobo_covid_2021 from "../images/GautierLobo_covid_2021.png"
+import panop from "../images/panop.png"
+import dti3d from "../images/dti3d.jpg"
+import trees from "../images/trees.png"
 export const ContainerWithSlider = ({ children }) => {
   debugger;
   return (
@@ -11,20 +18,14 @@ export const ContainerWithSlider = ({ children }) => {
       <Column2>{children}</Column2>
       <Column2>
         <Slider infinite="true" autoplay="true" className="overflow-hidden">
-          <img src="https://www.umr-lastig.fr/img/lastig_1920_EN.png" alt="" />
-          <img src="https://www.umr-lastig.fr/img/lastig_crop1.jpeg" alt="" />
-          <img
-            src="https://www.umr-lastig.fr/img/Labo_2021_03_18_bis.png"
-            alt=""
-          />
-          <img src="https://www.umr-lastig.fr/img/larzac1.png" alt="" />
-          <img
-            src="https://www.umr-lastig.fr/img/GautierLobo_covid_2021.png"
-            alt=""
-          />
-          <img src="https://www.umr-lastig.fr/img/panop.png" alt="" />
-          <img src="https://www.umr-lastig.fr/img/dti3d.jpg" alt="" />
-          <img src="https://www.umr-lastig.fr/img/trees.png" alt="" />
+          <img src={lastig_1920_EN} alt="lastig_1920_EN" />
+          <img src={lastig_crop1} alt="lastig_crop1" />
+          <img src={Labo_2021_03_18_bis} alt="Labo_2021_03_18_bis" />
+          <img src={larzac1} alt="larzac1" />
+          <img src={GautierLobo_covid_2021} alt="GautierLobo_covid_2021" />
+          <img src={panop} alt="panop" />
+          <img src={dti3d} alt="dti3d" />
+          <img src={trees} alt="trees" />
           {/* <WordCloud /> */}
         </Slider>
       </Column2>
