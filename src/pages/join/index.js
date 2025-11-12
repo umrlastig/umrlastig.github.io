@@ -30,15 +30,16 @@ const JoinPage = ({ data }) => {
     return intl.formatMessage({ id: text });
   }
   const nodes = data.allRecruitingCsv.nodes;
+  console.log(nodes);
   return (
     <Layout pageTitle="Join Us">
       <h1>Join Us!</h1>
       <h3>PhD</h3>
       <PositionList>
-        {nodes.foreach (
+        {nodes.map (
           (node) => {
-            console.log("node!", node.type);
             if (node.type === "PhD") {
+              console.log("node!", node.type);
               return createPosition(
                 node.id,
                 trans(node.type),
@@ -53,10 +54,10 @@ const JoinPage = ({ data }) => {
       </PositionList>
       <h3>Postdoc</h3>
       <PositionList>
-        {nodes.foreach(
+        {nodes.map(
           (node) => {
-            console.log("node!", node.type);
             if (node.type === "postdoc") {
+              console.log("node!", node.type);
               return createPosition(
                 node.id,
                 trans(node.type),
@@ -71,10 +72,10 @@ const JoinPage = ({ data }) => {
       </PositionList>
       <h3>Research engineer</h3>
       <PositionList>
-        {nodes.foreach(
+        {nodes.map(
           (node) => {
-            console.log("node!", node.type);
             if (node.type === "ingenieur") {
+              console.log("node!", node.type);
               return createPosition(
                 node.id,
                 trans(node.type),
@@ -89,10 +90,10 @@ const JoinPage = ({ data }) => {
       </PositionList>
       <h3>Internship</h3>
       <PositionList>
-        {nodes.foreach(
+        {nodes.map(
           (node) => {
-            console.log("node!", node.type);
             if (node.type === "Internship") {
+              console.log("node!", node.type);
               return createPosition(
                 node.id,
                 trans(node.type),

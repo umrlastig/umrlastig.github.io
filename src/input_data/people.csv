@@ -1,4 +1,4 @@
-"firstname","alt_firstname","lastname","team","statut","status","webpage","HAL","start_date","end_date","member","photo","perm"
+"firstname","alt_firstname","lastname","teams","statut","status","webpage","HAL","start_date","end_date","member","photo","perm"
 "Saif",,"Aati","ACTE","Doctorant","PhD student","/saif-aati",,2020-07-01,2023-03-31,"false",,"false"
 "Nathalie",,"Abadie","STRUDEL","CR IGN","Researcher","/nathalie-abadie","nathalie-abadie",2005-10-01,,"true","/nathalie-abadie/img/abadie.png","true"
 "Mohamed",,"Ali-Chebbi","ACTE","Doctorant","PhD student","/mohamed-alichebbi",,2020-07-01,2024-07-10,"false",,"false"
