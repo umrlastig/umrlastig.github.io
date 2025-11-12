@@ -6,7 +6,8 @@ import { Menu, MenuItem, MenuButton, SubMenu } from "@szhsin/react-menu";
 
 export const Nav = styled.nav`
   background: ${({ theme, $team }) =>
-    $team ? theme.colors[$team] : theme.colors.header};
+    // $team ? theme.colors[$team] : theme.colors.header};
+  theme.colors.header};
   height: 80px;
   display: flex;
   justify-content: center;
@@ -31,6 +32,7 @@ export const NavBarContainer = styled.div`
 
 export const NavBarLogo = styled(Link)`
   color: #fff;
+  color: ${({ theme, $team }) =>$team ? theme.colors[$team] : theme.colors.header};
   justify-self: flex-start;
   cursor: pointer;
   text-decoration: none;
@@ -78,7 +80,8 @@ export const NavBarMenu = styled.ul`
     padding: 0;
     // transition: all 0.2s ease;
     background: ${({ theme, team }) =>
-      team ? theme.colors[team] : theme.colors.header};
+      // team ? theme.colors[team] : theme.colors.header};
+      theme.colors.header};
   }
 `;
 
@@ -143,7 +146,8 @@ export const NavMenuButton = styled(MenuButton)`
 
 export const NavMenu = styled(Menu)`
   background: ${({ theme, $team }) =>
-    $team ? theme.colors[$team] : theme.colors.header};
+    // $team ? theme.colors[$team] : theme.colors.header};
+  theme.colors.header};
   ul {
     background: inherit;
   }

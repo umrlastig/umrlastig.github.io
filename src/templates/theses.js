@@ -34,14 +34,11 @@ export default function thesesPage({ data, pageContext }) {
           team={team}
         />
       )}
+      <h3>Ongoing theses</h3>
       <table>
-        <thead />
+        {/* <thead><h3>Ongoing theses</h3></thead> */}
+        <thead></thead>
         <tbody>
-          <tr key="ongoing">
-            <td>
-              <h2>Ongoing theses</h2>
-            </td>
-          </tr>
           {ongoingNodes.map((node, index) => {
             return (
               <tr key={index + "=" + node.id}>
@@ -56,7 +53,9 @@ export default function thesesPage({ data, pageContext }) {
                     }}
                   />
                 </td>
-                <td>
+                <td style={{
+                     minWidth:  "100px",
+                    }}>
                   <span>{node.start}</span>
                 </td>
                 <td>
@@ -82,11 +81,11 @@ export default function thesesPage({ data, pageContext }) {
               </tr>
             );
           })}
-          <tr key="defended">
-            <td>
-              <h2>Defended theses</h2>
-            </td>
-          </tr>
+          </tbody>
+          </table>
+      <h3>Defended theses</h3>          
+      <table>
+        <tbody>
           {defendedNodes.map((node, index) => {
             return (
               <tr key={index + "=" + node.id}>
@@ -101,7 +100,7 @@ export default function thesesPage({ data, pageContext }) {
                     }}
                   />
                 </td>
-                <td>
+                <td style={{minWidth: "100px"}}>
                   <span>{node.defense}</span>
                 </td>
                 <td>

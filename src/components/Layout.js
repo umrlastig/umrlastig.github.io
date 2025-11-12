@@ -8,6 +8,7 @@ import {
   FaYoutube,
   FaGithub,
   FaLocationPin,
+  FaLinkedin,
 } from "react-icons/fa6";
 import {
   VerticalContainer,
@@ -85,11 +86,11 @@ const Layout = ({ children }) => {
             </section>
             <section>
               <div>
-                {/* <Button>
-                  <a href="https://x.com/LASTIG_lab">
-                    <FaTwitter /> Twitter
+                <Button>
+                  <a href="https://www.linkedin.com/search/results/all/?keywords=%23lastig&origin=HASH_TAG_FROM_FEED&sid=RuS">
+                    <FaLinkedin /> Linkedin
                   </a>
-                </Button> */}
+                </Button>
                 <Button>
                   <a href="https://www.youtube.com/channel/UCpVokwKUh9S4pqZ4cd-GTCQ">
                     <FaYoutube /> YouTube
