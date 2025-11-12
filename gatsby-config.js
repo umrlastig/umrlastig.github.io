@@ -2,7 +2,7 @@
  * @type {import('gatsby').GatsbyConfig}
  */
 module.exports = {
-  pathPrefix: "/lastig-gatsby",
+  pathPrefix: "",
   siteMetadata: {
     title: "LASTIG Gatsby",
     siteUrl: "https://www.umr-lastig.fr/",

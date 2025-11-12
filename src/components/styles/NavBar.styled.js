@@ -7,7 +7,7 @@ import { Menu, MenuItem, MenuButton, SubMenu } from "@szhsin/react-menu";
 export const Nav = styled.nav`
   background: ${({ theme, $team }) =>
     // $team ? theme.colors[$team] : theme.colors.header};
-  theme.colors.header};
+    theme.colors.header};
   height: 80px;
   display: flex;
   justify-content: center;
@@ -32,7 +32,8 @@ export const NavBarContainer = styled.div`
 
 export const NavBarLogo = styled(Link)`
   color: #fff;
-  color: ${({ theme, $team }) =>$team ? theme.colors[$team] : theme.colors.header};
+  color: ${({ theme, $team }) =>
+    $team ? theme.colors[$team] : theme.colors.header};
   justify-self: flex-start;
   cursor: pointer;
   text-decoration: none;
@@ -147,7 +148,7 @@ export const NavMenuButton = styled(MenuButton)`
 export const NavMenu = styled(Menu)`
   background: ${({ theme, $team }) =>
     // $team ? theme.colors[$team] : theme.colors.header};
-  theme.colors.header};
+    theme.colors.header};
   ul {
     background: inherit;
   }

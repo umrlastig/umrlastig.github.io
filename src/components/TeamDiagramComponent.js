@@ -11,7 +11,11 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
       <g id="Frame 3">
         <rect width="2421" height="1887" fill="white" />
         <g id="Teams">
-          <a href="https://www.umr-lastig.fr/acte/" fill="inherit" aria-label="ACTE Team">
+          <a
+            href="https://www.umr-lastig.fr/acte/"
+            fill="inherit"
+            aria-label="ACTE Team"
+          >
             <circle
               id="Ellipse 1"
               cx="585"
@@ -28,7 +32,11 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
           />
         </g>
         <g id="Teams_2">
-          <a href="https://www.umr-lastig.fr/strudel/" fill="inherit" aria-label="STRUDEL Team">
+          <a
+            href="https://www.umr-lastig.fr/strudel/"
+            fill="inherit"
+            aria-label="STRUDEL Team"
+          >
             <circle
               id="Ellipse 1_2"
               cx="1026"
@@ -44,7 +52,11 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
           />
         </g>
         <g id="Teams_3">
-          <a href="https://www.umr-lastig.fr/geovis/" fill="inherit" aria-label="GEOVIS Team">
+          <a
+            href="https://www.umr-lastig.fr/geovis/"
+            fill="inherit"
+            aria-label="GEOVIS Team"
+          >
             <circle
               id="Ellipse 1_3"
               cx="1811"
@@ -60,7 +72,11 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
           />
         </g>
         <g id="Teams_4">
-          <a href="https://www.umr-lastig.fr/meig/" fill="inherit" aria-label="MEIG Team">
+          <a
+            href="https://www.umr-lastig.fr/meig/"
+            fill="inherit"
+            aria-label="MEIG Team"
+          >
             <circle id="Ellipse 1_4" cx="969" cy="250" r="170" fill="#4DAF4A" />
           </a>
           <path

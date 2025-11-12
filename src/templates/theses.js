@@ -53,9 +53,11 @@ export default function thesesPage({ data, pageContext }) {
                     }}
                   />
                 </td>
-                <td style={{
-                     minWidth:  "100px",
-                    }}>
+                <td
+                  style={{
+                    minWidth: "100px",
+                  }}
+                >
                   <span>{node.start}</span>
                 </td>
                 <td>
@@ -81,9 +83,9 @@ export default function thesesPage({ data, pageContext }) {
               </tr>
             );
           })}
-          </tbody>
-          </table>
-      <h3>Defended theses</h3>          
+        </tbody>
+      </table>
+      <h3>Defended theses</h3>
       <table>
         <tbody>
           {defendedNodes.map((node, index) => {
@@ -100,7 +102,7 @@ export default function thesesPage({ data, pageContext }) {
                     }}
                   />
                 </td>
-                <td style={{minWidth: "100px"}}>
+                <td style={{ minWidth: "100px" }}>
                   <span>{node.defense}</span>
                 </td>
                 <td>

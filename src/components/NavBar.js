@@ -122,7 +122,12 @@ export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
       <IconContext.Provider value={{ color: "#131313" }}>
         <Nav $active={`${scroll}`} $click={click} $team={team}>
           <NavBarContainer>
-            <NavBarLogo key="NavBarLogo" to="/" onClick={closeMobileMenu} $team={team}>
+            <NavBarLogo
+              key="NavBarLogo"
+              to="/"
+              onClick={closeMobileMenu}
+              $team={team}
+            >
               {lastigLogo ? (
                 <StaticImage
                   src="../images/lastig1.svg"

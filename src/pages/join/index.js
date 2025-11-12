@@ -36,7 +36,7 @@ const JoinPage = ({ data }) => {
       <h1>Join Us!</h1>
       <h3>PhD</h3>
       <PositionList>
-        {nodes.map (
+        {nodes.map(
           (node) => {
             if (node.type === "PhD") {
               console.log("node!", node.type);
