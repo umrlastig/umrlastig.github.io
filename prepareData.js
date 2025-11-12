@@ -5,6 +5,7 @@ var fs = require("fs");
 const { stringify } = require("csv-stringify");
 const csv = require("csv-parser");
 const { HttpsProxyAgent } = require("https-proxy-agent");
+const https = require('https');
 
 const use_proxy = false;
 const axiosDefaultConfig = use_proxy
@@ -40,6 +41,35 @@ axiosRetry(axios, {
 function get(url) {
   return axios.get(url);
 }
+
+// File
+function getFile(inputUrl, filename, columns) {
+  return new Promise(function (resolve, reject) {
+    var news = [];
+    https.get(inputUrl, (stream) => {
+      stream.pipe(csv())
+        .on("data", (data) => {
+        //console.log(data);
+        news.push(data);
+      })
+      .on("end", async () => {
+        console.log("Finished reading and found", news.length,"news");
+        const writableStream = fs.createWriteStream(filename);
+        const stringifier = stringify({ header: true, columns: columns });
+        function write(value) {
+          console.log(value);
+          stringifier.write(value);
+        }
+        news.forEach(write);
+        stringifier.pipe(writableStream);
+        console.log("Finished writing data");
+        resolve();
+      })
+      .on("error", reject);
+    });
+  });
+}
+
 // People
 function getPeople(inputPeopleFilename, peopleFilename) {
   return new Promise(function (resolve, reject) {
@@ -53,9 +83,9 @@ function getPeople(inputPeopleFilename, peopleFilename) {
       "arxivId_s",
     ];
     var persons = [];
-    fs.createReadStream(inputPeopleFilename)
-      .pipe(csv())
-      .on("data", (data) => {
+    https.get(inputPeopleFilename, (stream) => {
+      stream.pipe(csv())
+        .on("data", (data) => {
         //console.log(data);
         persons.push(data);
       })
@@ -89,7 +119,7 @@ function getPeople(inputPeopleFilename, peopleFilename) {
         for (const [fid, personValue] of persons.entries()) {
           var person = JSON.parse(JSON.stringify(personValue));
           person["fid"] = fid;
-          console.log(fid);
+          // console.log(fid);
           const halId = person.HAL;
           if (halId) {
             const url = `https://api.archives-ouvertes.fr/ref/author/?q=idHal_s:${halId}&wt=json&fl=fullName_s,idHal_s,*Id_s`;
@@ -110,12 +140,12 @@ function getPeople(inputPeopleFilename, peopleFilename) {
               person[id] = "";
             });
           }
-          console.log(person.teams);
+          // console.log(person.team);
           stringifier.write([
             person.firstname,
             person.alt_firstname,
             person.lastname,
-            person.teams,
+            person.team,
             person.statut,
             person.status,
             person.webpage,
@@ -140,9 +170,13 @@ function getPeople(inputPeopleFilename, peopleFilename) {
         resolve();
       })
       .on("error", reject);
+    });
   });
 }
 
+function removeAccents(str) {
+  return str.normalize("NFD").replace(/\p{Diacritic}/gu, "").replaceAll("-"," ");
+}
 async function getTheses(peopleFilename, thesesFilename) {
   //input people data
   return new Promise(function (resolve, reject) {
@@ -157,13 +191,17 @@ async function getTheses(peopleFilename, thesesFilename) {
           firstname: data.firstname,
           lastname: data.lastname,
         };
+        const name = `${removeAccents(data.firstname.toLowerCase())} ${removeAccents(data.lastname.toLowerCase())}`;
+        console.log(name);
         people.set(
-          `${data.firstname.toLowerCase()} ${data.lastname.toLowerCase()}`,
+          name,
           o,
         );
         if (data.alt_firstname) {
+          const alt_name = `${removeAccents(data.alt_firstname.toLowerCase())} ${removeAccents(data.lastname.toLowerCase())}`;
+          console.log(alt_name);
           people.set(
-            `${data.alt_firstname.toLowerCase()} ${data.lastname.toLowerCase()}`,
+            alt_name,
             o,
           );
         }
@@ -365,15 +403,18 @@ async function getTheses(peopleFilename, thesesFilename) {
               let HAL = "";
               if (
                 people.has(
-                  `${firstname.toLowerCase()} ${lastname.toLowerCase()}`,
+                  `${removeAccents(firstname.toLowerCase())} ${removeAccents(lastname.toLowerCase())}`,
                 )
               ) {
                 const r = people.get(
-                  `${firstname.toLowerCase()} ${lastname.toLowerCase()}`,
+                  `${removeAccents(firstname.toLowerCase())} ${removeAccents(lastname.toLowerCase())}`,
                 );
                 teams = r.teams;
                 webpage = r.webpage;
                 HAL = r.HAL;
+                console.log(`Found teams ${teams} for ${firstname} ${lastname}`);
+              } else {
+                console.log(`No team found for ${firstname} ${lastname} (${removeAccents(firstname.toLowerCase())} ${removeAccents(lastname.toLowerCase())})`);
               }
               return [
                 thesis.id,
@@ -999,7 +1040,14 @@ function getDatasets(inputDatasetFilename, datasetFilename) {
 - add info about previous positions? education?
 */
 
-getPeople("src/input_data/people.csv", "src/data/people.csv").then(() =>
+// we read the people.csv from github, process it and save it to use it for the rest of the process (and for gatsby)
+
+// get news file
+getFile("https://raw.githubusercontent.com/umrlastig/lastig_data/refs/heads/master/news.csv","src/data/news.csv",["date","team","only","perso","texten","textfr"]);
+// get jobs file
+getFile("https://raw.githubusercontent.com/umrlastig/lastig_data/refs/heads/master/recruiting.csv","src/data/recruiting.csv",["type","titre","title","pdf_fr","pdf_en","team","filled"]);
+// get people data
+getPeople("https://raw.githubusercontent.com/umrlastig/lastig_data/refs/heads/master/people.csv", "src/data/people.csv").then(() =>
   getTheses("src/data/people.csv", "src/data/theses.csv").then(() =>
     getKeywordBase(
       "src/input_data/synonyms.csv",
