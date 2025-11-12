@@ -3,14 +3,14 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { WordCloud } from "./WordCloud";
-import lastig_1920_EN from "../images/lastig_1920_EN.png"
-import lastig_crop1 from "../images/lastig_crop1.jpeg"
-import Labo_2021_03_18_bis from "../images/Labo_2021_03_18_bis.png"
-import larzac1 from "../images/larzac1.png"
-import GautierLobo_covid_2021 from "../images/GautierLobo_covid_2021.png"
-import panop from "../images/panop.png"
-import dti3d from "../images/dti3d.jpg"
-import trees from "../images/trees.png"
+import lastig_1920_EN from "../images/lastig_1920_EN.png";
+import lastig_crop1 from "../images/lastig_crop1.jpeg";
+import Labo_2021_03_18_bis from "../images/Labo_2021_03_18_bis.png";
+import larzac1 from "../images/larzac1.png";
+import GautierLobo_covid_2021 from "../images/GautierLobo_covid_2021.png";
+import panop from "../images/panop.png";
+import dti3d from "../images/dti3d.jpg";
+import trees from "../images/trees.png";
 
 export const ContainerWithSliderAndWordCloud = ({ nodes, children }) => {
   debugger;
