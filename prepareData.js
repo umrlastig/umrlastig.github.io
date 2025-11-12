@@ -17,6 +17,25 @@ const axiosDefaultConfig = use_proxy
     };
 
 const axios = require("axios").create(axiosDefaultConfig);
+const axiosRetry = require('axios-retry').default;
+
+axios.interceptors.response.use(async (response) => {
+  // workaround as axios-retry only works with errors
+  if (response.status == 202 && response.data.pending) {
+    console.log("found 202 response!")
+    const err = new Error('Pending response');
+    err.config = response.config;
+    throw err;
+  }
+  return response;
+});
+
+axiosRetry(axios, {
+  retries: 3,
+  retryCondition: (error) => {
+    return error.response.status === 202;
+  },
+});
 
 function get(url) {
   return axios.get(url);
@@ -783,6 +802,35 @@ function getKeywords(halFilename, keywordsFilename, cooccurenceFilename) {
     });
 }
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
+async function getWithRetry(url, retries = 10) {
+  let attempt = 0;
+  // use for loop to retry 3 times at most
+  while (attempt < retries) {
+    try {
+      const response = await axios.get(url);
+      if (response.status == 200) {
+        return response.data; // Success: Return data
+      } else {
+        attempt++;
+        console.log(`${url} Attempt ${attempt} still processing. Retrying...`); // guessing 202
+        if (attempt === retries) {
+          // throw error; // Fail after exhausting retries
+          return {status: 404};
+        }
+        await delay(5000);
+      }
+    } catch (error) {
+      attempt++;
+      console.log(`${url} Attempt ${attempt} failed. Retrying...`);
+      if (attempt === retries) {
+        // throw error; // Fail after exhausting retries
+        return {status: 404};
+      }
+      await delay(5000);
+    }
+  }
+}
 function getDatasets(inputDatasetFilename, datasetFilename) {
   //input datasets data
   const datasets = new Array();
@@ -853,16 +901,16 @@ function getDatasets(inputDatasetFilename, datasetFilename) {
                   // use previous values (harvard dataverse blocks requests now apparently)
                   switch (url) {
                     case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/ZKRJFA":
-                      downloadValue = 11045; //updated 2025/06/24
+                      downloadValue = 13719; //updated 2025/11/12
                       break;
                     case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/XP8J6P":
-                      downloadValue = 6569; //updated 2025/06/24
+                      downloadValue = 6575; //updated 2025/11/12
                       break;
                     case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/28674":
-                      downloadValue = 2649; //updated 2025/06/24
+                      downloadValue = 2929; //updated 2025/11/12
                       break;
                     case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/CCESX4":
-                      downloadValue = 371; //updated 2025/06/24
+                      downloadValue = 371; //updated 2025/11/12
                       break;
                     default:
                       console.log(`Sorry, not found ${url}.`);
@@ -912,17 +960,14 @@ function getDatasets(inputDatasetFilename, datasetFilename) {
                 return modifiableDataset;
               } else {
                 if (url.includes("huggingface")) {
-                  console.log("huggingface = " + url);
                   const dataId = url.substring(
                     url.lastIndexOf("datasets/") + 9,
                   );
-                  console.log("huggingface dataId = " + dataId);
                   var downloadValue = 0;
                   await get(
                     `https://huggingface.co/api/datasets/${dataId}?expand%5B%5D=downloads&expand%5B%5D=downloadsAllTime`,
                   )
                     .then((res) => {
-                      console.log("huggingface data = " + res.data);
                       const downloads = res.data["downloadsAllTime"];
                       console.log("H => " + downloads);
                       if (downloads) downloadValue = downloads;
@@ -954,15 +999,6 @@ function getDatasets(inputDatasetFilename, datasetFilename) {
 - add info about previous positions? education?
 */
 
-// getPeople("src/input_data/people.csv", "src/data/people.csv")
-//     .then(() => getTheses("src/data/people.csv", "src/data/theses.csv")
-//         .then(() => getPublications("src/data/people.csv", "src/data/hal.csv")
-//             .then(() => getKeywords("src/data/hal.csv", "src/data/keywords.csv")
-//                 // .then(() => getDatasets("src/input_data/dataset.csv", "src/data/dataset.csv"))
-//             )
-//         )
-//     )
-// getTheses("src/data/people.csv", "src/data/theses.csv")
 getPeople("src/input_data/people.csv", "src/data/people.csv").then(() =>
   getTheses("src/data/people.csv", "src/data/theses.csv").then(() =>
     getKeywordBase(
