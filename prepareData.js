@@ -45,22 +45,22 @@ function get(url) {
 // File
 function getFile(inputUrl, filename, columns) {
   return new Promise(function (resolve, reject) {
-    var news = [];
+    var values = [];
     https.get(inputUrl, (stream) => {
       stream.pipe(csv())
         .on("data", (data) => {
         //console.log(data);
-        news.push(data);
+        values.push(data);
       })
       .on("end", async () => {
-        console.log("Finished reading and found", news.length,"news");
+        console.log("Finished reading and found", values.length,"elements");
         const writableStream = fs.createWriteStream(filename);
         const stringifier = stringify({ header: true, columns: columns });
         function write(value) {
           console.log(value);
           stringifier.write(value);
         }
-        news.forEach(write);
+        values.forEach(write);
         stringifier.pipe(writableStream);
         console.log("Finished writing data");
         resolve();
