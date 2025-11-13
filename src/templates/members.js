@@ -6,22 +6,25 @@ import { Members, StyledMember } from "../components/styles/Members.styled";
 import Layout from "../components/Layout";
 import Seo from "../components/seo";
 import { NavBar } from "../components/NavBar";
+import { GatsbyImage, getImage } from "gatsby-plugin-image";
 
-const modifyUrl = (url) => {
-  if (!url)
-    return "https://www.umr-lastig.fr/lastig_data/img/abstract-user-icon.svg";
-  if (url.startsWith("/")) return "https://www.umr-lastig.fr" + url;
-  return url;
-};
+// const modifyUrl = (url) => {
+//   if (!url)
+//     return "https://www.umr-lastig.fr/lastig_data/img/abstract-user-icon.svg";
+//   if (url.startsWith("/")) return "https://www.umr-lastig.fr" + url;
+//   return url;
+// };
 
 const Member = ({ node }) => {
+  console.log(node.photo);
   return (
     <StyledMember key={node.id}>
       <Link to={`/members/${node.firstname}-${node.lastname}`}>
-        <img
+        <GatsbyImage image={getImage(node.image)} alt={`${node.firstname} ${node.lastname}`} aspectRatio={1/1}/>
+        {/* <img
           src={modifyUrl(node.photo)}
           alt={`${node.firstname} ${node.lastname}`}
-        />
+        /> */}
         <h3>
           {" "}
           {node.firstname} {node.alt_firstname && `(${node.alt_firstname}) `}
@@ -118,6 +121,11 @@ export const query = graphql`
         member
         perm
         photo
+        image {
+          childImageSharp {
+            gatsbyImageData(width: 200)
+          }
+        }
         start_date
         status
         statut

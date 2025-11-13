@@ -43,6 +43,7 @@ exports.createPages = async function ({ actions, graphql, reporter }) {
           member
           perm
           photo
+          fields { image }
           start_date
           status
           statut
@@ -98,7 +99,7 @@ exports.onCreateNode = async ({
   createNodeId,
   getCache,
 }) => {
-  //console.log(`onCreateNode ${node.internal.type}`);
+  // console.log(`onCreateNode ${node.internal.type}`);
   if (node.internal.type === `DatasetCsv`) {
     if (node.image_url !== null && node.image_url) {
       reporter.info(`DatasetCsv Image url = ${node.image_url}.`);
@@ -134,6 +135,25 @@ exports.onCreateNode = async ({
       // if the file was created, extend the node with "image"
       if (fileNode) {
         createNodeField({ node, name: "image", value: fileNode.id });
+      }
+    } else {
+      if (
+        node.internal.type === `PeopleCsv` &&
+        node.photo !== null &&
+        node.photo
+      ) {
+        reporter.info(`PeopleCsv photo = ${node.photo}.`);
+        const fileNode = await createRemoteFileNode({
+          url: node.photo, // string that points to the URL of the image
+          parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
+          createNode, // helper function in gatsby-node to generate the node
+          createNodeId, // helper function in gatsby-node to generate the node id
+          getCache,
+        });
+        // if the file was created, extend the node with "image"
+        if (fileNode) {
+          createNodeField({ node, name: "image", value: fileNode.id });
+        }
       }
     }
   }
@@ -197,6 +217,14 @@ exports.createSchemaCustomization = ({ actions, schema, reporter }) => {
             const content = src[fieldName];
             const teams = content.split(",").map((str) => str.trim());
             return teams;
+          },
+        },
+        image: {
+          type: "File",
+          extensions: {
+            link: {
+              from: "fields.image",
+            },
           },
         },
       },
