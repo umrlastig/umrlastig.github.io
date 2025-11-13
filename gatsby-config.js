@@ -3,7 +3,7 @@
  */
 module.exports = {
   siteMetadata: {
-    title: "LASTIG Gatsby",
+    title: "LASTIG lab",
     siteUrl: "https://www.umr-lastig.fr/",
     menuLinks: [
       {
