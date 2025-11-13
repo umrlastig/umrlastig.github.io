@@ -13,7 +13,7 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "deploy": "gatsby build --prefix-paths && gh-pages -f -d public"
+    "deploy": "gatsby build && gh-pages -f -d public"
   },
   "dependencies": {
     "@ericcote/gatsby-theme-i18n": "^4.1.13",
