@@ -14,14 +14,11 @@ import { theme } from "../theme";
 
 import { useLocalization } from "@ericcote/gatsby-theme-i18n";
 
+import { GatsbyImage, getImage } from "gatsby-plugin-image";
+
 const modifyUrl = (url) => {
   if (url.startsWith("/")) return "https://www.umr-lastig.fr" + url;
   return url;
-};
-const modifyPhotoUrl = (url) => {
-  if (!url)
-    return "https://www.umr-lastig.fr/lastig_data/img/abstract-user-icon.svg";
-  return modifyUrl(url);
 };
 
 export default function MemberPage({ data }) {
@@ -68,9 +65,10 @@ export default function MemberPage({ data }) {
           {node.lastname}
         </h1>
         <div>
-          <img
-            src={modifyPhotoUrl(node.photo)}
+          <GatsbyImage
+            image={getImage(node.image)}
             alt={`${node.firstname} ${node.lastname}`}
+            aspectRatio={1 / 1}
           />
         </div>
         <h2>{locale === "en" ? node.status : node.statut}</h2>
@@ -173,6 +171,11 @@ export const query = graphql`
       alt_firstname
       lastname
       photo
+      image {
+        childImageSharp {
+          gatsbyImageData(width: 200)
+        }
+      }
       HAL
       member
       start_date
