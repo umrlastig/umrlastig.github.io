@@ -140,6 +140,12 @@ function getPeople(inputPeopleFilename, peopleFilename) {
               person[id] = "";
             });
           }
+          function modifyPhoto(url) {
+            if (!url) return "https://www.umr-lastig.fr/lastig_data/img/abstract-user-icon.jpg";
+            if (url.startsWith("/")) return "https://www.umr-lastig.fr" + url;
+            if (url.contains("abstract-user-icon.svg")) return url.replace("abstract-user-icon.svg","abstract-user-icon.jpg");
+            return url;
+          }
           // console.log(person.team);
           stringifier.write([
             person.firstname,
@@ -153,7 +159,7 @@ function getPeople(inputPeopleFilename, peopleFilename) {
             person.start_date,
             person.end_date,
             person.member,
-            person.photo,
+            modifyPhoto(person.photo),
             person.perm,
             person.fid,
             person.researcheridId_s,
