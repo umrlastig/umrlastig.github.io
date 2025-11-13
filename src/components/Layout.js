@@ -78,7 +78,7 @@ const Layout = ({ children }) => {
                   </Link>
                 </Button> */}
                 <Button>
-                  <a href="https://github.com/umrlastig/lastig-gatsby">
+                  <a href="https://github.com/umrlastig/umrlastig.github.io">
                     <FaGithub /> {trans("Source")}
                   </a>
                 </Button>
@@ -112,11 +112,11 @@ const Layout = ({ children }) => {
                 alt="Université Gustave Eiffel"
               ></img>
             </a>
-            <a href="https://ensg.eu">
+            <a href="https://geodata-paris.fr">
               <img
-                src="https://www.univ-gustave-eiffel.fr/fileadmin/_processed_/9/6/csm_ENSG-footer-logo_c0b9f2880f.png"
-                style={{ width: "auto", height: 60, filter: "invert(1)" }}
-                alt="ENSG"
+                src="https://geodata-paris.fr/files/ensg/styles/thumbnail/public/2025-10/G%C3%A9odata_Paris_logo.png"
+                style={{ width: "auto", height: 30, filter: "invert(1)" }}
+                alt="Géodata Paris"
               ></img>
             </a>
             <a href="https://www.eivp-paris.fr/">
