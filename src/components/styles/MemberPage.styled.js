@@ -22,4 +22,5 @@ export const StyledWordCloud = styled(ReactWordcloud)`
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-height: 400px;
 `;
