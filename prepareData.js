@@ -5,7 +5,7 @@ var fs = require("fs");
 const { stringify } = require("csv-stringify");
 const csv = require("csv-parser");
 const { HttpsProxyAgent } = require("https-proxy-agent");
-const https = require('https');
+const https = require("https");
 
 const use_proxy = false;
 const axiosDefaultConfig = use_proxy
@@ -18,13 +18,13 @@ const axiosDefaultConfig = use_proxy
     };
 
 const axios = require("axios").create(axiosDefaultConfig);
-const axiosRetry = require('axios-retry').default;
+const axiosRetry = require("axios-retry").default;
 
 axios.interceptors.response.use(async (response) => {
   // workaround as axios-retry only works with errors
   if (response.status == 202 && response.data.pending) {
-    console.log("found 202 response!")
-    const err = new Error('Pending response');
+    console.log("found 202 response!");
+    const err = new Error("Pending response");
     err.config = response.config;
     throw err;
   }
@@ -47,25 +47,26 @@ function getFile(inputUrl, filename, columns) {
   return new Promise(function (resolve, reject) {
     var values = [];
     https.get(inputUrl, (stream) => {
-      stream.pipe(csv())
+      stream
+        .pipe(csv())
         .on("data", (data) => {
-        //console.log(data);
-        values.push(data);
-      })
-      .on("end", async () => {
-        console.log("Finished reading and found", values.length,"elements");
-        const writableStream = fs.createWriteStream(filename);
-        const stringifier = stringify({ header: true, columns: columns });
-        function write(value) {
-          console.log(value);
-          stringifier.write(value);
-        }
-        values.forEach(write);
-        stringifier.pipe(writableStream);
-        console.log("Finished writing data");
-        resolve();
-      })
-      .on("error", reject);
+          //console.log(data);
+          values.push(data);
+        })
+        .on("end", async () => {
+          console.log("Finished reading and found", values.length, "elements");
+          const writableStream = fs.createWriteStream(filename);
+          const stringifier = stringify({ header: true, columns: columns });
+          function write(value) {
+            console.log(value);
+            stringifier.write(value);
+          }
+          values.forEach(write);
+          stringifier.pipe(writableStream);
+          console.log("Finished writing data");
+          resolve();
+        })
+        .on("error", reject);
     });
   });
 }
@@ -84,104 +85,113 @@ function getPeople(inputPeopleFilename, peopleFilename) {
     ];
     var persons = [];
     https.get(inputPeopleFilename, (stream) => {
-      stream.pipe(csv())
+      stream
+        .pipe(csv())
         .on("data", (data) => {
-        //console.log(data);
-        persons.push(data);
-      })
-      .on("end", async () => {
-        console.log("Finished reading and found", persons.length);
-        const writableStream = fs.createWriteStream(peopleFilename);
-        const columns = [
-          "firstname",
-          "alt_firstname",
-          "lastname",
-          "teams",
-          "statut",
-          "status",
-          "webpage",
-          "HAL",
-          "start_date",
-          "end_date",
-          "member",
-          "photo",
-          "perm",
-          "fid",
-          "researcheridId_s",
-          "idrefId_s",
-          "orcidId_s",
-          "viafId_s",
-          "isniId_s",
-          "google scholarId_s",
-          "arxivId_s",
-        ];
-        const stringifier = stringify({ header: true, columns: columns });
-        for (const [fid, personValue] of persons.entries()) {
-          var person = JSON.parse(JSON.stringify(personValue));
-          person["fid"] = fid;
-          // console.log(fid);
-          const halId = person.HAL;
-          if (halId) {
-            const url = `https://api.archives-ouvertes.fr/ref/author/?q=idHal_s:${halId}&wt=json&fl=fullName_s,idHal_s,*Id_s`;
-            await get(url).then(({ data }) => {
-              if (data.response.docs.length > 0) {
-                const doc = data.response.docs[0];
-                ids.forEach((id) => {
-                  person[id] = id in doc ? String(doc[id]) : "";
-                });
-              } else {
-                ids.forEach((id) => {
-                  person[id] = "";
-                });
-              }
-            });
-          } else {
-            ids.forEach((id) => {
-              person[id] = "";
-            });
+          //console.log(data);
+          persons.push(data);
+        })
+        .on("end", async () => {
+          console.log("Finished reading and found", persons.length);
+          const writableStream = fs.createWriteStream(peopleFilename);
+          const columns = [
+            "firstname",
+            "alt_firstname",
+            "lastname",
+            "teams",
+            "statut",
+            "status",
+            "webpage",
+            "HAL",
+            "start_date",
+            "end_date",
+            "member",
+            "photo",
+            "perm",
+            "fid",
+            "researcheridId_s",
+            "idrefId_s",
+            "orcidId_s",
+            "viafId_s",
+            "isniId_s",
+            "google scholarId_s",
+            "arxivId_s",
+          ];
+          const stringifier = stringify({ header: true, columns: columns });
+          for (const [fid, personValue] of persons.entries()) {
+            var person = JSON.parse(JSON.stringify(personValue));
+            person["fid"] = fid;
+            // console.log(fid);
+            const halId = person.HAL;
+            if (halId) {
+              const url = `https://api.archives-ouvertes.fr/ref/author/?q=idHal_s:${halId}&wt=json&fl=fullName_s,idHal_s,*Id_s`;
+              await get(url).then(({ data }) => {
+                if (data.response.docs.length > 0) {
+                  const doc = data.response.docs[0];
+                  ids.forEach((id) => {
+                    person[id] = id in doc ? String(doc[id]) : "";
+                  });
+                } else {
+                  ids.forEach((id) => {
+                    person[id] = "";
+                  });
+                }
+              });
+            } else {
+              ids.forEach((id) => {
+                person[id] = "";
+              });
+            }
+            function modifyPhoto(url) {
+              if (!url)
+                return "https://www.umr-lastig.fr/lastig_data/img/abstract-user-icon.jpg";
+              if (url.startsWith("/")) return "https://www.umr-lastig.fr" + url;
+              if (url.contains("abstract-user-icon.svg"))
+                return url.replace(
+                  "abstract-user-icon.svg",
+                  "abstract-user-icon.jpg",
+                );
+              return url;
+            }
+            // console.log(person.team);
+            stringifier.write([
+              person.firstname,
+              person.alt_firstname,
+              person.lastname,
+              person.team,
+              person.statut,
+              person.status,
+              person.webpage,
+              person.HAL,
+              person.start_date,
+              person.end_date,
+              person.member,
+              modifyPhoto(person.photo),
+              person.perm,
+              person.fid,
+              person.researcheridId_s,
+              person.idrefId_s,
+              person.orcidId_s,
+              person.viafId_s,
+              person.isniId_s,
+              person["google scholarId_s"],
+              person.arxivId_s,
+            ]);
           }
-          function modifyPhoto(url) {
-            if (!url) return "https://www.umr-lastig.fr/lastig_data/img/abstract-user-icon.jpg";
-            if (url.startsWith("/")) return "https://www.umr-lastig.fr" + url;
-            if (url.contains("abstract-user-icon.svg")) return url.replace("abstract-user-icon.svg","abstract-user-icon.jpg");
-            return url;
-          }
-          // console.log(person.team);
-          stringifier.write([
-            person.firstname,
-            person.alt_firstname,
-            person.lastname,
-            person.team,
-            person.statut,
-            person.status,
-            person.webpage,
-            person.HAL,
-            person.start_date,
-            person.end_date,
-            person.member,
-            modifyPhoto(person.photo),
-            person.perm,
-            person.fid,
-            person.researcheridId_s,
-            person.idrefId_s,
-            person.orcidId_s,
-            person.viafId_s,
-            person.isniId_s,
-            person["google scholarId_s"],
-            person.arxivId_s,
-          ]);
-        }
-        stringifier.pipe(writableStream);
-        console.log("Finished writing data for persons");
-        resolve();
-      })
-      .on("error", reject);
+          stringifier.pipe(writableStream);
+          console.log("Finished writing data for persons");
+          resolve();
+        })
+        .on("error", reject);
     });
   });
 }
 
 function removeAccents(str) {
-  return str.normalize("NFD").replace(/\p{Diacritic}/gu, "").replaceAll("-"," ");
+  return str
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replaceAll("-", " ");
 }
 async function getTheses(peopleFilename, thesesFilename) {
   //input people data
@@ -199,17 +209,11 @@ async function getTheses(peopleFilename, thesesFilename) {
         };
         const name = `${removeAccents(data.firstname.toLowerCase())} ${removeAccents(data.lastname.toLowerCase())}`;
         console.log(name);
-        people.set(
-          name,
-          o,
-        );
+        people.set(name, o);
         if (data.alt_firstname) {
           const alt_name = `${removeAccents(data.alt_firstname.toLowerCase())} ${removeAccents(data.lastname.toLowerCase())}`;
           console.log(alt_name);
-          people.set(
-            alt_name,
-            o,
-          );
+          people.set(alt_name, o);
         }
       })
       .on("end", async () => {
@@ -418,9 +422,13 @@ async function getTheses(peopleFilename, thesesFilename) {
                 teams = r.teams;
                 webpage = r.webpage;
                 HAL = r.HAL;
-                console.log(`Found teams ${teams} for ${firstname} ${lastname}`);
+                console.log(
+                  `Found teams ${teams} for ${firstname} ${lastname}`,
+                );
               } else {
-                console.log(`No team found for ${firstname} ${lastname} (${removeAccents(firstname.toLowerCase())} ${removeAccents(lastname.toLowerCase())})`);
+                console.log(
+                  `No team found for ${firstname} ${lastname} (${removeAccents(firstname.toLowerCase())} ${removeAccents(lastname.toLowerCase())})`,
+                );
               }
               return [
                 thesis.id,
@@ -849,7 +857,7 @@ function getKeywords(halFilename, keywordsFilename, cooccurenceFilename) {
     });
 }
 
-const delay = ms => new Promise(res => setTimeout(res, ms));
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 async function getWithRetry(url, retries = 10) {
   let attempt = 0;
   // use for loop to retry 3 times at most
@@ -863,7 +871,7 @@ async function getWithRetry(url, retries = 10) {
         console.log(`${url} Attempt ${attempt} still processing. Retrying...`); // guessing 202
         if (attempt === retries) {
           // throw error; // Fail after exhausting retries
-          return {status: 404};
+          return { status: 404 };
         }
         await delay(5000);
       }
@@ -872,7 +880,7 @@ async function getWithRetry(url, retries = 10) {
       console.log(`${url} Attempt ${attempt} failed. Retrying...`);
       if (attempt === retries) {
         // throw error; // Fail after exhausting retries
-        return {status: 404};
+        return { status: 404 };
       }
       await delay(5000);
     }
@@ -1049,11 +1057,22 @@ function getDatasets(inputDatasetFilename, datasetFilename) {
 // we read the people.csv from github, process it and save it to use it for the rest of the process (and for gatsby)
 
 // get news file
-getFile("https://raw.githubusercontent.com/umrlastig/lastig_data/refs/heads/master/news.csv","src/data/news.csv",["date","team","only","perso","texten","textfr"]);
+getFile(
+  "https://raw.githubusercontent.com/umrlastig/lastig_data/refs/heads/master/news.csv",
+  "src/data/news.csv",
+  ["date", "team", "only", "perso", "texten", "textfr"],
+);
 // get jobs file
-getFile("https://raw.githubusercontent.com/umrlastig/lastig_data/refs/heads/master/recruiting.csv","src/data/recruiting.csv",["type","titre","title","pdf_fr","pdf_en","team","filled"]);
+getFile(
+  "https://raw.githubusercontent.com/umrlastig/lastig_data/refs/heads/master/recruiting.csv",
+  "src/data/recruiting.csv",
+  ["type", "titre", "title", "pdf_fr", "pdf_en", "team", "filled"],
+);
 // get people data
-getPeople("https://raw.githubusercontent.com/umrlastig/lastig_data/refs/heads/master/people.csv", "src/data/people.csv").then(() =>
+getPeople(
+  "https://raw.githubusercontent.com/umrlastig/lastig_data/refs/heads/master/people.csv",
+  "src/data/people.csv",
+).then(() =>
   getTheses("src/data/people.csv", "src/data/theses.csv").then(() =>
     getKeywordBase(
       "src/input_data/synonyms.csv",

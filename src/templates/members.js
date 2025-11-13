@@ -20,7 +20,11 @@ const Member = ({ node }) => {
   return (
     <StyledMember key={node.id}>
       <Link to={`/members/${node.firstname}-${node.lastname}`}>
-        <GatsbyImage image={getImage(node.image)} alt={`${node.firstname} ${node.lastname}`} aspectRatio={1/1}/>
+        <GatsbyImage
+          image={getImage(node.image)}
+          alt={`${node.firstname} ${node.lastname}`}
+          aspectRatio={1 / 1}
+        />
         {/* <img
           src={modifyUrl(node.photo)}
           alt={`${node.firstname} ${node.lastname}`}

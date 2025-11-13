@@ -43,7 +43,9 @@ exports.createPages = async function ({ actions, graphql, reporter }) {
           member
           perm
           photo
-          fields { image }
+          fields {
+            image
+          }
           start_date
           status
           statut
