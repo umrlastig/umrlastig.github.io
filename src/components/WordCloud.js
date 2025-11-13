@@ -10,6 +10,7 @@ export const WordCloud = ({ nodes }) => {
     )
     .filter((x) => x)
     .filter((x) => x.length > 2)
+    .filter((x) => x.length < 20)
     .map((x) => x.toLowerCase());
   const counts = {};
   for (const word of allWords) {
