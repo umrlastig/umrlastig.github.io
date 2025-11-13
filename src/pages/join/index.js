@@ -36,72 +36,60 @@ const JoinPage = ({ data }) => {
       <h1>Join Us!</h1>
       <h3>PhD</h3>
       <PositionList>
-        {nodes.map(
+        {nodes.filter((node) => node.type === "PhD").map(
           (node) => {
-            if (node.type === "PhD") {
-              console.log("node!", node.type);
-              return createPosition(
-                node.id,
-                trans(node.type),
-                node.team,
-                locale === "en" ? node.pdf_en : node.pdf_fr,
-                locale === "en" ? node.title : node.titre,
-              );
-            }
+            return createPosition(
+              node.id,
+              trans(node.type),
+              node.team,
+              locale === "en" ? node.pdf_en : node.pdf_fr,
+              locale === "en" ? node.title : node.titre,
+            );
           },
           // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
         )}
       </PositionList>
       <h3>Postdoc</h3>
       <PositionList>
-        {nodes.map(
+        {nodes.filter((node) => node.type === "postdoc").map(
           (node) => {
-            if (node.type === "postdoc") {
-              console.log("node!", node.type);
-              return createPosition(
-                node.id,
-                trans(node.type),
-                node.team,
-                locale === "en" ? node.pdf_en : node.pdf_fr,
-                locale === "en" ? node.title : node.titre,
-              );
-            }
+            return createPosition(
+              node.id,
+              trans(node.type),
+              node.team,
+              locale === "en" ? node.pdf_en : node.pdf_fr,
+              locale === "en" ? node.title : node.titre,
+            );
           },
           // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
         )}
       </PositionList>
       <h3>Research engineer</h3>
       <PositionList>
-        {nodes.map(
+        {nodes.filter((node) => node.type === "ingenieur").map(
           (node) => {
-            if (node.type === "ingenieur") {
-              console.log("node!", node.type);
-              return createPosition(
-                node.id,
-                trans(node.type),
-                node.team,
-                locale === "en" ? node.pdf_en : node.pdf_fr,
-                locale === "en" ? node.title : node.titre,
-              );
-            }
+            return createPosition(
+              node.id,
+              trans(node.type),
+              node.team,
+              locale === "en" ? node.pdf_en : node.pdf_fr,
+              locale === "en" ? node.title : node.titre,
+            );
           },
           // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
         )}
       </PositionList>
       <h3>Internship</h3>
       <PositionList>
-        {nodes.map(
+        {nodes.filter((node) => node.type === "Internship").map(
           (node) => {
-            if (node.type === "Internship") {
-              console.log("node!", node.type);
-              return createPosition(
-                node.id,
-                trans(node.type),
-                node.team,
-                locale === "en" ? node.pdf_en : node.pdf_fr,
-                locale === "en" ? node.title : node.titre,
-              );
-            }
+            return createPosition(
+              node.id,
+              trans(node.type),
+              node.team,
+              locale === "en" ? node.pdf_en : node.pdf_fr,
+              locale === "en" ? node.title : node.titre,
+            );
           },
           // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
         )}
