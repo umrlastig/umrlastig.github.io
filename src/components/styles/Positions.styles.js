@@ -18,7 +18,17 @@ export const Position = styled.li`
   }
   span:last-child {
     font-size: 1rem;
-    background-color: ${({ theme, $team }) => theme.colors[$team]};
+    background: conic-gradient(
+      ${({ theme, $team }) =>
+        $team
+          .map(
+            (team, index) =>
+              `${theme.colors[team]} ${
+                (index * 360.0) / $team.length
+              }deg ${((index + 1) * 360.0) / $team.length}deg`,
+          )
+          .join(", ")}
+    );
     color: white;
     border-radius: 1rem;
     padding: 1rem;
@@ -29,4 +39,31 @@ export const Position = styled.li`
 
 export const PositionList = styled.ul`
   width: 80%;
+`;
+
+export const ImageLink = styled.div`
+  width: 32px;
+  height: 32px;
+  display: block;
+  float: right;
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+  button {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+  }
+  iconify-icon {
+    svg {
+      width: 2em;
+      height: 2em;
+    }
+  }
+  a {
+    color: ${({ theme }) => theme.colors.publication_link};
+    text-decoration: none;
+  }
 `;

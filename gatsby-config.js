@@ -83,6 +83,10 @@ module.exports = {
         ],
       },
       {
+        name: `Seminars`,
+        link: `/seminars`,
+      },
+      {
         name: `Join`,
         link: `/join`,
       },

@@ -146,7 +146,7 @@ function getPeople(inputPeopleFilename, peopleFilename) {
               if (!url)
                 return "https://www.umr-lastig.fr/lastig_data/img/abstract-user-icon.jpg";
               if (url.startsWith("/")) return "https://www.umr-lastig.fr" + url;
-              if (url.contains("abstract-user-icon.svg"))
+              if (url.includes("abstract-user-icon.svg"))
                 return url.replace(
                   "abstract-user-icon.svg",
                   "abstract-user-icon.jpg",
@@ -283,9 +283,13 @@ async function getTheses(peopleFilename, thesesFilename) {
           "Méthodes d'analyses pour le Traitement d'Images et la Stéréorestitution",
         ];
         const statusPatch = new Map();
-        statusPatch.set("s213033", "abandoned");
-        statusPatch.set("s91800", "abandoned");
-        statusPatch.set("s359006", "defended");
+        statusPatch.set("s213033", "abandoned"); //Qasem Safariallahkheili
+        statusPatch.set("s91800", "abandoned"); //Maeva dhoimiri Anwar
+        statusPatch.set("s359006", "defended"); //Mohamed Ali Chebbi
+        statusPatch.set("s213020", "abandoned"); //Clarice Fotso
+        statusPatch.set("s207673", "abandoned"); //Amira Khouas
+        statusPatch.set("s199605", "abandoned"); //Ibrahim Maidneh Abdi: Temporary patch because of a mistake in theses.fr
+
         const firstNamePatch = new Map();
         firstNamePatch.set("s379134", "Alexane");
 
@@ -1066,7 +1070,7 @@ getFile(
 getFile(
   "https://raw.githubusercontent.com/umrlastig/lastig_data/refs/heads/master/recruiting.csv",
   "src/data/recruiting.csv",
-  ["type", "titre", "title", "pdf_fr", "pdf_en", "team", "filled"],
+  ["type", "titre", "title", "pdf_fr", "pdf_en", "team", "filled", "link"],
 );
 // get people data
 getPeople(

@@ -395,6 +395,24 @@ exports.createSchemaCustomization = ({ actions, schema, reporter }) => {
         },
       },
     }),
+    schema.buildObjectType({
+      name: "RecruitingCsv",
+      interfaces: ["Node"],
+      extensions: {
+        infer: true,
+      },
+      fields: {
+        team: {
+          type: "[String]",
+          resolve: (src, args, context, info) => {
+            const { fieldName } = info;
+            const content = src[fieldName];
+            const teams = content.split(",").map((str) => str.trim());
+            return teams;
+          },
+        },
+      },
+    }),
   ];
   createTypes(typeDefs);
 };

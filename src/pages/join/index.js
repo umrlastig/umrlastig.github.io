@@ -4,20 +4,29 @@ import Layout from "../../components/Layout";
 import Seo from "../../components/seo";
 import { useIntl } from "react-intl";
 import { useLocalization } from "@ericcote/gatsby-theme-i18n";
+import { FaFilePdf } from "react-icons/fa6";
 import {
   Position,
   PositionList,
+  ImageLink,
 } from "../../components/styles/Positions.styles";
 
-function createPosition(id, type, team, pdf, text) {
+function createPosition(id, type, team, pdf, text, link) {
   return (
     <Position $team={team}>
       {/* <span key={`${id}-position`}><b>{type}</b></span> */}
-      <a href={pdf} key={`${id}-title`}>
+      <ImageLink>
+        {pdf && (
+          <a href={pdf} aria-label="pdf document">
+            <FaFilePdf />
+          </a>
+        )}
+      </ImageLink>
+      <a href={link} key={`${id}-title`}>
         {text}
       </a>
       <span key={`${id}-team`}>
-        <b>{team}</b>
+        <b>{team.join(" & ")}</b>
       </span>
     </Position>
   );
@@ -46,6 +55,7 @@ const JoinPage = ({ data }) => {
                 node.team,
                 locale === "en" ? node.pdf_en : node.pdf_fr,
                 locale === "en" ? node.title : node.titre,
+                node.link,
               );
             },
             // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
@@ -63,6 +73,7 @@ const JoinPage = ({ data }) => {
                 node.team,
                 locale === "en" ? node.pdf_en : node.pdf_fr,
                 locale === "en" ? node.title : node.titre,
+                node.link,
               );
             },
             // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
@@ -80,6 +91,7 @@ const JoinPage = ({ data }) => {
                 node.team,
                 locale === "en" ? node.pdf_en : node.pdf_fr,
                 locale === "en" ? node.title : node.titre,
+                node.link,
               );
             },
             // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
@@ -97,6 +109,7 @@ const JoinPage = ({ data }) => {
                 node.team,
                 locale === "en" ? node.pdf_en : node.pdf_fr,
                 locale === "en" ? node.title : node.titre,
+                node.link,
               );
             },
             // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
@@ -118,6 +131,7 @@ export const query = graphql`
         pdf_en
         team
         filled
+        link
       }
     }
   }
