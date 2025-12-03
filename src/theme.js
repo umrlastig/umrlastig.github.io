@@ -50,7 +50,7 @@ export const theme = {
     GEOVIS: "#377eb8",
     MEIG: "#4daf4a",
     STRUDEL: "#984ea3",
-    LASTIG: "#337ab7",
+    LASTIG: "#4b4b4bff",
     ACTElight: "#e41a1ccc",
     GEOVISlight: "#377eb8cc",
     MEIGlight: "#4daf4acc",
