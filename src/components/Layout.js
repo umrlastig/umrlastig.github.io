@@ -115,7 +115,7 @@ const Layout = ({ children }) => {
             <a href="https://geodata-paris.fr">
               <img
                 src="https://geodata-paris.fr/files/ensg/styles/thumbnail/public/2025-10/G%C3%A9odata_Paris_logo.png"
-                style={{ width: "auto", height: 30, filter: "invert(1)" }}
+                style={{ width: "auto", height: 30 }}
                 alt="Géodata Paris"
               ></img>
             </a>
