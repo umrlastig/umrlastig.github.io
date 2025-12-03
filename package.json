@@ -24,7 +24,7 @@
     "@szhsin/react-menu": "^4.1.0",
     "axios-retry": "^4.5.0",
     "babel-plugin-styled-components": "^2.1.4",
-    "caniuse-lite": "^1.0.30001724",
+    "caniuse-lite": "^1.0.30001759",
     "chart.js": "^4.4.3",
     "cross-env": "^7.0.3",
     "csv-parser": "^3.0.0",
