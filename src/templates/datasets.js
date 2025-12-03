@@ -32,7 +32,6 @@ Chart.register(CategoryScale);
 export default function DatasetsPage({ data, pageContext }) {
   const team = pageContext.team;
   const isLastigPage = team.length > 1;
-  console.log(`Dataset PAGE : ${team} => ${isLastigPage}`);
   const intl = useIntl();
   function trans(text) {
     return intl.formatMessage({ id: text });
@@ -122,7 +121,7 @@ export default function DatasetsPage({ data, pageContext }) {
             "Security",
             "Climate",
           ].map((dataTheme) => (
-            <DatasetLegendItem $dataTheme={dataTheme}>
+            <DatasetLegendItem $dataTheme={dataTheme} key={dataTheme}>
               <b>{dataTheme}</b>
             </DatasetLegendItem>
           ))}
@@ -144,10 +143,10 @@ export default function DatasetsPage({ data, pageContext }) {
             </DatasetHead>
             <DatasetInfo>
               <DatasetImageHolder>
-                <GatsbyImage
+                {node.image && <GatsbyImage
                   image={getImage(node.image)}
                   alt={node.short_name}
-                />
+                />}
               </DatasetImageHolder>
 
               <Project project={node.project} />

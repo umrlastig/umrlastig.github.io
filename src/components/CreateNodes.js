@@ -115,8 +115,8 @@ function Repo(repo, key) {
 }
 
 function getBibtex(label_bibtex) {
-  console.log(label_bibtex);
-  console.log(Buffer.from(label_bibtex, "base64").toString("utf8"));
+  // console.log(label_bibtex);
+  // console.log(Buffer.from(label_bibtex, "base64").toString("utf8"));
   return Buffer.from(label_bibtex, "base64").toString("utf8");
 }
 

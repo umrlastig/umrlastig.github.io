@@ -68,7 +68,7 @@ export default function MemberPage({ data }) {
           <GatsbyImage
             image={getImage(node.image)}
             alt={`${node.firstname} ${node.lastname}`}
-            aspectRatio={1 / 1}
+            aspectratio={1 / 1}
           />
         </div>
         <h2>{locale === "en" ? node.status : node.statut}</h2>

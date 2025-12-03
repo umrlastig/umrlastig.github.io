@@ -11,7 +11,6 @@ import * as Plot from "@observablehq/plot";
 export default function ProjectsPage({ data, pageContext }) {
   const team = pageContext.team;
   const isLastigPage = team.length > 1;
-  console.log(`Project PAGE : ${team} => ${isLastigPage}`);
   const intl = useIntl();
   function trans(text) {
     return intl.formatMessage({ id: text });
@@ -65,9 +64,9 @@ export default function ProjectsPage({ data, pageContext }) {
   const sorted_projects = projects.map((p, index) => {
     return { index: index, ...p };
   });
-  sorted_projects.forEach((p) =>
-    console.log(p.index, p.theme, p.start_date, p.end_date, p.name),
-  );
+  // sorted_projects.forEach((p) =>
+  //   console.log(p.index, p.theme, p.start_date, p.end_date, p.name),
+  // );
   const teams = sorted_projects.flatMap((p) =>
     p.teams.map((t, index) => ({
       end_date: p.end_date,
@@ -77,8 +76,8 @@ export default function ProjectsPage({ data, pageContext }) {
     })),
   );
   const dxValues = [...new Set(teams.map((t) => t.dx))];
-  teams.forEach((p) => console.log(p.index, p.index, p.dx));
-  dxValues.forEach((dx) => console.log(dx));
+  // teams.forEach((p) => console.log(p.index, p.index, p.dx));
+  // dxValues.forEach((dx) => console.log(dx));
   const themes = [...new Set(sorted_projects.map((p) => p.theme))];
   const sorted_themes = themes.map((t) => {
     const theme_projects = sorted_projects.filter(({ theme }) => theme === t);
@@ -93,16 +92,16 @@ export default function ProjectsPage({ data, pageContext }) {
       index_middle: Math.round((first_index + last_index) / 2),
     };
   });
-  sorted_themes.forEach((t) =>
-    console.log(
-      t.theme,
-      t.start_date,
-      t.end_date,
-      t.index_1,
-      t.index_2,
-      t.index_middle,
-    ),
-  );
+  // sorted_themes.forEach((t) =>
+  //   console.log(
+  //     t.theme,
+  //     t.start_date,
+  //     t.end_date,
+  //     t.index_1,
+  //     t.index_2,
+  //     t.index_middle,
+  //   ),
+  // );
   return (
     <Layout pageTitle={`${isLastigPage ? "LASTIG" : team} Projects`}>
       <h3>{trans(`${isLastigPage ? "LASTIG" : team} Projects`)}</h3>

@@ -23,7 +23,7 @@ const Member = ({ node }) => {
         <GatsbyImage
           image={getImage(node.image)}
           alt={`${node.firstname} ${node.lastname}`}
-          aspectRatio={1 / 1}
+          aspectratio={1 / 1}
         />
         {/* <img
           src={modifyUrl(node.photo)}

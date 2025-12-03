@@ -12,7 +12,6 @@ import { theme } from "../theme";
 export default function PublicationsPage({ data, pageContext }) {
   const team = pageContext.team;
   const isLastigPage = team.length > 1;
-  console.log(`Publication PAGE : ${team} => ${isLastigPage}`);
   const intl = useIntl();
   function trans(text) {
     return intl.formatMessage({ id: text });

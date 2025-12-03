@@ -22,10 +22,6 @@ Chart.register(CategoryScale);
 export default function SoftwaresPage({ data, pageContext }) {
   const team = pageContext.team;
   const isLastigPage = team.length > 1;
-  console.log(`Software PAGE : ${team} => ${isLastigPage}`);
-  data.allSoftwareCsv.nodes.forEach((element) => {
-    console.log(`Software ${element.short_name}`);
-  });
   const intl = useIntl();
   function trans(text) {
     return intl.formatMessage({ id: text });
@@ -86,7 +82,7 @@ export default function SoftwaresPage({ data, pageContext }) {
               </div>
             </SoftwareHead>
             <SoftwareInfo>
-              <GatsbyImage image={getImage(node.image)} alt={node.short_name} />
+              {node.image&&<GatsbyImage image={getImage(node.image)} alt={node.short_name} />}
               <Doi doi={node.doi} />
               <Teams teams={node.teams} />
             </SoftwareInfo>
