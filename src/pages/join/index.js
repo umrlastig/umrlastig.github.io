@@ -13,8 +13,7 @@ import {
 
 function createPosition(id, type, team, pdf, text, link) {
   return (
-    <Position $team={team}>
-      {/* <span key={`${id}-position`}><b>{type}</b></span> */}
+    <Position $team={team} key={`${id}-position`}>
       <ImageLink>
         {pdf && (
           <a href={pdf} aria-label="pdf document">
@@ -31,7 +30,26 @@ function createPosition(id, type, team, pdf, text, link) {
     </Position>
   );
 }
-
+function createPositionList(type, nodes, trans, locale) {
+  return nodes.length>0 && (
+      <PositionList>
+        <h3>{type}</h3>
+        {nodes
+          .map(
+            (node) => {
+              return createPosition(
+                node.id,
+                trans(node.type),
+                node.team,
+                locale === "en" ? node.pdf_en : node.pdf_fr,
+                locale === "en" ? node.title : node.titre,
+                node.link,
+              );
+            },
+          )}
+      </PositionList>
+  );
+}
 const JoinPage = ({ data }) => {
   const intl = useIntl();
   const { locale } = useLocalization();
@@ -39,82 +57,17 @@ const JoinPage = ({ data }) => {
     return intl.formatMessage({ id: text });
   }
   const nodes = data.allRecruitingCsv.nodes;
-  console.log(nodes);
+  const phds = nodes.filter((node) => node.type === "PhD")
+  const postdocs = nodes.filter((node) => node.type === "postdoc")
+  const engineers = nodes.filter((node) => node.type === "ingenieur")
+  const interns = nodes.filter((node) => node.type === "Internship")
   return (
     <Layout pageTitle="Join Us">
       <h1>Join Us!</h1>
-      <h3>PhD</h3>
-      <PositionList>
-        {nodes
-          .filter((node) => node.type === "PhD")
-          .map(
-            (node) => {
-              return createPosition(
-                node.id,
-                trans(node.type),
-                node.team,
-                locale === "en" ? node.pdf_en : node.pdf_fr,
-                locale === "en" ? node.title : node.titre,
-                node.link,
-              );
-            },
-            // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
-          )}
-      </PositionList>
-      <h3>Postdoc</h3>
-      <PositionList>
-        {nodes
-          .filter((node) => node.type === "postdoc")
-          .map(
-            (node) => {
-              return createPosition(
-                node.id,
-                trans(node.type),
-                node.team,
-                locale === "en" ? node.pdf_en : node.pdf_fr,
-                locale === "en" ? node.title : node.titre,
-                node.link,
-              );
-            },
-            // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
-          )}
-      </PositionList>
-      <h3>Research engineer</h3>
-      <PositionList>
-        {nodes
-          .filter((node) => node.type === "ingenieur")
-          .map(
-            (node) => {
-              return createPosition(
-                node.id,
-                trans(node.type),
-                node.team,
-                locale === "en" ? node.pdf_en : node.pdf_fr,
-                locale === "en" ? node.title : node.titre,
-                node.link,
-              );
-            },
-            // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
-          )}
-      </PositionList>
-      <h3>Internship</h3>
-      <PositionList>
-        {nodes
-          .filter((node) => node.type === "Internship")
-          .map(
-            (node) => {
-              return createPosition(
-                node.id,
-                trans(node.type),
-                node.team,
-                locale === "en" ? node.pdf_en : node.pdf_fr,
-                locale === "en" ? node.title : node.titre,
-                node.link,
-              );
-            },
-            // <article key={node.id} dangerouslySetInnerHTML={{ __html: `<b>${node.type} [${node.team}]:</b> <a href="${(locale === 'en') ? node.pdf_en : node.pdf_fr}">${(locale === 'en') ? node.title : node.titre}</a>` }}></article>
-          )}
-      </PositionList>
+      {createPositionList("PhD", phds, trans, locale)}
+      {createPositionList("Postdoc", postdocs, trans, locale)}
+      {createPositionList("Engineer", engineers, trans, locale)}
+      {createPositionList("Internship", interns, trans, locale)}
     </Layout>
   );
 };
