@@ -93,7 +93,7 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             r="151"
             fill="white"
             stroke="black"
-            stroke-width="2"
+            strokeWidth="2"
           />
           <path
             id="Visualisation"
@@ -109,7 +109,7 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             r="151"
             fill="white"
             stroke="black"
-            stroke-width="2"
+            strokeWidth="2"
           />
           <path
             id="Visualisation_2"
@@ -125,7 +125,7 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             r="151"
             fill="white"
             stroke="black"
-            stroke-width="2"
+            strokeWidth="2"
           />
           <path
             id="Visualisation_3"
@@ -141,7 +141,7 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             r="151"
             fill="white"
             stroke="black"
-            stroke-width="2"
+            strokeWidth="2"
           />
           <path
             id="Visualisation_4"
@@ -157,7 +157,7 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             r="151"
             fill="white"
             stroke="black"
-            stroke-width="2"
+            strokeWidth="2"
           />
           <path
             id="Visualisation_5"
@@ -173,7 +173,7 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             r="151"
             fill="white"
             stroke="black"
-            stroke-width="2"
+            strokeWidth="2"
           />
           <path
             id="Visualisation_6"
@@ -189,7 +189,7 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             r="151"
             fill="white"
             stroke="black"
-            stroke-width="2"
+            strokeWidth="2"
           />
           <path
             id="Visualisation_7"
@@ -205,7 +205,7 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             r="151"
             fill="white"
             stroke="black"
-            stroke-width="2"
+            strokeWidth="2"
           />
           <path
             id="Visualisation_8"
@@ -221,7 +221,7 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             r="151"
             fill="white"
             stroke="black"
-            stroke-width="2"
+            strokeWidth="2"
           />
           <path
             id="Visualisation_9"
@@ -237,7 +237,7 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             r="151"
             fill="white"
             stroke="black"
-            stroke-width="2"
+            strokeWidth="2"
           />
           <path
             id="Visualisation_10"
@@ -253,7 +253,7 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             r="151"
             fill="white"
             stroke="black"
-            stroke-width="2"
+            strokeWidth="2"
           />
           <path
             id="Visualisation_11"
@@ -266,8 +266,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape"
             d="M1143.81 347.349L1227.19 393.789"
             stroke="#4DAF4A"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_2">
@@ -275,8 +275,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_2"
             d="M986.882 425.472L1001.16 565.528"
             stroke="#4DAF4A"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_3">
@@ -284,8 +284,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_3"
             d="M916.176 425.266L691.797 1169.73"
             stroke="#4DAF4A"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_4">
@@ -293,8 +293,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_4"
             d="M1056.46 424.919L1245.54 803.081"
             stroke="#4DAF4A"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_5">
@@ -302,8 +302,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_5"
             d="M760.392 772.678L861.608 752.294"
             stroke="#E41A1C"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_6">
@@ -311,8 +311,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_6"
             d="M605.363 983.463L626.958 1169.54"
             stroke="#E41A1C"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_7">
@@ -320,8 +320,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_7"
             d="M760.39 843.648L1167.61 926.417"
             stroke="#E41A1C"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_8">
@@ -329,8 +329,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_8"
             d="M759.883 898.673L1323.12 1190.7"
             stroke="#E41A1C"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_9">
@@ -338,8 +338,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_9"
             d="M1200.49 1467.47L1323.51 1380.37"
             stroke="#9136A0"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_10">
@@ -347,8 +347,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_10"
             d="M1108.1 1416.02L1250.28 1112.98"
             stroke="#9136A0"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_11">
@@ -356,8 +356,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_11"
             d="M851.49 1469.16L799.51 1432.87"
             stroke="#9136A0"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_12">
@@ -365,8 +365,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_12"
             d="M1024.18 1415.5L1018.61 876.5"
             stroke="#9136A0"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_13">
@@ -374,8 +374,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_13"
             d="M1201.22 1532.53L1742.78 1351.8"
             stroke="#9136A0"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_14">
@@ -383,8 +383,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_14"
             d="M605.363 983.463L626.958 1169.54"
             stroke="#E41A1C"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_15">
@@ -392,8 +392,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_15"
             d="M1985.85 652.857L2069.15 608.489"
             stroke="#377EB8"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_16">
@@ -401,8 +401,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_16"
             d="M1985.94 831.827L2029.06 852.985"
             stroke="#377EB8"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_17">
@@ -410,8 +410,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_17"
             d="M1814.39 570.501L1816 487.499"
             stroke="#377EB8"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_18">
@@ -419,8 +419,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_18"
             d="M1838.55 921.433L1873.59 1144.57"
             stroke="#377EB8"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_19">
@@ -428,8 +428,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_19"
             d="M1700.23 920.645L1576.09 1116.36"
             stroke="#377EB8"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_20">
@@ -437,8 +437,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_20"
             d="M1635.96 822.044L1478.04 890.645"
             stroke="#377EB8"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_21">
@@ -446,8 +446,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_21"
             d="M1636.33 637.694L1536.67 575.905"
             stroke="#377EB8"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_22">
@@ -455,8 +455,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_22"
             d="M410.104 718.475L360.896 693.287"
             stroke="#E41A1C"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
         <g id="Connector line_23">
@@ -464,8 +464,8 @@ export const TeamDiagramComponent = ({ nodes, children }) => {
             id="Shape_23"
             d="M410.199 905.733L333.801 948.449"
             stroke="#E41A1C"
-            stroke-width="6"
-            stroke-linejoin="bevel"
+            strokeWidth="6"
+            strokeLinejoin="bevel"
           />
         </g>
       </g>
