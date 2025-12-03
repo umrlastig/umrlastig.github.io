@@ -193,283 +193,302 @@ function removeAccents(str) {
     .replace(/\p{Diacritic}/gu, "")
     .replaceAll("-", " ");
 }
-async function getTheses(peopleFilename, thesesFilename) {
-  //input people data
-  return new Promise(function (resolve, reject) {
-    const people = new Map();
-    fs.createReadStream(peopleFilename)
+
+// FOR THESES
+const memberTypeAsRole = new Map();
+memberTypeAsRole.set("president", "president");
+memberTypeAsRole.set("rapporteurs", "reviewer");
+memberTypeAsRole.set("examinateurs", "examiner");
+memberTypeAsRole.set("directeurs", "supervisor");
+
+// PATCHES
+const statusMap = new Map();
+statusMap.set("soutenue", "defended");
+statusMap.set("enCours", "ongoing");
+const statusPatch = new Map();
+statusPatch.set("s213033", "abandoned"); //Qasem Safariallahkheili
+statusPatch.set("s91800", "abandoned"); //Maeva dhoimiri Anwar
+statusPatch.set("s359006", "defended"); //Mohamed Ali Chebbi
+statusPatch.set("s213020", "abandoned"); //Clarice Fotso
+statusPatch.set("s207673", "abandoned"); //Amira Khouas
+statusPatch.set("s161935", "abandoned"); // Mohamed khaled Bouzid
+statusPatch.set("s199605", "abandoned"); //Ibrahim Maidneh Abdi: Temporary patch because of a mistake in theses.fr
+const firstNamePatch = new Map();
+firstNamePatch.set("s379134", "Alexane");
+const lastNamePatch = new Map();
+lastNamePatch.set("2008PEST0252", "Olteanu-Raimond");
+
+
+function juryMembers(thesis, type) {
+    const l = thesis[type];
+    if (Array.isArray(l)) {
+        if (l.length == 0) {
+            return [];
+        }
+        return l.map((j) => [j.prenom, j.nom, memberTypeAsRole.get(type)]).flat();
+    }
+    if (!l.prenom) {
+        return [];
+    }
+    return [l.prenom, l.nom, memberTypeAsRole.get(type)];
+}
+
+async function readPeople(peopleFilename) {
+  const people = new Map();   // key → normalised full name
+  const phds   = new Map();   // sous‑ensemble des doctorants
+  // Promesse qui se résout quand le stream CSV se termine,
+  // ou se rejette en cas d’erreur de lecture/parsing.
+  await new Promise((resolve, reject) => {
+    const stream = fs.createReadStream(peopleFilename)
       .pipe(csv())
-      .on("data", (data) => {
-        const o = {
-          teams: data.teams,
-          webpage: data.webpage,
-          HAL: data.HAL,
-          firstname: data.firstname,
+      .on('data', data => {
+        const entry = {
+          teams:    data.teams,
+          webpage:  data.webpage,
+          HAL:      data.HAL,
+          firstname:data.firstname,
           lastname: data.lastname,
         };
+        // Normalisation du nom (minuscules, accents retirés)
         const name = `${removeAccents(data.firstname.toLowerCase())} ${removeAccents(data.lastname.toLowerCase())}`;
-        console.log(name);
-        people.set(name, o);
+        people.set(name, entry);
+        // Doctorant ? → on le mémorise séparément
+        if (data.status === 'PhD student') {
+          phds.set(name, entry);
+        }
+        // Gestion d’un éventuel alias de prénom
         if (data.alt_firstname) {
-          const alt_name = `${removeAccents(data.alt_firstname.toLowerCase())} ${removeAccents(data.lastname.toLowerCase())}`;
-          console.log(alt_name);
-          people.set(alt_name, o);
+          const altName = `${removeAccents(data.alt_firstname.toLowerCase())} ${removeAccents(data.lastname.toLowerCase())}`;
+          people.set(altName, entry);
         }
       })
-      .on("end", async () => {
-        console.log(people.size, "persons found for theses");
-        const writableStream = fs.createWriteStream(thesesFilename);
-        const columns = [
-          "id",
-          "titre",
-          "titreEN",
-          "etablissement",
-          "defense",
-          "start",
-          "authorFirstName",
-          "authorLastName",
-          "authorIdHal",
-          "authorHAL",
-          "authorTeam",
-          "authorWebpage",
-          "discipline",
-          "status",
-          "school",
-          "keywords",
-          "keywordsEN",
-          "rameau",
-          "partners",
-          "halId",
-          "halUri",
-          "halFile",
-          "jury1FirstName",
-          "jury1LastName",
-          "jury1role",
-          "jury2FirstName",
-          "jury2LastName",
-          "jury2role",
-          "jury3FirstName",
-          "jury3LastName",
-          "jury3role",
-          "jury4FirstName",
-          "jury4LastName",
-          "jury4role",
-          "jury5FirstName",
-          "jury5LastName",
-          "jury5role",
-          "jury6FirstName",
-          "jury6LastName",
-          "jury6role",
-          "jury7FirstName",
-          "jury7LastName",
-          "jury7role",
-          "jury8FirstName",
-          "jury8LastName",
-          "jury8role",
-          "jury9FirstName",
-          "jury9LastName",
-          "jury9role",
-          "jury10FirstName",
-          "jury10LastName",
-          "jury10role",
-        ];
-        const stringifier = stringify({ header: true, columns: columns });
-        const labs = [
-          "LASTIG",
-          "Laboratoire en Sciences et technologies de l'information géographique",
-          "COGIT",
-          "Laboratoire Conception Objet et Généralisation de l'Information Topographique",
-          "MATIS",
-          "Méthodes d'analyses pour le Traitement d'Images et la Stéréorestitution",
-        ];
-        const statusPatch = new Map();
-        statusPatch.set("s213033", "abandoned"); //Qasem Safariallahkheili
-        statusPatch.set("s91800", "abandoned"); //Maeva dhoimiri Anwar
-        statusPatch.set("s359006", "defended"); //Mohamed Ali Chebbi
-        statusPatch.set("s213020", "abandoned"); //Clarice Fotso
-        statusPatch.set("s207673", "abandoned"); //Amira Khouas
-        statusPatch.set("s199605", "abandoned"); //Ibrahim Maidneh Abdi: Temporary patch because of a mistake in theses.fr
-
-        const firstNamePatch = new Map();
-        firstNamePatch.set("s379134", "Alexane");
-
-        // GET THESES FROM THESES.FR
-        const queryParams = {
-          q: `partenairesRechercheN:("${labs.join('" OR "')}")`,
-          nombre: 1000,
-        };
-        const params = qs.stringify(queryParams);
-        await get(`https://theses.fr/api/v1/theses/recherche/?${params}`)
-          .then((res) => {
-            console.log(`https://theses.fr/api/v1/theses/recherche/?${params}`);
-            console.info(`Found ${res.data.totalHits} theses`);
-            // go through these results
-            const promises = res.data.theses.map(async (thesis) => {
-              const keywords = thesis.sujets
-                .filter((kw) => kw.langue == "fr")
-                .map((kw) => kw.libelle);
-              const keywordsEN = thesis.sujets
-                .filter((kw) => kw.langue == "en")
-                .map((kw) => kw.libelle);
-              const rameau = thesis.sujetsRameau.map((kw) => kw.libelle);
-              const partners = thesis.partenairesDeRecherche.map((p) => p.nom);
-              const statusMap = new Map();
-              statusMap.set("soutenue", "defended");
-              statusMap.set("enCours", "ongoing");
-              function reformatDate(d) {
-                if (!d) {
-                  return "";
-                }
-                const date = d.split("/");
-                return `${date[2]}-${date[1]}-${date[0]}`;
-              }
-              function getStatusWithPatch() {
-                if (statusPatch.has(thesis.id)) {
-                  return statusPatch.get(thesis.id);
-                }
-                return statusMap.get(thesis.status);
-              }
-              const memberTypeAsRole = new Map();
-              memberTypeAsRole.set("president", "president");
-              memberTypeAsRole.set("rapporteurs", "reviewer");
-              memberTypeAsRole.set("examinateurs", "examiner");
-              memberTypeAsRole.set("directeurs", "supervisor");
-              function juryMembers(type) {
-                const l = thesis[type];
-                if (Array.isArray(l)) {
-                  if (l.length == 0) {
-                    return [];
-                  }
-                  return l
-                    .map((j) => [j.prenom, j.nom, memberTypeAsRole.get(type)])
-                    .flat();
-                }
-                if (!l.prenom) {
-                  return [];
-                }
-                return [l.prenom, l.nom, memberTypeAsRole.get(type)];
-              }
-              const jury = Array.from(memberTypeAsRole.keys())
-                .map((t) => juryMembers(t))
-                .flat();
-              let authorIdHal = "";
-              async function getAuthorHalInfo() {
-                const queryParams = {
-                  q: `fullName_s:"${thesis.auteurs[0].prenom} ${thesis.auteurs[0].nom}"`,
-                  fl: "idHal_s,fullName_s",
-                  fq: "idHal_s:*",
-                };
-                const halApiRequest = `https://api.archives-ouvertes.fr/ref/author/?${qs.stringify(queryParams)}`;
-                await get(halApiRequest)
-                  .then((hal) => {
-                    if (hal.data.response.numFound != 1) {
-                      console.warn(
-                        `Author: Found ${hal.data.response.numFound} correspondances for ${halApiRequest}`,
-                      );
-                      return;
-                    }
-                    const doc = hal.data.response.docs[0];
-                    authorIdHal = doc.idHal_s;
-                    return;
-                  })
-                  .catch((err) => console.error(err));
-              }
-              await getAuthorHalInfo();
-              let halId = "";
-              let halUri = "";
-              let halFile = "";
-              const status = getStatusWithPatch();
-              async function getHalInfo() {
-                if (status !== "defended") {
-                  return;
-                }
-                const halApiRequest = `https://api.archives-ouvertes.fr/search/tel/?q=nntId_s:${thesis.id}&fl=docid,uri_s,fileMain_s`;
-                await get(halApiRequest)
-                  .then((hal) => {
-                    if (hal.data.response.numFound != 1) {
-                      console.warn(
-                        `Found ${hal.data.response.numFound} correspondances`,
-                      );
-                      return;
-                    }
-                    const doc = hal.data.response.docs[0];
-                    halId = doc.docid;
-                    halUri = doc.uri_s;
-                    halFile = doc.fileMain_s;
-                    const result = [
-                      String(doc.docid),
-                      String(doc.uri_s),
-                      String(doc.fileMain_s),
-                    ];
-                    //console.log(`${doc.docid}, ${doc.uri_s}, ${doc.fileMain_s}`);
-                    // console.log(result);
-                    return;
-                  })
-                  .catch((err) => console.error(err));
-              }
-              await getHalInfo();
-              let firstname = firstNamePatch.has(thesis.id)
-                ? firstNamePatch.get(thesis.id)
-                : thesis.auteurs[0].prenom;
-              let lastname = thesis.auteurs[0].nom;
-              let teams = "";
-              let webpage = "";
-              let HAL = "";
-              if (
-                people.has(
-                  `${removeAccents(firstname.toLowerCase())} ${removeAccents(lastname.toLowerCase())}`,
-                )
-              ) {
-                const r = people.get(
-                  `${removeAccents(firstname.toLowerCase())} ${removeAccents(lastname.toLowerCase())}`,
-                );
-                teams = r.teams;
-                webpage = r.webpage;
-                HAL = r.HAL;
-                console.log(
-                  `Found teams ${teams} for ${firstname} ${lastname}`,
-                );
-              } else {
-                console.log(
-                  `No team found for ${firstname} ${lastname} (${removeAccents(firstname.toLowerCase())} ${removeAccents(lastname.toLowerCase())})`,
-                );
-              }
-              return [
-                thesis.id,
-                thesis.titrePrincipal,
-                thesis.titreEN,
-                thesis.etabSoutenanceN,
-                reformatDate(thesis.dateSoutenance),
-                reformatDate(thesis.datePremiereInscriptionDoctorat),
-                firstname,
-                lastname,
-                authorIdHal,
-                HAL,
-                teams,
-                webpage,
-                thesis.discipline,
-                status,
-                thesis.ecolesDoctorale[0].nom,
-                keywords.join(";"),
-                keywordsEN.join(";"),
-                rameau.join(";"),
-                partners.join(";"),
-                halId,
-                halUri,
-                halFile,
-              ].concat(jury);
-            });
-            Promise.all(promises).then((values) => {
-              values.forEach((v) => stringifier.write(v));
-              stringifier.pipe(writableStream);
-              console.log("Finished writing data for theses");
-              resolve();
-            });
-          })
-          .catch((err) => console.error(err));
-      })
-      .on("error", reject);
+      .on('error', err => reject(err))   // <-- capture les erreurs de lecture/parsing
+      .on('end', () => resolve());       // <-- le stream a fini
   });
+  // On renvoie les deux maps dans un tableau (conforme à votre API d’origine)
+  return [people, phds];
+}
+async function getThesesData() {
+  const labs = [
+    'LASTIG',
+    'Laboratoire en Sciences et technologies de l\'information géographique',
+    'COGIT',
+    'Laboratoire Conception Objet et Généralisation de l\'Information Topographique',
+    'MATIS',
+    'Méthodes d\'analyses pour le Traitement d\'Images et la Stéréorestitution',
+  ];
+  const queryParams = {
+    q: `partenairesRechercheN:("${labs.join('" OR "')}")`,
+    nombre: 1000,
+  };
+  const url = `https://theses.fr/api/v1/theses/recherche/?${qs.stringify(queryParams)}`;
+  try {
+    const response = await axios.get(url);
+    console.info(`Found ${response.data.totalHits} theses`);
+    return response.data.theses;   // tableau d’objets thèse
+  } catch (err) {
+    // Propagation de l’erreur avec un message plus explicite
+    throw new Error(`Impossible de récupérer les thèses depuis ${url} – ${err.message}`);
+  }
+}
+function getAuthorInfo(people, thesis) {
+    let firstname = firstNamePatch.has(thesis.id)
+        ? firstNamePatch.get(thesis.id)
+        : thesis.auteurs[0].prenom;
+    let lastname = lastNamePatch.has(thesis.id)
+        ? lastNamePatch.get(thesis.id)
+        : thesis.auteurs[0].nom;
+    let teams = "";
+    let webpage = "";
+    let HAL = "";
+    if (
+        people.has(
+            `${removeAccents(firstname.toLowerCase())} ${removeAccents(lastname.toLowerCase())}`,
+        )
+    ) {
+        const r = people.get(
+            `${removeAccents(firstname.toLowerCase())} ${removeAccents(lastname.toLowerCase())}`,
+        );
+        teams = r.teams;
+        webpage = r.webpage;
+        HAL = r.HAL;
+        return [teams, webpage, HAL]
+    } else {
+        // not found. We set the default team as "LASTIG"
+        return ["LASTIG", "", ""]
+    }
+}
+async function getAuthorHalInfo(thesis) {
+  const queryParams = {
+    q: `fullName_s:"${thesis.auteurs[0].prenom} ${thesis.auteurs[0].nom}"`,
+    fl: "idHal_s,fullName_s",
+    fq: "idHal_s:*",
+  };
+  const halApiRequest = `https://api.archives-ouvertes.fr/ref/author/?${qs.stringify(queryParams)}`;
+  const response = await get(halApiRequest);          // ← lance la requête
+  const { numFound, docs } = response.data.response;
+  if (numFound !== 1) {
+    // Aucun auteur trouvé ou plusieurs correspondances → on renvoie une chaîne vide
+    return "";
+  }
+  // Un seul résultat → on renvoie son idHal
+  return docs[0].idHal_s;
+}
+
+function reformatDate(d) {
+    if (!d) {
+        return "";
+    }
+    const date = d.split("/");
+    return `${date[2]}-${date[1]}-${date[0]}`;
+}
+function getStatusWithPatch(thesis) {
+    if (statusPatch.has(thesis.id)) {
+        return statusPatch.get(thesis.id);
+    }
+    return statusMap.get(thesis.status);
+}
+
+async function getHalInfo(thesis) {
+  const halApiRequest = `https://api.archives-ouvertes.fr/search/tel/?q=nntId_s:${thesis.id}&fl=docid,uri_s,fileMain_s`;
+  const response = await get(halApiRequest);
+  const { numFound, docs } = response.data.response;
+  if (numFound !== 1) {
+    // Aucun fichier ou plusieurs fichiers associés → on renvoie des champs vides
+    return ["", "", ""];
+  }
+  const doc = docs[0];
+  return [
+    String(doc.docid),
+    String(doc.uri_s),
+    String(doc.fileMain_s),
+  ];
+}
+
+async function getThesisData(people, thesis) {
+  // ----- Extraction des métadonnées -----
+  const keywordsFR = thesis.sujets.filter(k => k.langue === "fr").map(k => k.libelle);
+  const keywordsEN = thesis.sujets.filter(k => k.langue === "en").map(k => k.libelle);
+  const rameau    = thesis.sujetsRameau.map(k => k.libelle);
+  const partners  = thesis.partenairesDeRecherche.map(p => p.nom);
+  const jury = Array.from(memberTypeAsRole.keys()).map(t => juryMembers(thesis, t)).flat();
+  // ----- Infos auteurs -----
+  const [teams, webpage, hal] = getAuthorInfo(people, thesis);
+  // ----- Récupération du HAL (ou utilisation du cache) -----
+  const halFromApi = hal
+    ? Promise.resolve(hal)          // déjà présent
+    : getAuthorHalInfo(thesis);     // sinon appel réseau
+  const halInfo = await halFromApi; // <-- peut lever une exception
+  // ----- Infos détaillées de la thèse si soutenue (fichier pdf, etc.) -----
+  const status = getStatusWithPatch(thesis);
+  const [halId, halUri, halFile] = (status == "defended")
+    ? await getHalInfo(thesis) // <-- idem
+    : ["", "", ""];
+  console.log(`${thesis.auteurs[0].prenom} ${thesis.auteurs[0].nom} => ${hal} - ${halInfo} - ${halFile}`);
+  // ----- Construction du tableau de résultat -----
+  return [
+    thesis.id,
+    thesis.titrePrincipal,
+    thesis.titreEN,
+    thesis.etabSoutenanceN,
+    reformatDate(thesis.dateSoutenance),
+    reformatDate(thesis.datePremiereInscriptionDoctorat),
+    thesis.auteurs[0].prenom,
+    thesis.auteurs[0].nom,
+    halInfo,
+    teams,
+    webpage,
+    thesis.discipline,
+    status,
+    thesis.ecolesDoctorale[0].nom,
+    keywordsFR.join(";"),
+    keywordsEN.join(";"),
+    rameau.join(";"),
+    partners.join(";"),
+    halId,
+    halUri,
+    halFile,
+    ...jury                  // on étend le tableau avec les membres du jury
+  ];
+}
+
+function writeTheses(thesesFilename, values) {
+    const writableStream = fs.createWriteStream(thesesFilename);
+    const columns = [
+        "id",
+        "titre",
+        "titreEN",
+        "etablissement",
+        "defense",
+        "start",
+        "authorFirstName",
+        "authorLastName",
+        "authorIdHal",
+        "authorTeam",
+        "authorWebpage",
+        "discipline",
+        "status",
+        "school",
+        "keywords",
+        "keywordsEN",
+        "rameau",
+        "partners",
+        "halId",
+        "halUri",
+        "halFile",
+        "jury1FirstName",
+        "jury1LastName",
+        "jury1role",
+        "jury2FirstName",
+        "jury2LastName",
+        "jury2role",
+        "jury3FirstName",
+        "jury3LastName",
+        "jury3role",
+        "jury4FirstName",
+        "jury4LastName",
+        "jury4role",
+        "jury5FirstName",
+        "jury5LastName",
+        "jury5role",
+        "jury6FirstName",
+        "jury6LastName",
+        "jury6role",
+        "jury7FirstName",
+        "jury7LastName",
+        "jury7role",
+        "jury8FirstName",
+        "jury8LastName",
+        "jury8role",
+        "jury9FirstName",
+        "jury9LastName",
+        "jury9role",
+        "jury10FirstName",
+        "jury10LastName",
+        "jury10role",
+    ];
+    const stringifier = stringify({ header: true, columns: columns });
+    values.forEach((v) => {
+        console.log(v);
+        stringifier.write(v)
+    });
+    stringifier.pipe(writableStream);
+    console.log("Finished writing data for theses");
+}
+
+async function getTheses(peopleFilename, thesesFilename) {
+  const [people] = await readPeople(peopleFilename);
+  const theses = await getThesesData();
+  console.log('Theses found :', theses.length);
+  const promises = theses.map(thesis => getThesisData(people, thesis));
+  const results = await Promise.allSettled(promises);
+  const successes = results.filter(r => r.status === 'fulfilled').map(r => r.value);
+  const failures = results.filter(r => r.status === 'rejected').map(r => r.reason);
+  console.log('successes :', successes.length);
+  console.log('failures :', failures.length);
+  writeTheses(thesesFilename, successes);
+  //console.log('Succès :', successes);
+  if (failures.length) console.error('Échecs :', failures);
 }
 
 //HAL
