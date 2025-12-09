@@ -137,7 +137,7 @@ export const NavLinkNoLocale = styled.a`
     display: table;
     &:hover {
       color: #ff4040;
-      transition: all 0.3s ease;
+      // transition: all 0.3s ease;
     }
   }
 `;
