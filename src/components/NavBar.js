@@ -13,6 +13,7 @@ import {
   NavMenu,
   NavSubMenu,
   NavMenuItem,
+  NavLinkNoLocale,
 } from "./styles/NavBar.styled";
 import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
@@ -103,7 +104,10 @@ export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
           e.keepOpen = true;
         }}
       >
-        <NavLink to={menu.link}>{trans(menu.name)}</NavLink>
+        {//create an exception! if link is a full url, don't localise it
+        menu.link.startsWith("https")?
+        <NavLinkNoLocale to={menu.link}>{trans(menu.name)}</NavLinkNoLocale>:
+        <NavLink to={menu.link}>{trans(menu.name)}</NavLink>}
       </NavMenuItem>
     );
   }
@@ -113,7 +117,10 @@ export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
     }
     return (
       <NavItem key={menu.name}>
-        <NavLink to={menu.link}>{trans(menu.name)}</NavLink>
+        {//create an exception! if link is a full url, don't localise it
+        menu.link.startsWith("https")?
+        <NavLinkNoLocale to={menu.link}>{trans(menu.name)}</NavLinkNoLocale>:
+        <NavLink to={menu.link}>{trans(menu.name)}</NavLink>}
       </NavItem>
     );
   });

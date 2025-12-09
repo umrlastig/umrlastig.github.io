@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { LocalizedLink as Link } from "@ericcote/gatsby-theme-i18n";
+import { LocalizedLink } from "@ericcote/gatsby-theme-i18n";
 import { FaHamburger } from "react-icons/fa";
 import { Menu, MenuItem, MenuButton, SubMenu } from "@szhsin/react-menu";
 
@@ -30,7 +30,7 @@ export const NavBarContainer = styled.div`
   margin: 0 auto;
 `;
 
-export const NavBarLogo = styled(Link)`
+export const NavBarLogo = styled(LocalizedLink)`
   color: #fff;
   color: ${({ theme, $team }) =>
     $team ? theme.colors[$team] : theme.colors.header};
@@ -98,7 +98,29 @@ export const NavItem = styled.li`
   }
 `;
 
-export const NavLink = styled(Link)`
+export const NavLink = styled(LocalizedLink)`
+  color: #000;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  // padding: 0.5rem 1rem;
+  padding: 0rem 1rem;
+  height: 100%;
+  @media screen and (max-width: 960px) {
+    height: 80px;
+    text-align: center;
+    //padding: 2rem;
+    padding: 0rem 1rem;
+    width: 100%;
+    display: table;
+    &:hover {
+      color: #ff4040;
+      transition: all 0.3s ease;
+    }
+  }
+`;
+
+export const NavLinkNoLocale = styled.a`
   color: #000;
   display: flex;
   align-items: center;
@@ -146,7 +168,7 @@ export const NavMenuButton = styled(MenuButton)`
 `;
 
 export const NavMenu = styled(Menu)`
-  background: ${({ theme, $team }) =>
+  background: ${({ theme }) =>
     // $team ? theme.colors[$team] : theme.colors.header};
     theme.colors.header};
   ul {
