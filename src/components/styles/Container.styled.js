@@ -16,7 +16,8 @@ export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 5px;
+  // margin: 5px;
+  // margin: 0 50px;
   // svg {
   //     margin: 0 auto 0 auto;
   //     width: 50%;
@@ -26,17 +27,19 @@ export const MainContainer = styled.div`
 
 export const HorizontalContainer = styled.div`
   display: flex;
-  width: 100%;
+  // width: 100%;
   flex-direction: row;
   justify-content: space-between;
+  margin: 0 50px;
 `;
 
 export const HorizontalCenteredContainer = styled.div`
   display: flex;
-  width: 100%;
+  // width: 100%;
   flex-direction: row;
   place-items: center;
   justify-content: center;
+  margin: 0 50px;
 `;
 
 export const TextContainer = styled.div`

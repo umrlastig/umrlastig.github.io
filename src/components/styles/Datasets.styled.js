@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const DatasetLegend = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 1.5rem;
+  gap: 0.1rem;
   margin: 2rem;
   text-decoration: none;
   justify-content: space-between;
@@ -13,11 +13,9 @@ export const DatasetLegendItem = styled.div`
   background-color: ${({ theme, $dataTheme }) => theme.colors[$dataTheme]};
   border-radius: 1rem;
   padding: 1rem;
-<<<<<<< HEAD
-=======
   text-align: center;
   color: white;
->>>>>>> origin/merged
+  font-size: small;
 `;
 
 export const DatasetList = styled.div`
