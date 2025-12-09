@@ -25,7 +25,7 @@ export const NewsArticleDate = styled.div`
   max-height: 60px;
   display: flex;
   flex-direction: column;
-  background-color: ${({ theme, team }) => theme.colors[team]};
+  background-color: ${({ theme, $team }) => theme.colors[$team]};
   color: white;
 `;
 
