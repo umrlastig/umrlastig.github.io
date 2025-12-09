@@ -58,7 +58,7 @@ exports.createPages = async function ({ actions, graphql, reporter }) {
   data.allPeopleCsv.nodes.forEach((node) => {
     const firstName = node.firstname;
     const lastName = node.lastname;
-    console.log(`${node.firstname}-${node.lastname}`);
+    // console.log(`${node.firstname}-${node.lastname}`);
     actions.createPage({
       path: `/members/${node.firstname}-${node.lastname}`,
       component: require.resolve(`./src/templates/member-page.js`),
@@ -85,6 +85,7 @@ exports.createPages = async function ({ actions, graphql, reporter }) {
     });
   });
   pages.forEach((page) => {
+    reporter.info(`Creating pages for page ${page}`);
     actions.createPage({
       path: `/${page}`,
       component: require.resolve(`./src/templates/${page}.js`),
@@ -99,7 +100,7 @@ exports.onCreateNode = async ({
   actions: { createNode, createNodeField },
   reporter,
   createNodeId,
-  getCache,
+  cache,
 }) => {
   // console.log(`onCreateNode ${node.internal.type}`);
   if (node.internal.type === `DatasetCsv`) {
@@ -110,7 +111,7 @@ exports.onCreateNode = async ({
         parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
         createNode, // helper function in gatsby-node to generate the node
         createNodeId, // helper function in gatsby-node to generate the node id
-        getCache,
+        cache,
       });
       // if the file was created, extend the node with "image"
       if (fileNode) {
@@ -130,7 +131,7 @@ exports.onCreateNode = async ({
         parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
         createNode, // helper function in gatsby-node to generate the node
         createNodeId, // helper function in gatsby-node to generate the node id
-        getCache,
+        cache,
         // ext: extension,
         // name: node.short_name,
       });
@@ -150,7 +151,7 @@ exports.onCreateNode = async ({
           parentNodeId: node.id, // id of the parent node of the fileNode you are going to create
           createNode, // helper function in gatsby-node to generate the node
           createNodeId, // helper function in gatsby-node to generate the node id
-          getCache,
+          cache,
         });
         // if the file was created, extend the node with "image"
         if (fileNode) {

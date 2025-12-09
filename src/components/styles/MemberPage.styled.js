@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import ReactWordcloud from "react-wordcloud";
+// import ReactWordcloud from "react-wordcloud";
+import { WordCloud } from "@isoterik/react-word-cloud";
 
 export const StyledMemberPage = styled.div`
   display: flex;
@@ -18,7 +19,7 @@ export const Ids = styled.div`
   flex-direction: row;
   align-items: center;
 `;
-export const StyledWordCloud = styled(ReactWordcloud)`
+export const StyledWordCloud = styled(WordCloud)`
   display: flex;
   flex-direction: column;
   align-items: center;

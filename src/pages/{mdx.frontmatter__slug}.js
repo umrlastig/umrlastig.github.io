@@ -7,17 +7,14 @@ import { MdxLink as Link } from "@ericcote/gatsby-theme-i18n";
 import Projects from "../images/projects.svg";
 import LastigMapContainer from "../components/lastigMapComponent";
 import { ContainerWithSlider } from "../components/ContainerWithSlider";
-import {
-  Columns,
-  Column2,
-  Column4,
-} from "../components/styles/ContainerWithSlider.styled";
+import { Columns, Column2, Column4 } from "../components/styles/ContainerWithSlider.styled";
 import { TeamDiagramComponent } from "../components/TeamDiagramComponent";
 import { News } from "../components/News";
 import { NavBar } from "../components/NavBar";
 import { WordCloud } from "../components/WordCloud";
 import { ContainerWithSliderAndWordCloud } from "../components/ContainerWithSliderAndWordCloud";
 import { TextContainer } from "../components/styles/Container.styled";
+import KeywordsPlot from "../components/KeywordsPlot";
 
 function LocalMenu(title, team, menus) {
   return <NavBar title={title} menus={menus} team={team} />;
@@ -31,12 +28,9 @@ const Page = ({ data, children }) => {
     : null;
   const pageMenu = team ? data.site.siteMetadata.menus[team] : null;
   const nodes = data.allHalCsv.nodes;
-  // console.log("Team = " + team);
-  // console.log("Node Team = " + nodes[0].teams);
   const filteredNodes = team
     ? nodes.filter((node) => node.teams.includes(team))
     : nodes;
-  // console.log(`Page ${pageSlug} - team ${team} menu ${pageMenu}`)
   const shortcodes = {
     Link,
     ContainerWithSlider,
@@ -53,8 +47,8 @@ const Page = ({ data, children }) => {
     ),
     TextContainer,
     TeamsDiagram: () => <TeamDiagramComponent />,
+    KeywordsPlot: () => <KeywordsPlot nodes = {filteredNodes}/>
   }; // Provide common components here
-  //console.log("children", children);
   return (
     <Layout pageTitle={data.mdx.frontmatter.title}>
       <MDXProvider components={shortcodes}>{children}</MDXProvider>
@@ -62,11 +56,15 @@ const Page = ({ data, children }) => {
   );
 };
 export const query = graphql`
-  query ($id: String!) {
-    mdx(id: { eq: $id }) {
+  query ($frontmatter__slug: String!, $locale: String!) {
+    mdx(frontmatter: {slug: {eq: $frontmatter__slug}}, fields: { locale: { eq: $locale } }) {
+      id
       frontmatter {
         title
         slug
+      }
+      fields {
+        locale
       }
       body
     }

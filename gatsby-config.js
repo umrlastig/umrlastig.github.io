@@ -58,6 +58,10 @@ module.exports = {
             name: `Projects`,
             link: `/projects`,
           },
+          {
+            name: `Bibliometry`,
+            link: `/bibliometry`,
+          },
         ],
       },
       {
@@ -84,7 +88,7 @@ module.exports = {
       },
       {
         name: `Seminars`,
-        link: `/seminars`,
+        link: `https://www.umr-lastig.fr/seminars/`,
       },
       {
         name: `Join`,
@@ -254,21 +258,8 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        name: `pages`,
+        name: `lastig-pages`,
         path: `${__dirname}/pages`,
-      },
-    },
-    {
-      resolve: `gatsby-plugin-mdx`,
-      options: {
-        gatsbyRemarkPlugins: [
-          {
-            resolve: `gatsby-remark-images`,
-            options: {
-              maxWidth: 1200,
-            },
-          },
-        ],
       },
     },
     // "gatsby-transformer-sharp",
@@ -305,6 +296,19 @@ module.exports = {
       resolve: `@ericcote/gatsby-theme-i18n-react-intl`,
       options: {
         defaultLocale: `./i18n/locales/en.json`,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        gatsbyRemarkPlugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 1200,
+            },
+          },
+        ],
       },
     },
     {

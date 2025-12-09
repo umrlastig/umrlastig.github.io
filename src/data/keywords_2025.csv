@@ -1,0 +1,250 @@
+keyword,acte,meig,geovis,strudel,total
+stereo matching,1,0,0,0,1
+brdf,1,0,0,0,1
+neural radiance fields,1,0,0,0,1
+bundle adjustment,1,0,0,0,1
+geohistory,1,0,0,4,5
+camera pose estimation,1,0,0,0,1
+vision,2,0,0,2,4
+photogrammetry,2,0,0,1,3
+user feedback,0,1,1,0,2
+integration,0,3,1,2,6
+visualisation,0,1,2,0,3
+digital twin,0,1,1,0,2
+graph mapping,0,1,0,0,1
+language,0,3,1,1,5
+knowledge,0,1,0,5,6
+sdg,0,1,0,0,1
+3d retrieval scalable retrieval 3d point cloud descriptors differentiable search index lidar-based place recognition,1,0,0,1,2
+lidar-based place recognition,2,0,0,2,4
+differentiable search index,1,0,0,1,2
+3d point cloud descriptors,2,0,0,2,4
+scalable retrieval,2,0,0,2,4
+3d retrieval,2,0,0,2,4
+urban project,0,0,3,0,3
+ecosystem services,0,0,2,0,2
+green space,0,0,1,0,1
+life cycle assesment,0,0,1,0,1
+services écosystémiques,0,0,1,0,1
+espaces verts,0,0,1,0,1
+analyse de cycle de vie,0,0,2,0,2
+semantic table interpretation,0,0,0,1,1
+knowledge graphs,0,0,0,2,2
+image,1,0,0,7,8
+interprétation sémantique de tables,0,0,0,2,2
+htr,0,0,0,2,2
+named entities,0,0,0,2,2
+indice de végétation,0,0,0,1,1
+remote sensing,2,0,0,6,8
+modèle génératif,0,0,0,1,1
+inter capteurs,0,0,0,1,1
+super résolution,0,0,0,1,1
+text linking,0,0,0,1,1
+ocr,0,0,0,1,1
+hierarchical text detection,0,0,0,1,1
+computing methodologies → model verification and validation,1,0,1,0,2
+ccs concepts,1,0,1,0,2
+rational computation,1,0,1,0,2
+exact computation,1,0,1,0,2
+buildings,1,0,1,0,2
+mathematics 3d reconstruction,1,0,1,0,2
+ccs concepts computing methodologies → model verification and validation,1,0,1,0,2
+cross-country analysis,0,1,1,0,2
+lod,0,1,1,0,2
+machine learning,2,2,1,2,7
+river network,0,1,1,0,2
+generalization,0,5,2,0,7
+gps / gnss,1,2,0,0,3
+mobility,0,1,0,1,2
+information retrieval,0,0,0,1,1
+chunking,0,0,0,1,1
+artificial intelligence,0,0,0,1,1
+property directory,0,0,0,1,1
+optical character recognition,0,0,0,1,1
+segmentation,0,0,0,4,4
+directional spatial relationships,0,0,0,1,1
+heritage collections,0,0,0,1,1
+historical documents vision par ordinateur,0,0,0,1,1
+rag semantic table interpretation,0,0,0,1,1
+contextual ontology,0,0,0,1,1
+semantic indexing,0,0,0,1,1
+historical knowledge graph,0,0,0,1,1
+historical urban gazetteer -knowledge graph -geographical entities evolution documents historiques,0,0,0,1,1
+historical urban gazetteer -knowledge graph -geographical entities evolution documents historiques entités nommées graphe de connaissance historique indexation sémantique ontologie contextuelle rag historical documents named entities historical knowledge graph semantic indexing contextual ontology rag semantic table interpretation knowledge graphs information extraction htr ner historical documents vision par ordinateur collections patrimoniales musée coopération humain-machine computer vision heritage collections museum humanmachine cooperation ontology management conversational system formal concept analysis cultural heritage collection artificial intelligence digital humanities segmentation directional spatial relationships byzantine seals digital humanities image segmentation optical character recognition named entity recognition property directory artificial intelligence metrics digital humanities llm rag chunking information retrieval historical documents,0,0,0,1,1
+human-machine cooperation ontology management,0,0,0,1,1
+byzantine seals digital humanities,0,0,0,1,1
+conversational system,0,0,0,1,1
+formal concept analysis,0,0,0,1,1
+cultural heritage collection artificial intelligence,0,0,0,1,1
+digital humanities,1,0,0,3,4
+rag historical documents,0,0,0,1,1
+ontologie contextuelle,0,0,0,1,1
+indexation sémantique,0,0,0,1,1
+graphe de connaissance historique,0,0,0,1,1
+rag,0,0,0,1,1
+metrics digital humanities,0,0,0,1,1
+museum,0,0,0,1,1
+coopération humain-machine computer vision,0,0,0,1,1
+collections patrimoniales,0,0,0,1,1
+point cloud,0,2,0,3,5
+change detection,0,1,0,2,3
+fuzzy logic,0,2,0,2,4
+m3c2,0,2,0,2,4
+semantics,0,3,0,3,6
+gis,1,1,3,1,6
+life cycle assessment,0,0,1,0,1
+building simulation,0,0,1,0,1
+energy needs,0,0,1,0,1
+shading masks,0,0,1,0,1
+urban projects,0,0,2,0,2
+besoins énergétiques,0,0,1,0,1
+masques solaires,0,0,1,0,1
+géodonnées,0,0,2,0,2
+simulation thermique dynamique,0,0,1,0,1
+open science,0,2,0,0,2
+computer vision and pattern recognition cscv,0,0,0,1,1
+fos computer and information sciences,0,0,0,2,2
+deep learning,2,0,0,5,7
+generative ai,0,0,0,1,1
+flow matching,0,0,0,1,1
+sar interferometry insar,0,0,0,1,1
+musicxml,0,0,0,1,1
+quality,0,0,0,1,1
+digital music score,0,0,0,1,1
+multimedia csmm,0,0,0,1,1
+city model,1,0,0,1,2
+data,0,0,0,2,2
+observatoires milieux-société,0,1,0,0,1
+temps,0,1,0,0,1
+espace,0,1,0,0,1
+contexte,0,1,0,0,1
+décision territoriale,0,1,0,0,1
+localization,1,0,0,1,2
+composed image retrieval,1,0,0,1,2
+dimensionality reduction,0,1,0,0,1
+cahiers citoyens,0,1,0,0,1
+community detection,0,1,0,0,1
+language models,0,1,0,0,1
+climate crisis,0,1,0,0,1
+climate fiction,0,1,0,0,1
+figurations,0,1,0,0,1
+model exploration,0,1,0,0,1
+perceptual cartography,0,1,0,0,1
+cartographie perceptive,0,1,0,0,1
+fiction climatique,0,1,0,0,1
+crise climatique,0,1,0,0,1
+map description,0,1,1,0,2
+accessibility,0,1,1,0,2
+topography,0,1,1,0,2
+classification,0,0,0,1,1
+spatial domain shift,0,0,0,1,1
+domain generalization,0,0,0,1,1
+average precision,0,0,0,1,1
+hierarchical ranking,0,0,0,1,1
+hierarchical average precision,0,0,0,1,1
+non-decomposable,0,0,0,1,1
+ranking,0,0,0,1,1
+integrated management,0,1,0,0,1
+flood risk,0,1,0,0,1
+hydraulic modeling,0,1,0,0,1
+lulc,0,1,0,1,2
+explainable machine learning,0,1,0,1,2
+shap values,0,1,0,1,2
+explicabilité de l’apprentissage automatique,0,1,0,1,2
+mots-clés  classification de l'usage des sols explicabilité land use classification explainable machine learning data-fusion shap values,0,1,0,1,2
+mots-clés  classification de l'usage des sols,0,1,0,1,2
+explicabilité land use classification,0,1,0,1,2
+schema mapping,0,1,0,0,1
+knowledge graph kg,0,1,0,0,1
+sustainable development goals sdg,0,1,0,0,1
+geographical entities evolution,0,0,0,2,2
+historical urban gazetteer,0,0,0,2,2
+évolution des entités géographiques,0,0,0,1,1
+index géographique urbain historique,0,0,0,1,1
+change,0,1,0,1,2
+tiling,0,2,1,0,3
+compression,0,1,0,0,1
+green cartography,0,2,1,0,3
+urban tree,0,0,1,0,1
+matching,0,1,0,1,2
+collaborative platform,0,1,0,1,2
+quality metadata,0,1,0,1,2
+planning,0,1,0,1,2
+building change conceptual model,0,1,0,1,2
+semantic interpretation of tables,0,0,0,1,1
+historical document analysis,0,0,0,1,1
+lidar hd,0,0,0,1,1
+archeology,0,0,0,2,2
+bassin parisien,0,0,0,1,1
+vallée de l’eure,0,0,0,1,1
+télédédection,0,0,0,1,1
+multi-source images,1,0,0,0,1
+relative radiometric normalization,1,0,0,0,1
+grand nancy metropolis,0,0,0,1,1
+métropole du grand nancy ecological connectivity,0,0,0,1,1
+red fox,0,0,0,1,1
+landscape graph modeling,0,0,0,1,1
+renard roux,0,0,0,1,1
+connectivité écologique,0,0,0,1,1
+graphab,0,0,0,1,1
+modélisation de graphes paysagers,0,0,0,1,1
+métropole du grand nancy ecological connectivity red fox graphab landscape graph modeling grand nancy metropolis,0,0,0,1,1
+ensemble data,0,0,1,0,1
+uncertainty,0,0,1,0,1
+visual analysis,0,0,2,0,2
+meteo-oceanic data,0,0,1,0,1
+meteorological forecasting,0,0,1,0,1
+decision making,0,0,1,0,1
+web mapping,0,1,1,0,2
+green computing,0,1,1,0,2
+pre-training,0,0,0,1,1
+self-supervised learning remote sensing multimodality pretraining,0,0,0,1,1
+pretraining,0,0,0,1,1
+stable diffusion,0,0,0,1,1
+object detection,0,0,0,1,1
+weakly supervised learning,0,0,0,1,1
+zero-shot,0,0,0,1,1
+art analysis,0,0,0,1,1
+eure valley,0,0,0,1,1
+archaeology,0,0,0,1,1
+geomorphology,0,0,0,1,1
+vallée de l'eure,0,0,0,1,1
+géomorphologie,0,0,0,1,1
+abstracts of the ica,0,1,0,0,1
+multi-scale cartography,0,1,0,0,1
+sustainability,0,1,0,0,1
+benthic habitats,1,0,0,0,1
+bathymetry,1,0,0,0,1
+desis,1,0,0,0,1
+persons with reduced mobility,0,1,0,0,1
+citizen science,0,1,0,0,1
+cycling network,0,1,0,0,1
+data evolution,0,1,0,0,1
+multiplex graph,0,1,0,0,1
+route generation,0,1,0,0,1
+visualization of origin-destination flow data,0,0,1,0,1
+visualization of spatio-temporal data,0,0,1,0,1
+visualisation de données spatio-temporelles,0,0,1,0,1
+visualisation de flux origine-destination,0,0,1,0,1
+occlusions,1,0,0,0,1
+structured mesh,1,0,0,0,1
+textured mesh,1,0,0,0,1
+maillage structuré,1,0,0,0,1
+3d model,1,0,0,0,1
+bike,0,1,0,0,1
+scaling up,1,0,0,0,1
+3d retrieval scalable retrieval 3d point cloud descriptors differentiable search index dsi lidar-based place recognition,1,0,0,1,2
+differentiable search index dsi,1,0,0,1,2
+analyse du cycle de vie projets urbains spatialisation régionalisation géodonnées besoins systèmes d'information géographique sig life cycle analysis lca urban projects spatialisation regionalisation geodata geographical information systems gis,0,0,1,0,1
+life cycle analysis,0,0,1,0,1
+spatialisation,0,0,1,0,1
+regionalisation,0,0,1,0,1
+besoins,0,0,1,0,1
+systèmes d'information géographique sig life cycle analysis lca,0,0,1,0,1
+semantic annotation of tables,0,0,0,2,2
+cadastre,0,0,0,2,2
+dictionnaire,1,0,0,1,2
+glossaire,1,0,0,1,2
+lexique,1,0,0,1,2
+geospatial foundation models earth observation evaluation benchmark self-supervised learning,0,0,0,1,1
+geospatial analysis,0,0,0,1,1

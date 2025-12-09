@@ -743,17 +743,17 @@ function rewriteKeywords(base, keywords) {
     ),
   );
 }
-function getKeywords(halFilename, keywordsFilename, cooccurenceFilename) {
+function getKeywords(halFilename, keywordsFilename, cooccurenceFilename, publicationFilter = () => true) {
   //input hal data
   const publications = new Array();
   const allTeams = ["acte", "meig", "geovis", "strudel", "lastig"];
-  // const synonyms = base.synonyms;
-  // const toRemove = base.toRemove;
   fs.createReadStream(halFilename)
     .pipe(csv())
     .on("data", (data) => {
-      const o = { teams: data.teams, keywords: data.keywords_lastig };
-      publications.push(o);
+      if (publicationFilter(data)) {
+        const o = { teams: data.teams, keywords: data.keywords_lastig };
+        publications.push(o);
+      }
     })
     .on("end", () => {
       console.log(publications.length, "publications as input for Keywords");
@@ -773,15 +773,7 @@ function getKeywords(halFilename, keywordsFilename, cooccurenceFilename) {
           .split(",")
           .map((k) => k.trim())
           .filter((k) => k.length > 0);
-        const keywords = v.keywords ? v.keywords.split(",") : []; //rewriteKeywords(v.keywords.split(","))
-        // const keywords = Array.from(new Set(v.keywords
-        //     .split(",")
-        //     .map((k) => k.trim())
-        //     .filter((k) => k.length > 2)
-        //     .map((k) => k.toLowerCase())
-        //     .map((k) => synonyms.has(k) ? synonyms.get(k) : k)
-        //     .filter((k) => !toRemove.includes(k))));
-        // console.log(keywords, teams);
+        const keywords = v.keywords ? v.keywords.split(",") : [];
         if (teams.length > 0) {
           keywords.forEach((keyword) => {
             if (keywordTeamMap.has(keyword)) {
@@ -828,11 +820,6 @@ function getKeywords(halFilename, keywordsFilename, cooccurenceFilename) {
           });
         }
       });
-      // function logMapElements(value, key, map) {
-      //     console.log(`map.get('${key}') = ${value}`);
-      // };
-      // keywordMap.forEach(logMapElements);
-      // keywordMap.forEach((value, keyword, map) => stringifier.write([keyword, value[0].join(","), value[1]]));
       keywordTeamMap.forEach((value, keyword, _map) =>
         stringifier.write([
           keyword,
@@ -855,7 +842,6 @@ function getKeywords(halFilename, keywordsFilename, cooccurenceFilename) {
       allTeams.forEach((team) => {
         Array.from(keywordCoOccurenceMap[team].keys()).forEach((k) => {
           const value = keywordTeamMap.get(k);
-          // return [k,value.acte + value.meig + value.geovis + value.strudel,keywordCoOccurenceMap.get(k)]
           keywordCoOccurences[team][k] = {
             occurences:
               team == "lastig"
@@ -865,7 +851,6 @@ function getKeywords(halFilename, keywordsFilename, cooccurenceFilename) {
           };
         });
       });
-      // console.log(JSON.stringify(keywordCoOccurences, null, 2));
       fs.writeFile(
         cooccurenceFilename,
         JSON.stringify(keywordCoOccurences, null, 2),
@@ -1102,13 +1087,19 @@ getPeople(
       "src/input_data/remove.csv",
     ).then((kb) =>
       getPublications(kb, "src/data/people.csv", "src/data/hal.csv")
-        .then((_kb) =>
+        .then((_kb) => {
           getKeywords(
             "src/data/hal.csv",
             "src/data/keywords.csv",
             "src/data/keywords-co-occurences.json",
-          ),
-        )
+          );
+          // getKeywords(
+          //   "src/data/hal.csv",
+          //   "src/data/keywords_2025.csv",
+          //   "src/data/keywords-co-occurences_2025.json",
+          //   (data) => data.producedDate == "2025"
+          // );
+        })
         .then(() =>
           getDatasets("src/input_data/dataset.csv", "src/data/dataset.csv"),
         ),
