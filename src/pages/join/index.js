@@ -33,7 +33,7 @@ function createPosition(id, type, team, pdf, text, link) {
 function createPositionList(type, nodes, trans, locale) {
   return nodes.length>0 && (
       <PositionList>
-        <h3>{type}</h3>
+        <h3>{trans(type)}</h3>
         {nodes
           .map(
             (node) => {
@@ -57,6 +57,7 @@ const JoinPage = ({ data }) => {
     return intl.formatMessage({ id: text });
   }
   const nodes = data.allRecruitingCsv.nodes;
+  const lecturers = nodes.filter((node) => node.type === "EC")
   const phds = nodes.filter((node) => node.type === "PhD")
   const postdocs = nodes.filter((node) => node.type === "postdoc")
   const engineers = nodes.filter((node) => node.type === "ingenieur")
@@ -64,6 +65,7 @@ const JoinPage = ({ data }) => {
   return (
     <Layout pageTitle="Join Us">
       <h1>Join Us!</h1>
+      {createPositionList("Lecturer-Researcher", lecturers, trans, locale)}
       {createPositionList("PhD", phds, trans, locale)}
       {createPositionList("Postdoc", postdocs, trans, locale)}
       {createPositionList("Engineer", engineers, trans, locale)}
