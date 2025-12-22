@@ -218,42 +218,42 @@ firstNamePatch.set("s379134", "Alexane");
 const lastNamePatch = new Map();
 lastNamePatch.set("2008PEST0252", "Olteanu-Raimond");
 
-
 function juryMembers(thesis, type) {
-    const l = thesis[type];
-    if (Array.isArray(l)) {
-        if (l.length == 0) {
-            return [];
-        }
-        return l.map((j) => [j.prenom, j.nom, memberTypeAsRole.get(type)]).flat();
+  const l = thesis[type];
+  if (Array.isArray(l)) {
+    if (l.length == 0) {
+      return [];
     }
-    if (!l.prenom) {
-        return [];
-    }
-    return [l.prenom, l.nom, memberTypeAsRole.get(type)];
+    return l.map((j) => [j.prenom, j.nom, memberTypeAsRole.get(type)]).flat();
+  }
+  if (!l.prenom) {
+    return [];
+  }
+  return [l.prenom, l.nom, memberTypeAsRole.get(type)];
 }
 
 async function readPeople(peopleFilename) {
-  const people = new Map();   // key → normalised full name
-  const phds   = new Map();   // sous‑ensemble des doctorants
+  const people = new Map(); // key → normalised full name
+  const phds = new Map(); // sous‑ensemble des doctorants
   // Promesse qui se résout quand le stream CSV se termine,
   // ou se rejette en cas d’erreur de lecture/parsing.
   await new Promise((resolve, reject) => {
-    const stream = fs.createReadStream(peopleFilename)
+    const stream = fs
+      .createReadStream(peopleFilename)
       .pipe(csv())
-      .on('data', data => {
+      .on("data", (data) => {
         const entry = {
-          teams:    data.teams,
-          webpage:  data.webpage,
-          HAL:      data.HAL,
-          firstname:data.firstname,
+          teams: data.teams,
+          webpage: data.webpage,
+          HAL: data.HAL,
+          firstname: data.firstname,
           lastname: data.lastname,
         };
         // Normalisation du nom (minuscules, accents retirés)
         const name = `${removeAccents(data.firstname.toLowerCase())} ${removeAccents(data.lastname.toLowerCase())}`;
         people.set(name, entry);
         // Doctorant ? → on le mémorise séparément
-        if (data.status === 'PhD student') {
+        if (data.status === "PhD student") {
           phds.set(name, entry);
         }
         // Gestion d’un éventuel alias de prénom
@@ -262,20 +262,20 @@ async function readPeople(peopleFilename) {
           people.set(altName, entry);
         }
       })
-      .on('error', err => reject(err))   // <-- capture les erreurs de lecture/parsing
-      .on('end', () => resolve());       // <-- le stream a fini
+      .on("error", (err) => reject(err)) // <-- capture les erreurs de lecture/parsing
+      .on("end", () => resolve()); // <-- le stream a fini
   });
   // On renvoie les deux maps dans un tableau (conforme à votre API d’origine)
   return [people, phds];
 }
 async function getThesesData() {
   const labs = [
-    'LASTIG',
-    'Laboratoire en Sciences et technologies de l\'information géographique',
-    'COGIT',
-    'Laboratoire Conception Objet et Généralisation de l\'Information Topographique',
-    'MATIS',
-    'Méthodes d\'analyses pour le Traitement d\'Images et la Stéréorestitution',
+    "LASTIG",
+    "Laboratoire en Sciences et technologies de l'information géographique",
+    "COGIT",
+    "Laboratoire Conception Objet et Généralisation de l'Information Topographique",
+    "MATIS",
+    "Méthodes d'analyses pour le Traitement d'Images et la Stéréorestitution",
   ];
   const queryParams = {
     q: `partenairesRechercheN:("${labs.join('" OR "')}")`,
@@ -285,38 +285,40 @@ async function getThesesData() {
   try {
     const response = await axios.get(url);
     console.info(`Found ${response.data.totalHits} theses`);
-    return response.data.theses;   // tableau d’objets thèse
+    return response.data.theses; // tableau d’objets thèse
   } catch (err) {
     // Propagation de l’erreur avec un message plus explicite
-    throw new Error(`Impossible de récupérer les thèses depuis ${url} – ${err.message}`);
+    throw new Error(
+      `Impossible de récupérer les thèses depuis ${url} – ${err.message}`,
+    );
   }
 }
 function getAuthorInfo(people, thesis) {
-    let firstname = firstNamePatch.has(thesis.id)
-        ? firstNamePatch.get(thesis.id)
-        : thesis.auteurs[0].prenom;
-    let lastname = lastNamePatch.has(thesis.id)
-        ? lastNamePatch.get(thesis.id)
-        : thesis.auteurs[0].nom;
-    let teams = "";
-    let webpage = "";
-    let HAL = "";
-    if (
-        people.has(
-            `${removeAccents(firstname.toLowerCase())} ${removeAccents(lastname.toLowerCase())}`,
-        )
-    ) {
-        const r = people.get(
-            `${removeAccents(firstname.toLowerCase())} ${removeAccents(lastname.toLowerCase())}`,
-        );
-        teams = r.teams;
-        webpage = r.webpage;
-        HAL = r.HAL;
-        return [teams, webpage, HAL]
-    } else {
-        // not found. We set the default team as "LASTIG"
-        return ["LASTIG", "", ""]
-    }
+  let firstname = firstNamePatch.has(thesis.id)
+    ? firstNamePatch.get(thesis.id)
+    : thesis.auteurs[0].prenom;
+  let lastname = lastNamePatch.has(thesis.id)
+    ? lastNamePatch.get(thesis.id)
+    : thesis.auteurs[0].nom;
+  let teams = "";
+  let webpage = "";
+  let HAL = "";
+  if (
+    people.has(
+      `${removeAccents(firstname.toLowerCase())} ${removeAccents(lastname.toLowerCase())}`,
+    )
+  ) {
+    const r = people.get(
+      `${removeAccents(firstname.toLowerCase())} ${removeAccents(lastname.toLowerCase())}`,
+    );
+    teams = r.teams;
+    webpage = r.webpage;
+    HAL = r.HAL;
+    return [teams, webpage, HAL];
+  } else {
+    // not found. We set the default team as "LASTIG"
+    return ["LASTIG", "", ""];
+  }
 }
 async function getAuthorHalInfo(thesis) {
   const queryParams = {
@@ -325,7 +327,7 @@ async function getAuthorHalInfo(thesis) {
     fq: "idHal_s:*",
   };
   const halApiRequest = `https://api.archives-ouvertes.fr/ref/author/?${qs.stringify(queryParams)}`;
-  const response = await get(halApiRequest);          // ← lance la requête
+  const response = await get(halApiRequest); // ← lance la requête
   const { numFound, docs } = response.data.response;
   if (numFound !== 1) {
     // Aucun auteur trouvé ou plusieurs correspondances → on renvoie une chaîne vide
@@ -336,17 +338,17 @@ async function getAuthorHalInfo(thesis) {
 }
 
 function reformatDate(d) {
-    if (!d) {
-        return "";
-    }
-    const date = d.split("/");
-    return `${date[2]}-${date[1]}-${date[0]}`;
+  if (!d) {
+    return "";
+  }
+  const date = d.split("/");
+  return `${date[2]}-${date[1]}-${date[0]}`;
 }
 function getStatusWithPatch(thesis) {
-    if (statusPatch.has(thesis.id)) {
-        return statusPatch.get(thesis.id);
-    }
-    return statusMap.get(thesis.status);
+  if (statusPatch.has(thesis.id)) {
+    return statusPatch.get(thesis.id);
+  }
+  return statusMap.get(thesis.status);
 }
 
 async function getHalInfo(thesis) {
@@ -358,33 +360,38 @@ async function getHalInfo(thesis) {
     return ["", "", ""];
   }
   const doc = docs[0];
-  return [
-    String(doc.docid),
-    String(doc.uri_s),
-    String(doc.fileMain_s),
-  ];
+  return [String(doc.docid), String(doc.uri_s), String(doc.fileMain_s)];
 }
 
 async function getThesisData(people, thesis) {
   // ----- Extraction des métadonnées -----
-  const keywordsFR = thesis.sujets.filter(k => k.langue === "fr").map(k => k.libelle);
-  const keywordsEN = thesis.sujets.filter(k => k.langue === "en").map(k => k.libelle);
-  const rameau    = thesis.sujetsRameau.map(k => k.libelle);
-  const partners  = thesis.partenairesDeRecherche.map(p => p.nom);
-  const jury = Array.from(memberTypeAsRole.keys()).map(t => juryMembers(thesis, t)).flat();
+  const keywordsFR = thesis.sujets
+    .filter((k) => k.langue === "fr")
+    .map((k) => k.libelle);
+  const keywordsEN = thesis.sujets
+    .filter((k) => k.langue === "en")
+    .map((k) => k.libelle);
+  const rameau = thesis.sujetsRameau.map((k) => k.libelle);
+  const partners = thesis.partenairesDeRecherche.map((p) => p.nom);
+  const jury = Array.from(memberTypeAsRole.keys())
+    .map((t) => juryMembers(thesis, t))
+    .flat();
   // ----- Infos auteurs -----
   const [teams, webpage, hal] = getAuthorInfo(people, thesis);
   // ----- Récupération du HAL (ou utilisation du cache) -----
   const halFromApi = hal
-    ? Promise.resolve(hal)          // déjà présent
-    : getAuthorHalInfo(thesis);     // sinon appel réseau
+    ? Promise.resolve(hal) // déjà présent
+    : getAuthorHalInfo(thesis); // sinon appel réseau
   const halInfo = await halFromApi; // <-- peut lever une exception
   // ----- Infos détaillées de la thèse si soutenue (fichier pdf, etc.) -----
   const status = getStatusWithPatch(thesis);
-  const [halId, halUri, halFile] = (status == "defended")
-    ? await getHalInfo(thesis) // <-- idem
-    : ["", "", ""];
-  console.log(`${thesis.auteurs[0].prenom} ${thesis.auteurs[0].nom} => ${hal} - ${halInfo} - ${halFile}`);
+  const [halId, halUri, halFile] =
+    status == "defended"
+      ? await getHalInfo(thesis) // <-- idem
+      : ["", "", ""];
+  console.log(
+    `${thesis.auteurs[0].prenom} ${thesis.auteurs[0].nom} => ${hal} - ${halInfo} - ${halFile}`,
+  );
   // ----- Construction du tableau de résultat -----
   return [
     thesis.id,
@@ -408,87 +415,91 @@ async function getThesisData(people, thesis) {
     halId,
     halUri,
     halFile,
-    ...jury                  // on étend le tableau avec les membres du jury
+    ...jury, // on étend le tableau avec les membres du jury
   ];
 }
 
 function writeTheses(thesesFilename, values) {
-    const writableStream = fs.createWriteStream(thesesFilename);
-    const columns = [
-        "id",
-        "titre",
-        "titreEN",
-        "etablissement",
-        "defense",
-        "start",
-        "authorFirstName",
-        "authorLastName",
-        "authorIdHal",
-        "authorTeam",
-        "authorWebpage",
-        "discipline",
-        "status",
-        "school",
-        "keywords",
-        "keywordsEN",
-        "rameau",
-        "partners",
-        "halId",
-        "halUri",
-        "halFile",
-        "jury1FirstName",
-        "jury1LastName",
-        "jury1role",
-        "jury2FirstName",
-        "jury2LastName",
-        "jury2role",
-        "jury3FirstName",
-        "jury3LastName",
-        "jury3role",
-        "jury4FirstName",
-        "jury4LastName",
-        "jury4role",
-        "jury5FirstName",
-        "jury5LastName",
-        "jury5role",
-        "jury6FirstName",
-        "jury6LastName",
-        "jury6role",
-        "jury7FirstName",
-        "jury7LastName",
-        "jury7role",
-        "jury8FirstName",
-        "jury8LastName",
-        "jury8role",
-        "jury9FirstName",
-        "jury9LastName",
-        "jury9role",
-        "jury10FirstName",
-        "jury10LastName",
-        "jury10role",
-    ];
-    const stringifier = stringify({ header: true, columns: columns });
-    values.forEach((v) => {
-        console.log(v);
-        stringifier.write(v)
-    });
-    stringifier.pipe(writableStream);
-    console.log("Finished writing data for theses");
+  const writableStream = fs.createWriteStream(thesesFilename);
+  const columns = [
+    "id",
+    "titre",
+    "titreEN",
+    "etablissement",
+    "defense",
+    "start",
+    "authorFirstName",
+    "authorLastName",
+    "authorIdHal",
+    "authorTeam",
+    "authorWebpage",
+    "discipline",
+    "status",
+    "school",
+    "keywords",
+    "keywordsEN",
+    "rameau",
+    "partners",
+    "halId",
+    "halUri",
+    "halFile",
+    "jury1FirstName",
+    "jury1LastName",
+    "jury1role",
+    "jury2FirstName",
+    "jury2LastName",
+    "jury2role",
+    "jury3FirstName",
+    "jury3LastName",
+    "jury3role",
+    "jury4FirstName",
+    "jury4LastName",
+    "jury4role",
+    "jury5FirstName",
+    "jury5LastName",
+    "jury5role",
+    "jury6FirstName",
+    "jury6LastName",
+    "jury6role",
+    "jury7FirstName",
+    "jury7LastName",
+    "jury7role",
+    "jury8FirstName",
+    "jury8LastName",
+    "jury8role",
+    "jury9FirstName",
+    "jury9LastName",
+    "jury9role",
+    "jury10FirstName",
+    "jury10LastName",
+    "jury10role",
+  ];
+  const stringifier = stringify({ header: true, columns: columns });
+  values.forEach((v) => {
+    console.log(v);
+    stringifier.write(v);
+  });
+  stringifier.pipe(writableStream);
+  console.log("Finished writing data for theses");
 }
 
 async function getTheses(peopleFilename, thesesFilename) {
   const [people] = await readPeople(peopleFilename);
   const theses = await getThesesData();
-  console.log('Theses found :', theses.length);
-  const promises = theses.map(thesis => getThesisData(people, thesis));
+  console.log("Theses found :", theses.length);
+  const promises = theses.map((thesis) => getThesisData(people, thesis));
   const results = await Promise.allSettled(promises);
-  const successes = results.filter(r => r.status === 'fulfilled').map(r => r.value);
-  const failures = results.filter(r => r.status === 'rejected').map(r => r.reason);
-  console.log('successes :', successes.length);
-  console.log('failures :', failures.length);
+  const successes = results
+    .filter((r) => r.status === "fulfilled")
+    .map((r) => r.value);
+  const failures = results
+    .filter((r) => r.status === "rejected")
+    .map((r) => r.reason);
+  console.log("successes :", successes.length);
+  console.log("failures :", failures.length);
   writeTheses(thesesFilename, successes);
   //console.log('Succès :', successes);
-  if (failures.length) console.error('Échecs :', failures);
+  if (failures.length) console.error("Échecs :", failures);
 }
 
 //HAL
@@ -743,7 +754,12 @@ function rewriteKeywords(base, keywords) {
     ),
   );
 }
-function getKeywords(halFilename, keywordsFilename, cooccurenceFilename, publicationFilter = () => true) {
+function getKeywords(
+  halFilename,
+  keywordsFilename,
+  cooccurenceFilename,
+  publicationFilter = () => true,
+) {
   //input hal data
   const publications = new Array();
   const allTeams = ["acte", "meig", "geovis", "strudel", "lastig"];

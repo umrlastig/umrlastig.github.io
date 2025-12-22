@@ -1,6 +1,10 @@
 import React from "react";
 import { useLocalization } from "@ericcote/gatsby-theme-i18n";
-import { NewsList, NewsArticleDate, NewsArticleContent } from "./styles/News.styled_";
+import {
+  NewsList,
+  NewsArticleDate,
+  NewsArticleContent,
+} from "./styles/News.styled_";
 
 export const NewsArticle = ({ id, date, team, text }) => {
   return (
@@ -22,7 +26,7 @@ export const News = ({ data }) => {
     <div key="News">
       <h3 key="News-title">{locale === "en" ? "News" : "Actualités"}</h3>
       <NewsList>
-        {data.allNewsCsv.nodes.map((node) =>
+        {data.allNewsCsv.nodes.map((node) => (
           <NewsArticle
             id={node.id}
             date={node.date}
@@ -30,7 +34,7 @@ export const News = ({ data }) => {
             text={locale === "en" ? node.texten : node.textfr}
             key={node.id}
           />
-        )}
+        ))}
       </NewsList>
     </div>
   );

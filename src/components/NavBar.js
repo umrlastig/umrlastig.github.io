@@ -104,10 +104,16 @@ export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
           e.keepOpen = true;
         }}
       >
-        {//create an exception! if link is a full url, don't localise it
-        menu.link.startsWith("https")?
-        <NavLinkNoLocale href={menu.link}>{trans(menu.name)}</NavLinkNoLocale>:
-        <NavLink to={menu.link}>{trans(menu.name)}</NavLink>}
+        {
+          //create an exception! if link is a full url, don't localise it
+          menu.link.startsWith("https") ? (
+            <NavLinkNoLocale href={menu.link}>
+              {trans(menu.name)}
+            </NavLinkNoLocale>
+          ) : (
+            <NavLink to={menu.link}>{trans(menu.name)}</NavLink>
+          )
+        }
       </NavMenuItem>
     );
   }
@@ -117,10 +123,16 @@ export const NavBar = ({ title, menus, lastigLogo, useLocale, team }) => {
     }
     return (
       <NavItem key={menu.name}>
-        {//create an exception! if link is a full url, don't localise it
-        menu.link.startsWith("https")?
-        <NavLinkNoLocale href={menu.link}>{trans(menu.name)}</NavLinkNoLocale>:
-        <NavLink to={menu.link}>{trans(menu.name)}</NavLink>}
+        {
+          //create an exception! if link is a full url, don't localise it
+          menu.link.startsWith("https") ? (
+            <NavLinkNoLocale href={menu.link}>
+              {trans(menu.name)}
+            </NavLinkNoLocale>
+          ) : (
+            <NavLink to={menu.link}>{trans(menu.name)}</NavLink>
+          )
+        }
       </NavItem>
     );
   });

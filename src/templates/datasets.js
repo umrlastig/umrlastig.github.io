@@ -143,10 +143,12 @@ export default function DatasetsPage({ data, pageContext }) {
             </DatasetHead>
             <DatasetInfo>
               <DatasetImageHolder>
-                {node.image && <GatsbyImage
-                  image={getImage(node.image)}
-                  alt={node.short_name}
-                />}
+                {node.image && (
+                  <GatsbyImage
+                    image={getImage(node.image)}
+                    alt={node.short_name}
+                  />
+                )}
               </DatasetImageHolder>
 
               <Project project={node.project} />

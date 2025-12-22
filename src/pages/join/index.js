@@ -4,14 +4,14 @@ import Layout from "../../components/Layout";
 import Seo from "../../components/seo";
 import { useIntl } from "react-intl";
 import { useLocalization } from "@ericcote/gatsby-theme-i18n";
-import { FaFilePdf } from "react-icons/fa6";
+import { FaFilePdf, FaCircleCheck, FaCircleXmark } from "react-icons/fa6";
 import {
   Position,
   PositionList,
   ImageLink,
 } from "../../components/styles/Positions.styles";
 
-function createPosition(id, type, team, pdf, text, link) {
+function createPosition(id, team, pdf, text, link, filled) {
   return (
     <Position $team={team} key={`${id}-position`}>
       <ImageLink>
@@ -21,6 +21,13 @@ function createPosition(id, type, team, pdf, text, link) {
           </a>
         )}
       </ImageLink>
+      <span>
+        {filled === "true" ? (
+          <FaCircleXmark title="Position filled" />
+        ) : (
+          <FaCircleCheck title="Position open" />
+        )}
+      </span>
       <a href={link} key={`${id}-title`}>
         {text}
       </a>
@@ -31,23 +38,22 @@ function createPosition(id, type, team, pdf, text, link) {
   );
 }
 function createPositionList(type, nodes, trans, locale) {
-  return nodes.length>0 && (
+  return (
+    nodes.length > 0 && (
       <PositionList>
         <h3>{trans(type)}</h3>
-        {nodes
-          .map(
-            (node) => {
-              return createPosition(
-                node.id,
-                trans(node.type),
-                node.team,
-                locale === "en" ? node.pdf_en : node.pdf_fr,
-                locale === "en" ? node.title : node.titre,
-                node.link,
-              );
-            },
-          )}
+        {nodes.map((node) => {
+          return createPosition(
+            node.id,
+            node.team,
+            locale === "en" ? node.pdf_en : node.pdf_fr,
+            locale === "en" ? node.title : node.titre,
+            node.link,
+            node.filled,
+          );
+        })}
       </PositionList>
+    )
   );
 }
 const JoinPage = ({ data }) => {
@@ -57,11 +63,11 @@ const JoinPage = ({ data }) => {
     return intl.formatMessage({ id: text });
   }
   const nodes = data.allRecruitingCsv.nodes;
-  const lecturers = nodes.filter((node) => node.type === "EC")
-  const phds = nodes.filter((node) => node.type === "PhD")
-  const postdocs = nodes.filter((node) => node.type === "postdoc")
-  const engineers = nodes.filter((node) => node.type === "ingenieur")
-  const interns = nodes.filter((node) => node.type === "Internship")
+  const lecturers = nodes.filter((node) => node.type === "EC");
+  const phds = nodes.filter((node) => node.type === "PhD");
+  const postdocs = nodes.filter((node) => node.type === "postdoc");
+  const engineers = nodes.filter((node) => node.type === "ingenieur");
+  const interns = nodes.filter((node) => node.type === "Internship");
   return (
     <Layout pageTitle="Join Us">
       <h1>Join Us!</h1>

@@ -16,6 +16,10 @@ export const Position = styled.li`
       content: ". ";
     }
   }
+  span {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
   span:last-child {
     font-size: 1rem;
     background: conic-gradient(
@@ -34,6 +38,7 @@ export const Position = styled.li`
     padding: 1rem;
     translate: 0 -40px;
     margin-top: 10px;
+    margin-left: auto;
   }
 `;
 

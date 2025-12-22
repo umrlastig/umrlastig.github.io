@@ -82,7 +82,12 @@ export default function SoftwaresPage({ data, pageContext }) {
               </div>
             </SoftwareHead>
             <SoftwareInfo>
-              {node.image&&<GatsbyImage image={getImage(node.image)} alt={node.short_name} />}
+              {node.image && (
+                <GatsbyImage
+                  image={getImage(node.image)}
+                  alt={node.short_name}
+                />
+              )}
               <Doi doi={node.doi} />
               <Teams teams={node.teams} />
             </SoftwareInfo>

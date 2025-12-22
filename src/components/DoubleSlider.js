@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 const DoubleSliderBox = styled.div`
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    width: 100%;
-    max-width: 300px;
-    margin: auto;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
+  max-width: 300px;
+  margin: auto;
 `;
 
 const RangeSlider = styled.div`
@@ -27,30 +27,30 @@ const RangeSlider = styled.div`
     appearance: none;
     height: 5px;
     &::-webkit-slider-thumb {
-        height: 25px;
-        width: 25px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        background: #fe696a;
-        pointer-events: auto;
-        appearance: none;
-        cursor: pointer;
-        box-shadow: 0 0.125rem 0.5625rem -0.125rem rgba(0, 0, 0, 0.25);
-        position: relative;
-        z-index: 2; /* Ensure thumbs appear above the track */
+      height: 25px;
+      width: 25px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      background: #fe696a;
+      pointer-events: auto;
+      appearance: none;
+      cursor: pointer;
+      box-shadow: 0 0.125rem 0.5625rem -0.125rem rgba(0, 0, 0, 0.25);
+      position: relative;
+      z-index: 2; /* Ensure thumbs appear above the track */
     }
     &::-moz-range-thumb {
-        height: 25px;
-        width: 25px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        background: #fe696a;
-        pointer-events: auto;
-        cursor: pointer;
-        box-shadow: 0 0.125rem 0.5625rem -0.125rem rgba(0, 0, 0, 0.25);
-        position: relative;
-        z-index: 2;
-        }
+      height: 25px;
+      width: 25px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      background: #fe696a;
+      pointer-events: auto;
+      cursor: pointer;
+      box-shadow: 0 0.125rem 0.5625rem -0.125rem rgba(0, 0, 0, 0.25);
+      position: relative;
+      z-index: 2;
+    }
   }
 `;
 
@@ -92,7 +92,6 @@ const MaxBox = styled.div`
     text-align: center;
   }
 `;
-
 
 const MinTooltip = styled.div`
   position: absolute;
@@ -139,8 +138,14 @@ const MaxTooltip = styled.div`
 /*
  A Double Slider very much inspired by https://codesandbox.io/p/sandbox/blissful-allen-km9p4z
 */
-export const DoubleSlider = ({ sliderMinValue, sliderMaxValue, minVal, maxVal, setMinVal, setMaxVal }) => {
-
+export const DoubleSlider = ({
+  sliderMinValue,
+  sliderMaxValue,
+  minVal,
+  maxVal,
+  setMinVal,
+  setMaxVal,
+}) => {
   const track = useRef(null);
 
   const [isDragging, setIsDragging] = useState(false);
@@ -159,7 +164,6 @@ export const DoubleSlider = ({ sliderMinValue, sliderMaxValue, minVal, maxVal, s
       range.style.left = `${minPercent}%`;
       range.style.right = `${100 - maxPercent}%`;
     }
-
   }, [minVal, maxVal, sliderMinValue, sliderMaxValue]);
 
   const slideMin = (e) => {
@@ -246,7 +250,7 @@ export const DoubleSlider = ({ sliderMinValue, sliderMaxValue, minVal, maxVal, s
         </MaxBox>
       </InputBox>
       <RangeSlider>
-        <SliderTrack ref={track}/>
+        <SliderTrack ref={track} />
         <input
           type="range"
           min={sliderMinValue}

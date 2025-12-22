@@ -7,7 +7,11 @@ import { MdxLink as Link } from "@ericcote/gatsby-theme-i18n";
 import Projects from "../images/projects.svg";
 import LastigMapContainer from "../components/lastigMapComponent";
 import { ContainerWithSlider } from "../components/ContainerWithSlider";
-import { Columns, Column2, Column4 } from "../components/styles/ContainerWithSlider.styled";
+import {
+  Columns,
+  Column2,
+  Column4,
+} from "../components/styles/ContainerWithSlider.styled";
 import { TeamDiagramComponent } from "../components/TeamDiagramComponent";
 import { News } from "../components/News";
 import { NavBar } from "../components/NavBar";
@@ -47,7 +51,7 @@ const Page = ({ data, children }) => {
     ),
     TextContainer,
     TeamsDiagram: () => <TeamDiagramComponent />,
-    KeywordsPlot: () => <KeywordsPlot nodes = {filteredNodes}/>
+    KeywordsPlot: () => <KeywordsPlot nodes={filteredNodes} />,
   }; // Provide common components here
   return (
     <Layout pageTitle={data.mdx.frontmatter.title}>
@@ -57,7 +61,10 @@ const Page = ({ data, children }) => {
 };
 export const query = graphql`
   query ($frontmatter__slug: String!, $locale: String!) {
-    mdx(frontmatter: {slug: {eq: $frontmatter__slug}}, fields: { locale: { eq: $locale } }) {
+    mdx(
+      frontmatter: { slug: { eq: $frontmatter__slug } }
+      fields: { locale: { eq: $locale } }
+    ) {
       id
       frontmatter {
         title

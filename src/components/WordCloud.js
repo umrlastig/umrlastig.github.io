@@ -3,9 +3,9 @@ import { StyledWordCloud } from "../components/styles/MemberPage.styled";
 
 export const WordCloud = ({ nodes, keywordAttribute = "keywords_lastig" }) => {
   // console.log("WordCloud nodes = ",nodes);
-  if (!nodes) return ;
+  if (!nodes) return;
   const allWords = nodes
-    .flatMap((node) => node[keywordAttribute] ? node[keywordAttribute] : [])
+    .flatMap((node) => (node[keywordAttribute] ? node[keywordAttribute] : []))
     .filter((x) => x.length > 2)
     .filter((x) => x.length < 20)
     .map((x) => x.toLowerCase());
@@ -16,8 +16,12 @@ export const WordCloud = ({ nodes, keywordAttribute = "keywords_lastig" }) => {
   const words = Object.entries(counts)
     .map(([k, v], _i) => [{ text: k, value: v }])
     .flat(); //.filter((w)=>w.value>1)
-  const minOccurences = Math.min(...Object.entries(counts).map(([_k,v], _i) => v));
-  const maxOccurences = Math.max(...Object.entries(counts).map(([_k,v], _i) => v));
+  const minOccurences = Math.min(
+    ...Object.entries(counts).map(([_k, v], _i) => v),
+  );
+  const maxOccurences = Math.max(
+    ...Object.entries(counts).map(([_k, v], _i) => v),
+  );
   const rotationWeights = [0, 0, 90, 270];
   const resolveRotate = () => {
     return rotationWeights[Math.floor(Math.random() * rotationWeights.length)];
@@ -26,8 +30,12 @@ export const WordCloud = ({ nodes, keywordAttribute = "keywords_lastig" }) => {
   const maxSize = 100;
   const resolveFontSize = (word) => {
     const value = word.value;
-    return minSize + (value - minOccurences) / (maxOccurences - minOccurences) * (maxSize - minSize);
-  }
+    return (
+      minSize +
+      ((value - minOccurences) / (maxOccurences - minOccurences)) *
+        (maxSize - minSize)
+    );
+  };
   return (
     words.length > 0 && (
       <StyledWordCloud
@@ -54,11 +62,12 @@ export const WordCloud = ({ nodes, keywordAttribute = "keywords_lastig" }) => {
         // }}
         //size={[548, 400]}
         words={words}
-        width={1200} height={400}
+        width={1200}
+        height={400}
         enableTooltip
         fontSize={resolveFontSize}
         rotate={resolveRotate}
-        spiral = "archimedean"
+        spiral="archimedean"
       />
     )
   );

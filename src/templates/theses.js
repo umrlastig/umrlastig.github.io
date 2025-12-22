@@ -1,31 +1,37 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { graphql } from "gatsby";
 import Layout from "../components/Layout";
 import Seo from "../components/seo";
 import { NavBar } from "../components/NavBar";
 import { ImageLink } from "../components/styles/Publications.styled";
-import { FaFilePdf,FaAngleDown,FaAngleUp } from "react-icons/fa6";
+import { FaFilePdf, FaAngleDown, FaAngleUp } from "react-icons/fa6";
 
 import { theme } from "../theme";
 
-const Thesis = (node,index,beforeLastig=false) => {
-  const [showDetails, setShowDetails] = useState(false)
+const Thesis = (node, index, beforeLastig = false) => {
+  const [showDetails, setShowDetails] = useState(false);
   const jury = Array.from(Array(10).keys())
-    .map(h=>h+1)
-    .map(h=> node[`jury${h}LastName`] ? `${node[`jury${h}FirstName`]} ${node[`jury${h}LastName`]} (${node[`jury${h}role`]})` : "")
-    .filter(t=>t.length>0)
+    .map((h) => h + 1)
+    .map((h) =>
+      node[`jury${h}LastName`]
+        ? `${node[`jury${h}FirstName`]} ${node[`jury${h}LastName`]} (${node[`jury${h}role`]})`
+        : "",
+    )
+    .filter((t) => t.length > 0);
   return (
     <tr key={index + "=" + node.id}>
       <td key={node.id + "-teams"}>
-        {!beforeLastig && <div
-          aria-label="Team"
-          style={{
-            width: 32,
-            height: 32,
-            background: theme.colors[node.authorTeam],
-            borderRadius: 5,
-          }}
-        />}
+        {!beforeLastig && (
+          <div
+            aria-label="Team"
+            style={{
+              width: 32,
+              height: 32,
+              background: theme.colors[node.authorTeam],
+              borderRadius: 5,
+            }}
+          />
+        )}
       </td>
       <td
         style={{
@@ -47,24 +53,25 @@ const Thesis = (node,index,beforeLastig=false) => {
         </span>
       </td>
       <td>
-        <button 
-          style={{background:"none",border:0}}
-          onClick={() => setShowDetails(!showDetails)}>
+        <button
+          style={{ background: "none", border: 0 }}
+          onClick={() => setShowDetails(!showDetails)}
+        >
           {/* Details */}
           {showDetails ? <FaAngleUp /> : <FaAngleDown />}
         </button>
       </td>
       <td>
-        <a
-          href={`https://theses.fr/${node.id}`}
-          key={`${node.id}-title`}
-        >
+        <a href={`https://theses.fr/${node.id}`} key={`${node.id}-title`}>
           {node.titre}
         </a>
-        {showDetails && <p id="Details">
-          {jury.join('\n')}
+        {showDetails && (
+          <p id="Details">
+            {jury.map((member) => (
+              <p>{member}</p>
+            ))}
           </p>
-        }
+        )}
       </td>
       <td key={index + "-file"}>
         <ImageLink>
@@ -77,7 +84,7 @@ const Thesis = (node,index,beforeLastig=false) => {
       </td>
     </tr>
   );
-}
+};
 
 export default function thesesPage({ data, pageContext }) {
   const team = pageContext.team;
@@ -86,10 +93,14 @@ export default function thesesPage({ data, pageContext }) {
     (node) => node.status === "ongoing",
   );
   const defendedNodes = data.allThesesCsv.nodes.filter(
-    (node) => (node.status === "defended") && (new Date(node.defense) >= new Date("01/01/2019")),
+    (node) =>
+      node.status === "defended" &&
+      new Date(node.defense) >= new Date("01/01/2019"),
   );
   const defendedNodesBeforeLASTIG = data.allThesesCsv.nodes.filter(
-    (node) => (node.status === "defended") && (new Date(node.defense) < new Date("01/01/2019")),
+    (node) =>
+      node.status === "defended" &&
+      new Date(node.defense) < new Date("01/01/2019"),
   );
   ongoingNodes.sort(function (a, b) {
     return new Date(b.start) - new Date(a.start);
@@ -114,21 +125,25 @@ export default function thesesPage({ data, pageContext }) {
       <table>
         <thead></thead>
         <tbody>
-          {ongoingNodes.map((node, index) => { return Thesis(node,index) })}
+          {ongoingNodes.map((node, index) => {
+            return Thesis(node, index);
+          })}
         </tbody>
       </table>
       <h3>Defended theses</h3>
       <table>
         <tbody>
-          {defendedNodes.map((node, index) => { return Thesis(node,index) }
-          )}
+          {defendedNodes.map((node, index) => {
+            return Thesis(node, index);
+          })}
         </tbody>
       </table>
       <h3>Defended theses before the LASTIG</h3>
       <table>
         <tbody>
-          {defendedNodesBeforeLASTIG.map((node, index) => { return Thesis(node,index,true) }
-          )}
+          {defendedNodesBeforeLASTIG.map((node, index) => {
+            return Thesis(node, index, true);
+          })}
         </tbody>
       </table>
     </Layout>

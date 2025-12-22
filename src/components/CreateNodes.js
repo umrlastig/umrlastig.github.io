@@ -120,6 +120,44 @@ function getBibtex(label_bibtex) {
   return Buffer.from(label_bibtex, "base64").toString("utf8");
 }
 
+function authors(node) {
+  if (node.authIdHalFullName.length <= 4) {
+    return node.authIdHalFullName.map((auth, aIndex) => (
+      <a
+        key={node.id + "a" + aIndex}
+        href={
+          auth["idHal"]
+            ? `https://cv.archives-ouvertes.fr/${auth["idHal"]}`
+            : null
+        }
+      >
+        {auth["fullName"]}
+      </a>
+    ));
+  }
+  const firstAuthors = node.authIdHalFullName
+    .slice(0, 4)
+    .map((auth, aIndex) => (
+      <a
+        key={node.id + "a" + aIndex}
+        href={
+          auth["idHal"]
+            ? `https://cv.archives-ouvertes.fr/${auth["idHal"]}`
+            : null
+        }
+      >
+        {auth["fullName"]}
+      </a>
+    ));
+  return (
+    <>
+      {firstAuthors}
+      <a key={node.id + "etal"} href={null}>
+        et al
+      </a>
+    </>
+  );
+}
 export const PublicationList = ({ nodes, type, theme }) => {
   function pubKey(node) {
     return `${node.id}-${type}`;
@@ -130,7 +168,7 @@ export const PublicationList = ({ nodes, type, theme }) => {
       <tbody>
         {nodes.map((node, index) => {
           // console.log(index+"="+pubKey(node));
-          debugger;
+          // debugger;
           return (
             <Publication key={index + "=" + pubKey(node)}>
               <td key={pubKey(node) + "-teams"}>
@@ -152,20 +190,7 @@ export const PublicationList = ({ nodes, type, theme }) => {
                 />
               </td>
               <td key={pubKey(node) + "-authors"}>
-                <span key={`${node.id}-authors`}>
-                  {node.authIdHalFullName.map((auth, aIndex) => (
-                    <a
-                      key={node.id + "a" + aIndex}
-                      href={
-                        auth["idHal"]
-                          ? `https://cv.archives-ouvertes.fr/${auth["idHal"]}`
-                          : null
-                      }
-                    >
-                      {auth["fullName"]}
-                    </a>
-                  ))}
-                </span>
+                <span key={`${node.id}-authors`}>{authors(node)}</span>
                 <a
                   href={`https://hal.science/${node.halId}`}
                   key={`${node.id}-title`}
