@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { graphql } from "gatsby";
 import Layout from "../components/Layout";
 import Seo from "../components/seo";
@@ -8,6 +8,8 @@ import { getPubType } from "../util";
 import { PublicationList } from "../components/CreateNodes";
 import { NavBar } from "../components/NavBar";
 import { theme } from "../theme";
+import { DoubleSlider } from "../components/DoubleSlider";
+import { LocalDropdown } from "../components/LocalDropdown";
 
 export default function PublicationsPage({ data, pageContext }) {
   const team = pageContext.team;
@@ -17,18 +19,56 @@ export default function PublicationsPage({ data, pageContext }) {
     return intl.formatMessage({ id: text });
   }
   const nodes = data.allHalCsv.nodes;
-  const classifiedNodes = nodes.map((node) => ({
+
+  const allDates = [...new Set(nodes.map((node) => node.producedDate))];
+  const minDate = Math.min(...allDates);
+  const maxDate = Math.max(...allDates);
+  const [startDate, setStartDate] = useState(2018);
+  const [endDate, setEndDate] = useState(maxDate);
+
+  const selectedNodes = useMemo(
+    () =>
+      nodes.filter(
+        (node) =>
+          (node.producedDate >= startDate) & (node.producedDate <= endDate),
+      ),
+    [nodes, startDate, endDate],
+  );
+
+  const classifiedNodes = selectedNodes.map((node) => ({
     pubType: getPubType(node),
     ...node,
   }));
-  function Pub({ pubType }) {
+  const pubTypes = [
+    "ACL",
+    "ACLN",
+    "ASCL",
+    "PV",
+    "INV",
+    "COM",
+    "ACTI",
+    "ACTN",
+    "OS",
+    "DO",
+    "AP",
+    "TH",
+    "AFF",
+    "OTHER",
+  ];
+  const dropdown = <LocalDropdown
+            name="Jump to..."
+            options={pubTypes}
+            trans={trans}
+          ></LocalDropdown>;
+  function Pub({ id, pubType }) {
     const filteredNodes = classifiedNodes.filter(
       (node) => node.pubType === pubType,
     );
     if (filteredNodes.length > 0) {
       return (
-        <div key={`pub${pubType}`}>
+        <div id={id} key={`pub${pubType}`}>
           <h2> {trans(pubType)} </h2>
+          {dropdown}
           <PublicationList nodes={filteredNodes} type={pubType} theme={theme} />
         </div>
       );
@@ -45,8 +85,25 @@ export default function PublicationsPage({ data, pageContext }) {
           team={team}
         />
       )}
+      <span>Filter by date:</span>
+      <DoubleSlider
+        sliderMinValue={minDate}
+        sliderMaxValue={maxDate}
+        minVal={startDate}
+        maxVal={endDate}
+        setMinVal={setStartDate}
+        setMaxVal={setEndDate}
+      />
+      {/* <LocalDropdown
+        name="Jump to..."
+        options={pubTypes}
+        trans={trans}
+      ></LocalDropdown> */}
       <PublicationListOfLists>
-        <Pub pubType="ACL" key="ACL"></Pub>
+        {pubTypes.map((pt) => (
+          <Pub id={pt} pubType={pt} key={pt}></Pub>
+        ))}
+        {/* <Pub pubType="ACL" key="ACL"></Pub>
         <Pub pubType="ACLN" key="ACLN"></Pub>
         <Pub pubType="ASCL" key="ASCL"></Pub>
         <Pub pubType="PV" key="PV"></Pub>
@@ -59,7 +116,7 @@ export default function PublicationsPage({ data, pageContext }) {
         <Pub pubType="AP" key="AP"></Pub>
         <Pub pubType="TH" key="TH"></Pub>
         <Pub pubType="AFF" key="AFF"></Pub>
-        <Pub pubType="OTHER" key="OTHER"></Pub>
+        <Pub pubType="OTHER" key="OTHER"></Pub> */}
       </PublicationListOfLists>
     </Layout>
   );
