@@ -30,7 +30,7 @@
     "cross-env": "^7.0.3",
     "csv-parser": "^3.0.0",
     "csv-stringify": "^6.5.1",
-    "gatsby": "^5.15.0",
+    "gatsby": "^5.16.1",
     "gatsby-plugin-image": "^3.13.1",
     "gatsby-plugin-manifest": "^5.13.1",
     "gatsby-plugin-mdx": "^5.15.0",
