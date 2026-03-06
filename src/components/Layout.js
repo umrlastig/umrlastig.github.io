@@ -1,7 +1,10 @@
 import React from "react";
 import { useStaticQuery, graphql } from "gatsby";
 import { ThemeProvider } from "styled-components";
-import { LocalizedLink as Link, useLocalization } from "@ericcote/gatsby-theme-i18n";
+import {
+  LocalizedLink as Link,
+  useLocalization,
+} from "@ericcote/gatsby-theme-i18n";
 import { useIntl } from "react-intl";
 import { GlobalStyles } from "./styles/Global";
 import {
@@ -83,7 +86,12 @@ const Layout = ({ children }) => {
                     <FaGithub /> {trans("Source")}
                   </a>
                 </Button>
-                <label>{[trans("Deployed on"),new Date(Date.now()).toLocaleDateString(locale)].join(" ")}</label>
+                <label>
+                  {[
+                    trans("Deployed on"),
+                    new Date(Date.now()).toLocaleDateString(locale),
+                  ].join(" ")}
+                </label>
               </div>
             </section>
             <section>

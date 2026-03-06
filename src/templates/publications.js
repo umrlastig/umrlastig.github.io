@@ -55,11 +55,13 @@ export default function PublicationsPage({ data, pageContext }) {
     "AFF",
     "OTHER",
   ];
-  const dropdown = <LocalDropdown
-            name="Jump to..."
-            options={pubTypes}
-            trans={trans}
-          ></LocalDropdown>;
+  const dropdown = (
+    <LocalDropdown
+      name="Jump to..."
+      options={pubTypes}
+      trans={trans}
+    ></LocalDropdown>
+  );
   function Pub({ id, pubType }) {
     const filteredNodes = classifiedNodes.filter(
       (node) => node.pubType === pubType,
