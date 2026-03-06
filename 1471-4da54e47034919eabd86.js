@@ -1,0 +1,1 @@
+(self.webpackChunklastig_gastby=self.webpackChunklastig_gastby||[]).push([[1471],{1471:function(){}}]);
