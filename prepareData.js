@@ -31,11 +31,18 @@ axios.interceptors.response.use(async (response) => {
   return response;
 });
 
+// Configure axios-retry
 axiosRetry(axios, {
-  retries: 3,
-  retryCondition: (error) => {
-    return error.response.status === 202;
-  },
+  retries: 3,// Number of retries
+  // retryCondition: (error) => {
+  //   return error.response.status === 202;
+  // },
+  retryDelay: axiosRetry.exponentialDelay, // Use exponential backoff
+  // attach callback to each retry to handle logging or tracking
+  onRetry: (err) => console.log(`Retrying request: ${err.message}`),
+  // Specify conditions to retry on, this is the default
+  // which will retry on network errors or idempotent requests (5xx)
+  retryCondition: (error) => axiosRetry.isNetworkOrIdempotentRequestError(error)
 });
 
 function get(url) {
