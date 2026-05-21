@@ -22,15 +22,15 @@ Multi-Landcover translation network (MLCT-Net),MLCT-Net,10.5281/zenodo.7019838,h
 Données Stéréopolis - Projet I-site URBAN VISION,Données Stéréopolis,10.57745/BOK4I4,https://entrepot.recherche.data.gouv.fr/file.xhtml?persistentId=doi:10.57745/BOK4I4,2023,URBAN VISION,Urban,ACTE,,9
 ATLANTIS Ontology,ATLANTIS Ontology,10.5281/zenodo.10568807,https://zenodo.org/records/10568807,2022,ATLANTIS,Security,STRUDEL,,21
 ATLANTIS Dataset,ATLANTIS Dataset,10.5281/zenodo.10568800,https://zenodo.org/records/10568801,2023,ATLANTIS,Security,STRUDEL,,32
-"Panoptic Agricultural Satellite TIme Series : optical time series, radar time series and very high resolution image ",PASTIS-HD ,,https://huggingface.co/datasets/IGNF/PASTIS-HD,2024,,Agriculture,STRUDEL,https://cdn-uploads.huggingface.co/production/uploads/6582b7dd75754a803e484487/sxmnCAGs0p2u_PALLsqyN.jpeg,354883
-TreeSatAI-Time-Series ,TreeSatAI-Time-Series ,,https://huggingface.co/datasets/IGNF/TreeSatAI-Time-Series,2024,,LULC,STRUDEL,,25269
-FLAIR land-cover semantic segmentation ,FLAIR,,https://huggingface.co/datasets/IGNF/FLAIR-1-2,2023,,LULC,STRUDEL,https://www.umr-lastig.fr/lastig_data/img/flair-2-patches.png,31458
+"Panoptic Agricultural Satellite TIme Series : optical time series, radar time series and very high resolution image ",PASTIS-HD ,,https://huggingface.co/datasets/IGNF/PASTIS-HD,2024,,Agriculture,STRUDEL,https://cdn-uploads.huggingface.co/production/uploads/6582b7dd75754a803e484487/sxmnCAGs0p2u_PALLsqyN.jpeg,360265
+TreeSatAI-Time-Series ,TreeSatAI-Time-Series ,,https://huggingface.co/datasets/IGNF/TreeSatAI-Time-Series,2024,,LULC,STRUDEL,,25372
+FLAIR land-cover semantic segmentation ,FLAIR,,https://huggingface.co/datasets/IGNF/FLAIR-1-2,2023,,LULC,STRUDEL,https://www.umr-lastig.fr/lastig_data/img/flair-2-patches.png,31662
 Description and quality metadata files for four spatial landmark datasets,CHOUCAS metadata of the spatial landmark datasets,10.5281/zenodo.6494267,https://zenodo.org/records/6636472,2022,Choucas,Security,MEIG,,164
 Alignment between type of landmark in different sources and the concept in the spatial reference objects ontology,CHOUCAS alignment,10.5281/zenodo.6481338,https://zenodo.org/records/6542896,2022,Choucas,Security,MEIG,,602
 Five spatial landmark datasets,CHOUCAS landmark datasets,10.5281/zenodo.6480985,https://zenodo.org/records/6514812,2022,Choucas,Security,MEIG,,963
 Matching results between landmark in different sources and landmark in a referenced dataset (BDTOPO),CHOUCAS matching results,10.5281/zenodo.6483784,https://zenodo.org/records/6518363,2022,Choucas,Security,MEIG,,564
 Multiple Land-use / Land-cover Dataset (MLULC),MLULC,10.5281/zenodo.5843594,https://zenodo.org/records/5843595,2022,MAESTRIA,LULC,STRUDEL,,1157
-"The global long-term satellite radar backscatter dataset created by merging ERS, QSCAT, and ASCAT. (Cscat)",Cscat,10.6084/m9.figshare.20407857.v5,https://figshare.com/articles/dataset/CScat/20407857,2022,,Climate,ACTE,,1164
+"The global long-term satellite radar backscatter dataset created by merging ERS, QSCAT, and ASCAT. (Cscat)",Cscat,10.6084/m9.figshare.20407857.v5,https://figshare.com/articles/dataset/CScat/20407857,2022,,Climate,ACTE,,1174
 Vegetation Stratum Occupancy Prediction from Airborne LiDAR 3D Point Clouds,Vegetation Stratum,10.5281/zenodo.5555757,https://zenodo.org/records/5555758,2021,TOSCA FRISBEE,Agriculture,STRUDEL,,95
 CHOUCAS Landmarks ontology,CHOUCAS  Landmarks ontology,10.5281/zenodo.6643645,https://zenodo.org/records/6643646,2020,Choucas,Security,MEIG,,149
 Oso to Corine Land cover dataset,OSO-to-CLC,10.5281/zenodo.4459483,https://zenodo.org/records/4459484,2021,MAESTRIA,LULC,STRUDEL,,48

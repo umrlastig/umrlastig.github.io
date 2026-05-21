@@ -33,7 +33,7 @@ axios.interceptors.response.use(async (response) => {
 
 // Configure axios-retry
 axiosRetry(axios, {
-  retries: 3,// Number of retries
+  retries: 3, // Number of retries
   // retryCondition: (error) => {
   //   return error.response.status === 202;
   // },
@@ -42,7 +42,8 @@ axiosRetry(axios, {
   onRetry: (err) => console.log(`Retrying request: ${err.message}`),
   // Specify conditions to retry on, this is the default
   // which will retry on network errors or idempotent requests (5xx)
-  retryCondition: (error) => axiosRetry.isNetworkOrIdempotentRequestError(error)
+  retryCondition: (error) =>
+    axiosRetry.isNetworkOrIdempotentRequestError(error),
 });
 
 function get(url) {
