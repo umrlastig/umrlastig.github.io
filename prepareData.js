@@ -4,18 +4,10 @@ var qs = require("qs");
 var fs = require("fs");
 const { stringify } = require("csv-stringify");
 const csv = require("csv-parser");
-const { HttpsProxyAgent } = require("https-proxy-agent");
 const https = require("https");
 
 const use_proxy = false;
-const axiosDefaultConfig = use_proxy
-  ? {
-      proxy: false,
-      httpsAgent: new HttpsProxyAgent("http://proxy.ign.fr:3128"),
-    }
-  : {
-      proxy: false,
-    };
+const axiosDefaultConfig = { proxy: false };
 
 const axios = require("axios").create(axiosDefaultConfig);
 const axiosRetry = require("axios-retry").default;
@@ -62,16 +54,21 @@ function getFile(inputUrl, filename, columns) {
           values.push(data);
         })
         .on("end", async () => {
-          console.log("Finished reading and found", values.length, "elements");
+          console.log(
+            "Finished reading and found",
+            values.length,
+            "elements for",
+            filename,
+          );
           const writableStream = fs.createWriteStream(filename);
           const stringifier = stringify({ header: true, columns: columns });
           function write(value) {
-            console.log(value);
+            //console.log(value);
             stringifier.write(value);
           }
           values.forEach(write);
           stringifier.pipe(writableStream);
-          console.log("Finished writing data");
+          // console.log("Finished writing data");
           resolve();
         })
         .on("error", reject);
@@ -397,9 +394,9 @@ async function getThesisData(people, thesis) {
     status == "defended"
       ? await getHalInfo(thesis) // <-- idem
       : ["", "", ""];
-  console.log(
-    `${thesis.auteurs[0].prenom} ${thesis.auteurs[0].nom} => ${hal} - ${halInfo} - ${halFile}`,
-  );
+  // console.log(
+  //   `${thesis.auteurs[0].prenom} ${thesis.auteurs[0].nom} => ${hal} - ${halInfo} - ${halFile}`,
+  // );
   // ----- Construction du tableau de résultat -----
   return [
     thesis.id,
@@ -484,7 +481,7 @@ function writeTheses(thesesFilename, values) {
   ];
   const stringifier = stringify({ header: true, columns: columns });
   values.forEach((v) => {
-    console.log(v);
+    // console.log(v);
     stringifier.write(v);
   });
   stringifier.pipe(writableStream);
@@ -741,7 +738,7 @@ async function getKeywordBase(synonymsFilename, toRemoveFilename) {
             toRemove.push(data["0"]);
           })
           .on("end", () => {
-            console.log(toRemove);
+            // console.log(toRemove);
             resolve({ synonyms: synonyms, toRemove: toRemove });
           });
       });
@@ -988,16 +985,16 @@ function getDatasets(inputDatasetFilename, datasetFilename) {
                   // use previous values (harvard dataverse blocks requests now apparently)
                   switch (url) {
                     case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/ZKRJFA":
-                      downloadValue = 13719; //updated 2025/11/12
+                      downloadValue = 19247; //updated 2026/05/27
                       break;
                     case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/XP8J6P":
-                      downloadValue = 6575; //updated 2025/11/12
+                      downloadValue = 7351; //updated 2026/05/27
                       break;
                     case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/28674":
-                      downloadValue = 2929; //updated 2025/11/12
+                      downloadValue = 3143; //updated 2026/05/27
                       break;
                     case "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/CCESX4":
-                      downloadValue = 371; //updated 2025/11/12
+                      downloadValue = 393; //updated 2026/05/27
                       break;
                     default:
                       console.log(`Sorry, not found ${url}.`);
@@ -1099,6 +1096,38 @@ getFile(
   "https://raw.githubusercontent.com/umrlastig/lastig_data/refs/heads/master/recruiting.csv",
   "src/data/recruiting.csv",
   ["type", "titre", "title", "pdf_fr", "pdf_en", "team", "filled", "link"],
+);
+// get dataset file
+getFile(
+  "https://raw.githubusercontent.com/umrlastig/lastig_data/refs/heads/master/dataset.csv",
+  "src/input_data/dataset.csv",
+  [
+    "name",
+    "short_name",
+    "doi",
+    "url",
+    "date",
+    "project",
+    "theme",
+    "teams",
+    "image_url",
+  ],
+);
+// get software file
+getFile(
+  "https://raw.githubusercontent.com/umrlastig/lastig_data/refs/heads/master/software.csv",
+  "src/data/software.csv",
+  [
+    "name",
+    "short_name",
+    "repo",
+    "HALid",
+    "date",
+    "teams",
+    "SWHID",
+    "doi",
+    "image_url",
+  ],
 );
 // get people data
 getPeople(
