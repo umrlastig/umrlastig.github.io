@@ -77,6 +77,11 @@ export default function PublicationsPage({ data, pageContext }) {
     }
     return null;
   }
+  function count(pubType) {
+    return classifiedNodes.filter(
+      (node) => node.pubType === pubType,
+    ).length;
+  }
   return (
     <Layout pageTitle={`${isLastigPage ? "LASTIG" : team} Publications`}>
       <h3>{trans(`${isLastigPage ? "LASTIG" : team} Publications`)}</h3>
@@ -96,29 +101,22 @@ export default function PublicationsPage({ data, pageContext }) {
         setMinVal={setStartDate}
         setMaxVal={setEndDate}
       />
-      {/* <LocalDropdown
-        name="Jump to..."
-        options={pubTypes}
-        trans={trans}
-      ></LocalDropdown> */}
+      <table>
+        <thead>
+          <tr>
+            {pubTypes.map((pubType) => (<th colSpan="1" rowSpan="1"><p>{trans(pubType)}</p></th>))}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {pubTypes.map((pubType) => (<th colSpan="1" rowSpan="1"><p>{count(pubType)}</p></th>))}
+          </tr>
+        </tbody>
+      </table>
       <PublicationListOfLists>
         {pubTypes.map((pt) => (
           <Pub id={pt} pubType={pt} key={pt}></Pub>
         ))}
-        {/* <Pub pubType="ACL" key="ACL"></Pub>
-        <Pub pubType="ACLN" key="ACLN"></Pub>
-        <Pub pubType="ASCL" key="ASCL"></Pub>
-        <Pub pubType="PV" key="PV"></Pub>
-        <Pub pubType="INV" key="INV"></Pub>
-        <Pub pubType="COM" key="COM"></Pub>
-        <Pub pubType="ACTI" key="ACTI"></Pub>
-        <Pub pubType="ACTN" key="ACTN"></Pub>
-        <Pub pubType="OS" key="OS"></Pub>
-        <Pub pubType="DO" key="DO"></Pub>
-        <Pub pubType="AP" key="AP"></Pub>
-        <Pub pubType="TH" key="TH"></Pub>
-        <Pub pubType="AFF" key="AFF"></Pub>
-        <Pub pubType="OTHER" key="OTHER"></Pub> */}
       </PublicationListOfLists>
     </Layout>
   );
@@ -211,8 +209,7 @@ export const query = graphql`
 
 export const Head = ({ pageContext }) => (
   <Seo
-    title={`${
-      pageContext.team.length > 1 ? "LASTIG" : pageContext.team
-    } Publications`}
+    title={`${pageContext.team.length > 1 ? "LASTIG" : pageContext.team
+      } Publications`}
   />
 );
