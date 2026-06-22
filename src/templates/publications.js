@@ -78,9 +78,7 @@ export default function PublicationsPage({ data, pageContext }) {
     return null;
   }
   function count(pubType) {
-    return classifiedNodes.filter(
-      (node) => node.pubType === pubType,
-    ).length;
+    return classifiedNodes.filter((node) => node.pubType === pubType).length;
   }
   return (
     <Layout pageTitle={`${isLastigPage ? "LASTIG" : team} Publications`}>
@@ -104,12 +102,20 @@ export default function PublicationsPage({ data, pageContext }) {
       <table>
         <thead>
           <tr>
-            {pubTypes.map((pubType) => (<th colSpan="1" rowSpan="1"><p>{trans(pubType)}</p></th>))}
+            {pubTypes.map((pubType) => (
+              <th colSpan="1" rowSpan="1">
+                <p>{trans(pubType)}</p>
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
           <tr>
-            {pubTypes.map((pubType) => (<th colSpan="1" rowSpan="1"><p>{count(pubType)}</p></th>))}
+            {pubTypes.map((pubType) => (
+              <th colSpan="1" rowSpan="1">
+                <p>{count(pubType)}</p>
+              </th>
+            ))}
           </tr>
         </tbody>
       </table>
@@ -209,7 +215,8 @@ export const query = graphql`
 
 export const Head = ({ pageContext }) => (
   <Seo
-    title={`${pageContext.team.length > 1 ? "LASTIG" : pageContext.team
-      } Publications`}
+    title={`${
+      pageContext.team.length > 1 ? "LASTIG" : pageContext.team
+    } Publications`}
   />
 );
