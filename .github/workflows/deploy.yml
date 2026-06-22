@@ -37,7 +37,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          path: my-output-dir
       - name: Detect package manager
+        working-directory: my-output-dir
         id: detect-package-manager
         run: |
           if [ -f "${{ github.workspace }}/yarn.lock" ]; then
@@ -53,11 +56,13 @@ jobs:
             exit 1
           fi
       - name: Setup Node
+        working-directory: my-output-dir
         uses: actions/setup-node@v4
         with:
           node-version: "24"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Setup Pages
+        working-directory: my-output-dir
         id: pages
         uses: actions/configure-pages@v5
         with:
@@ -66,6 +71,7 @@ jobs:
           # You may remove this line if you want to manage the configuration yourself.
           static_site_generator: gatsby
       - name: Restore cache
+        working-directory: my-output-dir
         uses: actions/cache@v4
         with:
           path: |
@@ -75,14 +81,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gatsby-build-
       - name: Install dependencies
-        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+        working-directory: my-output-dir
+          #run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+          run: npm ci --legacy-peer-deps
       - name: Prepare input data
+        working-directory: my-output-dir
         run: node prepareData.js
       - name: Build with Gatsby
+        working-directory: my-output-dir
         env:
           PREFIX_PATHS: "true"
         run: ${{ steps.detect-package-manager.outputs.manager }} run build
       - name: Upload artifact
+        working-directory: my-output-dir
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
