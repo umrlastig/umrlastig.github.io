@@ -63,11 +63,11 @@ const JoinPage = ({ data }) => {
     return intl.formatMessage({ id: text });
   }
   const nodes = data.allRecruitingCsv.nodes;
-  const lecturers = nodes.filter((node) => node.type === "EC");
-  const phds = nodes.filter((node) => node.type === "PhD");
-  const postdocs = nodes.filter((node) => node.type === "postdoc");
-  const engineers = nodes.filter((node) => node.type === "ingenieur");
-  const interns = nodes.filter((node) => node.type === "Internship");
+  const lecturers = nodes.filter((node) => node.type.toLowerCase() === "ec");
+  const phds = nodes.filter((node) => (node.type.toLowerCase() === "phd")||(node.type.toLowerCase() === "these"));
+  const postdocs = nodes.filter((node) => (node.type.toLowerCase() === "postdoc")||(node.type.toLowerCase() === "post-doc"));
+  const engineers = nodes.filter((node) => (node.type.toLowerCase() === "ingenieur")||(node.type.toLowerCase() === "engineer"));
+  const interns = nodes.filter((node) => (node.type.toLowerCase() === "internship")||(node.type.toLowerCase() === "stage"));
   return (
     <Layout pageTitle="Join Us">
       <h1>Join Us!</h1>
